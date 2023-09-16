@@ -1,0 +1,28 @@
+{
+  "name": "curve-farm",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev && cd contracts & anvil --block-time 5 --fork-url https://base-mainnet.g.alchemy.com/v2/mA1QMEu7zP_8g6WEZSsZAcLYZoeYGg0t",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "deploy:dev": "cd contracts/deployment && sh farm.local.sh"
+  },
+  "dependencies": {
+    "@rainbow-me/rainbowkit": "^1.0.11",
+    "autoprefixer": "10.4.15",
+    "encoding": "^0.1.13",
+    "lokijs": "^1.5.12",
+    "next": "13.4.19",
+    "postcss": "8.4.29",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.3",
+    "viem": "^1.10.14",
+    "wagmi": "^1.4.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^10.2.0"
+  }
+}
