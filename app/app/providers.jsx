@@ -12,8 +12,23 @@ import {
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { localhost, base } from "wagmi/chains";
+import { base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+
+const localhost = {
+  id: 9_999,
+  name: "Localhost",
+  network: "localhost",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["http://127.0.0.1:8545"] },
+    public: { http: ["http://127.0.0.1:8545"] },
+  },
+};
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [

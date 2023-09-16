@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev && cd contracts & anvil --block-time 5 --fork-url https://base-mainnet.g.alchemy.com/v2/mA1QMEu7zP_8g6WEZSsZAcLYZoeYGg0t",
+    "dev": "next dev && cd contracts & anvil --block-time 5 --fork-url https://base-mainnet.g.alchemy.com/v2/mA1QMEu7zP_8g6WEZSsZAcLYZoeYGg0t --chain-id 9999",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
