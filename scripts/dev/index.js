@@ -6,6 +6,9 @@ import { FARM_ABI } from "../abi/farm.js";
 import assert from "assert";
 import { getReason } from "../utils.js";
 
+console.log("LOCAL_FARM_ADDRESS", LOCAL_FARM_ADDRESS);
+console.log("LOCAL_PRIVATE_KEY", LOCAL_PRIVATE_KEY);
+
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 const wallet = new ethers.Wallet(LOCAL_PRIVATE_KEY, provider);
 const farm = new ethers.Contract(LOCAL_FARM_ADDRESS, FARM_ABI, wallet);
