@@ -5,18 +5,18 @@ import {Ownable} from "./Owner.sol";
 contract Farm is Ownable {
     event Trade(
         address trader,
-        address subject,
+        uint256 sharesId,
         bool isBuy,
         uint256 shareAmount,
         uint256 ethAmount,
         uint256 supply
     );
 
-    // SharesSubject => (Holder => Balance)
-    mapping(address => mapping(address => uint256)) public sharesBalance;
+    // sharesId => (Holder => Balance)
+    mapping(uint256 => mapping(address => uint256)) public sharesBalance;
 
-    // SharesSubject => Supply
-    mapping(address => uint256) public sharesSupply;
+    // sharesId => Supply
+    mapping(uint256 => uint256) public sharesSupply;
 
     function getPrice(
         uint256 supply,
@@ -35,35 +35,35 @@ contract Farm is Ownable {
     }
 
     function getBuyPrice(
-        address sharesSubject,
+        uint256 sharesId,
         uint256 amount
     ) public view returns (uint256) {
-        return getPrice(sharesSupply[sharesSubject], amount);
+        return getPrice(sharesSupply[sharesId], amount);
     }
 
     function getSellPrice(
-        address sharesSubject,
+        uint256 sharesId,
         uint256 amount
     ) public view returns (uint256) {
-        return getPrice(sharesSupply[sharesSubject] - amount, amount);
+        return getPrice(sharesSupply[sharesId] - amount, amount);
     }
 
     function createShares(
-        address sharesSubject,
+        uint256 sharesId,
         uint256 amount
     ) public onlyOwner {
-        uint256 supply = sharesSupply[sharesSubject];
+        uint256 supply = sharesSupply[sharesId];
         require(supply == 0, "Shares already created");
 
         uint256 price = getPrice(supply, amount);
-        sharesBalance[sharesSubject][msg.sender] =
-            sharesBalance[sharesSubject][msg.sender] +
+        sharesBalance[sharesId][msg.sender] =
+            sharesBalance[sharesId][msg.sender] +
             amount;
-        sharesSupply[sharesSubject] = supply + amount;
+        sharesSupply[sharesId] = supply + amount;
 
         emit Trade(
             msg.sender,
-            sharesSubject,
+            sharesId,
             true,
             amount,
             price,
@@ -71,21 +71,21 @@ contract Farm is Ownable {
         );
     }
 
-    function buyShares(address sharesSubject, uint256 amount) public payable {
-        uint256 supply = sharesSupply[sharesSubject];
+    function buyShares(uint256 sharesId, uint256 amount) public payable {
+        uint256 supply = sharesSupply[sharesId];
         require(supply > 0, "Shares not created yet");
 
         uint256 price = getPrice(supply, amount);
         require(msg.value >= price, "Insufficient payment");
 
-        sharesBalance[sharesSubject][msg.sender] =
-            sharesBalance[sharesSubject][msg.sender] +
+        sharesBalance[sharesId][msg.sender] =
+            sharesBalance[sharesId][msg.sender] +
             amount;
-        sharesSupply[sharesSubject] = supply + amount;
+        sharesSupply[sharesId] = supply + amount;
 
         emit Trade(
             msg.sender,
-            sharesSubject,
+            sharesId,
             true,
             amount,
             price,
@@ -93,21 +93,21 @@ contract Farm is Ownable {
         );
     }
 
-    function sellShares(address sharesSubject, uint256 amount) public {
-        uint256 supply = sharesSupply[sharesSubject];
+    function sellShares(uint256 sharesId, uint256 amount) public {
+        uint256 supply = sharesSupply[sharesId];
         require(supply > amount, "Cannot sell the last share");
         uint256 price = getPrice(supply - amount, amount);
         require(
-            sharesBalance[sharesSubject][msg.sender] >= amount,
+            sharesBalance[sharesId][msg.sender] >= amount,
             "Insufficient shares"
         );
-        sharesBalance[sharesSubject][msg.sender] =
-            sharesBalance[sharesSubject][msg.sender] -
+        sharesBalance[sharesId][msg.sender] =
+            sharesBalance[sharesId][msg.sender] -
             amount;
-        sharesSupply[sharesSubject] = supply - amount;
+        sharesSupply[sharesId] = supply - amount;
         emit Trade(
             msg.sender,
-            sharesSubject,
+            sharesId,
             false,
             amount,
             price,
@@ -116,4 +116,18 @@ contract Farm is Ownable {
         (bool success, ) = msg.sender.call{value: price}("");
         require(success, "Unable to send funds");
     }
+
+    function getSharesBalance(uint256 sharesId, address holder)
+        public
+        view
+        returns (uint256)
+    {
+        return sharesBalance[sharesId][holder];
+    }
+
+    function getSharesSupply(uint256 sharesId) public view returns (uint256) {
+        return sharesSupply[sharesId];
+    }
+
+    
 }
