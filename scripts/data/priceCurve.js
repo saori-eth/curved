@@ -6,7 +6,19 @@ import { utils, BigNumber } from "ethers";
 
 const plotly = Plotly("saori_eth", PLOTLY_API_KEY);
 
-function getPrice(supply, amount) {
+const DEFAULT_CURVE = 16000;
+
+const charts = [
+  {
+    title: "Friendtech Default Price Curve",
+    filename: "ft-default-price-curve",
+    supply: 500,
+    increment: 5,
+    curve: 16000,
+  },
+];
+
+function getPrice(supply, amount, curve = DEFAULT_CURVE) {
   let sum1, sum2;
 
   if (supply === 0) {
@@ -28,33 +40,44 @@ function getPrice(supply, amount) {
   }
 
   const summation = sum2.sub(sum1);
-  const resultInWei = summation.mul(utils.parseEther("1")).div(16000);
+  const resultInWei = summation.mul(utils.parseEther("1")).div(curve);
   return utils.formatEther(resultInWei);
 }
 
-const data = [];
-for (let supply = 0; supply <= 1000; supply += 5) {
-  const price = getPrice(supply, 1); // Assuming amount = 1
-  data.push({ x: supply, y: price });
-}
-
-const layout = {
-  title: "Price Curve",
-  xaxis: {
-    title: "Supply (Shares)",
-  },
-  yaxis: {
-    title: "Price (ETH)",
-  },
+const buildCurve = (supply, increment = 1) => {
+  const curve = [];
+  for (let i = 0; i <= supply; i += increment) {
+    curve.push({ x: i, y: getPrice(i, 1) });
+  }
+  return curve;
 };
 
-const graphOptions = {
-  layout: layout,
-  filename: "price-curve",
-  fileopt: "overwrite",
+const publishChart = (filename) => {
+  // find chart with matching filename or return
+  const chart = charts.find((chart) => chart.filename === filename);
+  if (!chart) return;
+  const options = {
+    layout: {
+      title: chart.title,
+      xaxis: {
+        title: "Supply (Shares)",
+      },
+      yaxis: {
+        title: "Price (ETH)",
+      },
+    },
+    filename: chart.filename,
+    fileopt: "overwrite",
+  };
+
+  const data = buildCurve(chart.supply, chart.increment, chart.curve);
+  plotly.plot(data, options, function (err, msg) {
+    if (err) return console.log(err);
+    console.log(msg);
+  });
 };
 
-plotly.plot(data, graphOptions, function (err, msg) {
-  if (err) return console.log(err);
-  console.log(msg);
-});
+(() => {
+  const filename = charts[0].filename;
+  publishChart(filename);
+})();
