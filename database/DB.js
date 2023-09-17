@@ -23,17 +23,23 @@ class DB {
     });
   }
 
-  // Example: insert('users', {name: 'John', age: 30})
   insert(table, data) {
     const columns = Object.keys(data).join(",");
-    const values = Object.values(data)
-      .map((value) => `'${value}'`)
+    // Use ? placeholders for values to prevent SQL injection
+    const placeholders = Object.keys(data)
+      .map(() => "?")
       .join(",");
+    // Extract the actual values to be inserted
+    const values = Object.values(data);
     return new Promise((resolve, reject) => {
       this.db.run(
-        `INSERT INTO ${table} (${columns}) VALUES (${values})`,
+        `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`,
+        values, // Binding the values to the placeholders
         function (err) {
-          if (err) reject(err);
+          if (err) {
+            console.error(err); // Log only if there's an error
+            return reject(err);
+          }
           resolve(this.lastID);
         }
       );
@@ -81,6 +87,27 @@ class DB {
       this.db.run(`DELETE FROM ${table} WHERE ${condition}`, function (err) {
         if (err) reject(err);
         resolve(this.changes);
+      });
+    });
+  }
+
+  listTables() {
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        "SELECT name FROM sqlite_master WHERE type='table'",
+        (err, rows) => {
+          if (err) reject(err);
+          resolve(rows);
+        }
+      );
+    });
+  }
+
+  listKeys(table) {
+    return new Promise((resolve, reject) => {
+      this.db.all(`PRAGMA table_info(${table})`, (err, rows) => {
+        if (err) reject(err);
+        resolve(rows);
       });
     });
   }
