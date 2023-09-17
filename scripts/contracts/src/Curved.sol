@@ -2,6 +2,9 @@
 pragma solidity ^0.8.13;
 import {Ownable} from "./Owner.sol";
 
+// TODO:
+// - Store user owned shares in a mapping
+
 contract Curved is Ownable {
     address public protocolFeeDestination; // 0.05 eth = 5%
     uint256 public protocolFeePercent; // 0.05 eth = 5%
@@ -100,15 +103,13 @@ contract Curved is Ownable {
             share.totalSupply - amount > 0,
             "Cannot sell all shares, must leave at least one"
         );
-        uint256 owed = getPrice(supply, amount);
+        uint256 owed = getPrice(supply - amount, amount);
         uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         share.balances[msg.sender] = share.balances[msg.sender] - amount;
         share.totalSupply = supply - amount;
         emit Trade(id, 1, msg.sender, share.owner, amount, owed, supply);
         (bool success1, ) = msg.sender.call{value: owed - protocolFee}("");
         require(success1, "Unable to send funds");
-        (bool success2, ) = protocolFeeDestination.call{value: protocolFee}("");
-        require(success2, "Unable to send funds");
     }
 
     function uri(uint256 id) external view returns (string memory) {
@@ -136,12 +137,28 @@ contract Curved is Ownable {
         return (share.owner, share.totalSupply, share.uri);
     }
 
+    function getBuyPrice(
+        uint256 id,
+        uint256 amount
+    ) public view returns (uint256) {
+        require(id < currentId, "Invalid share id");
+        return getPrice(shareInfo[id].totalSupply, amount);
+    }
+
+    function getSellPrice(
+        uint256 id,
+        uint256 amount
+    ) public view returns (uint256) {
+        require(id < currentId, "Invalid share id");
+        return getPrice(shareInfo[id].totalSupply - amount, amount);
+    }
+
     function getBuyPriceAfterFee(
         uint256 id,
         uint256 amount
     ) external view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        uint256 price = getPrice(shareInfo[id].totalSupply, amount);
+        uint256 price = getBuyPrice(id, amount);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         return price + protocolFee;
     }
@@ -151,7 +168,7 @@ contract Curved is Ownable {
         uint256 amount
     ) external view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        uint256 price = getPrice(shareInfo[id].totalSupply, amount);
+        uint256 price = getSellPrice(id, amount);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         return price - protocolFee;
     }

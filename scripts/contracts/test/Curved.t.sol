@@ -11,18 +11,20 @@ contract CounterTest is Test {
     address[] users = [address(0x12), address(0x13), address(0x14)];
 
     modifier createShare() {
+        // creates a share as user 0
         vm.stopPrank();
         vm.startPrank(users[0]);
         curved.createShare("ipfs://test");
         _;
     }
 
-    modifier purchaseShare() {
+    modifier purchaseShare(uint256 amount) {
+        // purchases user 0 as user 1
         vm.stopPrank();
         vm.startPrank(users[1]);
         uint256 targetId = curved.currentId() - 1;
-        uint256 cost = curved.getBuyPriceAfterFee(targetId, 1);
-        curved.buyShare{value: cost}(targetId, 1);
+        uint256 cost = curved.getBuyPriceAfterFee(targetId, amount);
+        curved.buyShare{value: cost}(targetId, amount);
         _;
     }
 
@@ -72,16 +74,17 @@ contract CounterTest is Test {
         assertEq(userBalance, 2);
     }
 
-    // function testSellSingleShare() public createShare {
-    //     vm.stopPrank();
-    //     vm.startPrank(users[1]);
-    //     uint256 targetId = curved.currentId() - 1;
-    //     uint256 cost = curved.getBuyPriceAfterFee(targetId, 1);
-    //     curved.buyShare{value: cost}(targetId, 1);
-    //     uint256 userBalance = curved.getShareBalance(targetId, users[1]);
-    //     assertEq(userBalance, 1);
-    //     curved.sellShare(targetId, 1);
-    //     userBalance = curved.getShareBalance(targetId, users[1]);
-    //     assertEq(userBalance, 0);
-    // }
+    function testSellSingleShare() public createShare purchaseShare(1) {
+        uint256 targetId = curved.currentId() - 1;
+        curved.sellShare(targetId, 1);
+        uint256 userBalanceAfter = curved.getShareBalance(targetId, users[1]);
+        assertEq(userBalanceAfter, 0);
+    }
+
+    function testSellManyShares() public createShare purchaseShare(2) {
+        uint256 targetId = curved.currentId() - 1;
+        curved.sellShare(targetId, 2);
+        uint256 userBalanceAfter = curved.getShareBalance(targetId, users[1]);
+        assertEq(userBalanceAfter, 0);
+    }
 }
