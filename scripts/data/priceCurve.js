@@ -16,6 +16,20 @@ const charts = [
     increment: 5,
     curve: 16000,
   },
+  {
+    title: "Custom Aggro Price Curve",
+    filename: "custom-aggro-price-curve",
+    supply: 100,
+    increment: 1,
+    curve: 4000,
+  },
+  {
+    title: "Custom Gentle Price Curve",
+    filename: "custom-gentle-price-curve",
+    supply: 100,
+    increment: 1,
+    curve: 32000,
+  },
 ];
 
 function getPrice(supply, amount, curve = DEFAULT_CURVE) {
@@ -44,12 +58,12 @@ function getPrice(supply, amount, curve = DEFAULT_CURVE) {
   return utils.formatEther(resultInWei);
 }
 
-const buildCurve = (supply, increment = 1) => {
-  const curve = [];
+const buildCurve = (supply, increment = 1, curve = DEFAULT_CURVE) => {
+  const data = [];
   for (let i = 0; i <= supply; i += increment) {
-    curve.push({ x: i, y: getPrice(i, 1) });
+    data.push({ x: i, y: getPrice(i, 1, curve) });
   }
-  return curve;
+  return data;
 };
 
 const publishChart = (filename) => {
@@ -78,6 +92,6 @@ const publishChart = (filename) => {
 };
 
 (() => {
-  const filename = charts[0].filename;
+  const filename = charts[2].filename;
   publishChart(filename);
 })();
