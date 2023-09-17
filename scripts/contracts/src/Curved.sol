@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 import {Ownable} from "./Owner.sol";
 
 contract Curved is Ownable {
-    address public protocolFeeDestination; // 0.05 eth = 5%
+    address public protocolFeeDestination;
     uint256 public protocolFeePercent; // 0.05 eth = 5%
     uint256 public curve = 4000;
     uint256 public currentId = 0;
@@ -78,7 +78,7 @@ contract Curved is Ownable {
         uint256 supply = share.totalSupply;
         require(
             supply > 0 || share.owner == msg.sender,
-            "Only the shares' subject can buy the first share"
+            "Only the shares subject can buy the first share"
         );
         uint256 price = getPrice(supply, amount);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
