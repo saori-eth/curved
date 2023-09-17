@@ -1,0 +1,3 @@
+[submodule "scripts/contracts/lib/solady"]
+	path = scripts/contracts/lib/solady
+	url = https://github.com/vectorized/solady
