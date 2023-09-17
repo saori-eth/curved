@@ -87,4 +87,10 @@ contract CounterTest is Test {
         uint256 userBalanceAfter = curved.getShareBalance(targetId, users[1]);
         assertEq(userBalanceAfter, 0);
     }
+
+    function testGetUserOwnedShares() public createShare {
+        uint256[] memory ownedShares = curved.getUserOwnedShares(users[0]);
+        assertEq(ownedShares.length, 1);
+        assertEq(ownedShares[0], curved.currentId() - 1);
+    }
 }

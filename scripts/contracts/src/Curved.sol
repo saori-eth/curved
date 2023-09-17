@@ -2,9 +2,6 @@
 pragma solidity ^0.8.13;
 import {Ownable} from "./Owner.sol";
 
-// TODO:
-// - Store user owned shares in a mapping
-
 contract Curved is Ownable {
     address public protocolFeeDestination; // 0.05 eth = 5%
     uint256 public protocolFeePercent; // 0.05 eth = 5%
@@ -29,6 +26,7 @@ contract Curved is Ownable {
         string uri;
     }
 
+    mapping(address => uint256[]) public userOwnedShares;
     mapping(uint256 => Share) public shareInfo;
 
     constructor(address _protocolFeeDestination, uint256 _protocolFeePercent) {
@@ -69,6 +67,7 @@ contract Curved is Ownable {
         shareInfo[currentId].balances[msg.sender] = 1;
         shareInfo[currentId].totalSupply = 1;
         shareInfo[currentId].uri = _uri;
+        userOwnedShares[msg.sender].push(currentId);
         currentId++;
         emit ShareCreated(msg.sender, currentId - 1);
     }
@@ -179,5 +178,11 @@ contract Curved is Ownable {
     ) external view returns (uint256) {
         require(id < currentId, "Invalid share id");
         return shareInfo[id].balances[user];
+    }
+
+    function getUserOwnedShares(
+        address user
+    ) external view returns (uint256[] memory) {
+        return userOwnedShares[user];
     }
 }
