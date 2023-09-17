@@ -96,12 +96,16 @@ contract Curved is Ownable {
             share.balances[msg.sender] >= amount,
             "Insufficient share balance"
         );
-        uint256 price = getPrice(supply, amount);
-        uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
+        require(
+            share.totalSupply - amount > 0,
+            "Cannot sell all shares, must leave at least one"
+        );
+        uint256 owed = getPrice(supply, amount);
+        uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         share.balances[msg.sender] = share.balances[msg.sender] - amount;
         share.totalSupply = supply - amount;
-        emit Trade(id, 1, msg.sender, share.owner, amount, price, supply);
-        (bool success1, ) = msg.sender.call{value: price - protocolFee}("");
+        emit Trade(id, 1, msg.sender, share.owner, amount, owed, supply);
+        (bool success1, ) = msg.sender.call{value: owed - protocolFee}("");
         require(success1, "Unable to send funds");
         (bool success2, ) = protocolFeeDestination.call{value: protocolFee}("");
         require(success2, "Unable to send funds");
@@ -116,5 +120,47 @@ contract Curved is Ownable {
         require(id < currentId, "Invalid share id");
         require(shareInfo[id].owner == msg.sender, "Only the owner can edit");
         shareInfo[id].uri = _uri;
+    }
+
+    // ====== Getters ======
+
+    function getShareInfo(
+        uint256 id
+    )
+        external
+        view
+        returns (address _owner, uint256 _totalSupply, string memory _uri)
+    {
+        require(id < currentId, "Invalid share id");
+        Share storage share = shareInfo[id];
+        return (share.owner, share.totalSupply, share.uri);
+    }
+
+    function getBuyPriceAfterFee(
+        uint256 id,
+        uint256 amount
+    ) external view returns (uint256) {
+        require(id < currentId, "Invalid share id");
+        uint256 price = getPrice(shareInfo[id].totalSupply, amount);
+        uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
+        return price + protocolFee;
+    }
+
+    function getSellPriceAfterFee(
+        uint256 id,
+        uint256 amount
+    ) external view returns (uint256) {
+        require(id < currentId, "Invalid share id");
+        uint256 price = getPrice(shareInfo[id].totalSupply, amount);
+        uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
+        return price - protocolFee;
+    }
+
+    function getShareBalance(
+        uint256 id,
+        address user
+    ) external view returns (uint256) {
+        require(id < currentId, "Invalid share id");
+        return shareInfo[id].balances[user];
     }
 }
