@@ -15,6 +15,7 @@ export const Dropzone = ({ onDrop, children }) => {
 
   const handleDrop = (e) => {
     e.preventDefault();
+    gi;
     setIsDragging(false);
 
     if (e.dataTransfer.items) {
