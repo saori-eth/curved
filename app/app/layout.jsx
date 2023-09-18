@@ -2,8 +2,6 @@ import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./providers";
 import { Header } from "../components";
-import { Body } from "../components";
-
 import { Handjet } from "next/font/google";
 
 // If loading a variable font, you don't need to specify the font weight
@@ -19,7 +17,7 @@ function RootLayout({ children }) {
       <body className="bg-gradient-to-r from-blue-400 to-purple-500 sm:px-6 lg:px-8 bg-attachment-fixed h-screen overflow-x-hidden no-scrollbar">
         <Providers>
           <Header />
-          <Body>{children}</Body>
+          {children}
         </Providers>
       </body>
     </html>

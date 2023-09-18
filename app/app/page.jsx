@@ -1,10 +1,22 @@
 "use client";
 import { PostCardFeed } from "../components";
+import { Dropzone } from "../components";
+
+const handleDrop = (file) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    console.log(reader.result);
+    setSelectedImage(reader.result);
+  };
+  reader.readAsDataURL(file);
+};
 
 const Page = () => {
   return (
     <>
-      <PostCardFeed />
+      <Dropzone onDrop={handleDrop}>
+        <PostCardFeed />
+      </Dropzone>
     </>
   );
 };
