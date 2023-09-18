@@ -12,11 +12,9 @@ const handleDrop = (file) => {
 
 const Page = () => {
   return (
-    <>
-      <Dropzone onDrop={handleDrop}>
-        <PostCardFeed />
-      </Dropzone>
-    </>
+    <Dropzone onDrop={handleDrop}>
+      <PostCardFeed />
+    </Dropzone>
   );
 };
 

@@ -33,7 +33,10 @@ export const Dropzone = ({ onDrop, children }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       style={{
-        border: isDragging ? "2px dashed red" : "2px dashed gray",
+        transition: "opacity 0.3s, boxShadow 0.3s", // smooth transition for opacity and boxShadow
+        boxShadow: isDragging
+          ? "inset 0 0 15px 5px rgba(54, 70, 93, 0.6)"
+          : "none",
       }}
     >
       {children}

@@ -11,7 +11,7 @@ export const PostCard = ({
 }) => {
   return (
     <div
-      className="border border-gray-300 p-4 my-4 relative rounded-lg backdrop-blur-sm bg-opacity-20"
+      className="border border-gray-300 p-4 my-4 relative rounded-lg backdrop-blur-sm bg-opacity-20 w-96"
       style={{ backgroundColor: "#2A3A4C" }}
     >
       <div className="absolute top-0 left-0 flex items-center space-x-2 p-3 pl-4 no-highlight">
