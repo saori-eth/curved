@@ -9,6 +9,9 @@
 - [ ] better price/supply/holders details on post card
 - [ ] onchain governance contract for platform fees and token minting
 - [ ] notifications
+- [ ] event logging
+  - [ ] user created content
+  - [ ] user purchased content
 
 ## DOING
 
