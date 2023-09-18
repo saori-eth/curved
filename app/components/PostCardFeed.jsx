@@ -23,7 +23,7 @@ const mockPost = [
 
 export const PostCardFeed = ({ children }) => {
   return (
-    <div className="flex flex-col items-center py-2">
+    <div className="flex flex-col items-center overflow-y-scroll h-screen no-scrollbar">
       {mockPost.map((post, i) => (
         <PostCard key={`${post.title}${i}`} {...post} />
       ))}
