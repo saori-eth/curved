@@ -16,7 +16,7 @@ const font = Handjet({
 function RootLayout({ children }) {
   return (
     <html lang="en" className={font.className}>
-      <body className="bg-gradient-to-r from-blue-400 to-purple-500 sm:px-6 lg:px-8 bg-attachment-fixed">
+      <body className="bg-gradient-to-r from-blue-400 to-purple-500 sm:px-6 lg:px-8 bg-attachment-fixed h-screen overflow-x-hidden no-scrollbar">
         <Providers>
           <Header />
           <Body>{children}</Body>
