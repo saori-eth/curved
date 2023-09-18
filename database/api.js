@@ -7,10 +7,13 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const db = new DB();
 
-// Express route
 app.get("/", (req, res) => {
   res.send("HTTP Server is running.");
 });
+
+/****************************************
+ * Database endpoints
+ ****************************************/
 
 app.get("/content", async (req, res) => {
   const validKeys = ["shareId", "creator"];
@@ -81,7 +84,10 @@ app.get("/users", async (req, res) => {
   }
 });
 
-// WebSocket connection
+/****************************************
+ * WebSocket endpoints
+ *****************************************/
+
 wss.on("connection", (ws) => {
   console.log("Client connected");
 

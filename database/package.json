@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node api.js",
     "create-content-table": "node scripts/create_content_table.js",
-    "create-users-table": "node scripts/create_users_table.js"
+    "create-users-table": "node scripts/create_users_table.js",
+    "create-auth-table": "node scripts/create_auth_table.js"
   }
 }
