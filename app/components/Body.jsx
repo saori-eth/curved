@@ -1,5 +1,5 @@
 "use client";
-import { Dropzone } from "./Dropzone";
+import { Dropzone } from ".";
 
 export const Body = ({ children }) => {
   const handleDrop = (file) => {
