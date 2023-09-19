@@ -55,6 +55,15 @@ class DB {
     });
   }
 
+  fetchAllConditional(table, condition) {
+    return new Promise((resolve, reject) => {
+      this.db.all(`SELECT * FROM ${table} WHERE ${condition}`, (err, rows) => {
+        if (err) reject(err);
+        resolve(rows);
+      });
+    });
+  }
+
   // Example: fetchOne('users', 'name = "John"')
   fetchOne(table, condition) {
     return new Promise((resolve, reject) => {
@@ -127,6 +136,56 @@ class DB {
         if (err) reject(err);
         resolve(true);
       });
+    });
+  }
+
+  /****************************************
+   * Specialized methods
+   *****************************************/
+
+  getUserBalances(address) {
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        `SELECT
+          shareId,
+          SUM(CASE WHEN side = 0 THEN amount ELSE 0 END) - SUM(CASE WHEN side = 1 THEN amount ELSE 0 END) as balance
+      FROM trades
+      WHERE trader = ?
+      GROUP BY shareId`,
+        [address],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            // Filter out rows where balance is 0
+            const nonZeroBalances = rows.filter((row) => row.balance !== 0);
+            resolve(nonZeroBalances);
+          }
+        }
+      );
+    });
+  }
+
+  getAllUserBalances() {
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        `SELECT 
+          trader, 
+          shareId,
+          SUM(CASE WHEN side = 0 THEN amount ELSE 0 END) - SUM(CASE WHEN side = 1 THEN amount ELSE 0 END) as balance
+      FROM trades 
+      GROUP BY trader, shareId
+      ORDER BY trader, shareId, balance`, // Order results by trader, then shareId, and finally balance
+        [],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            const nonZeroBalances = rows.filter((row) => row.balance !== 0);
+            resolve(nonZeroBalances);
+          }
+        }
+      );
     });
   }
 }

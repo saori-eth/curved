@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "node dev/index.js",
-    "anvil": "cd contracts && anvil --block-time 5",
+    "anvil": "cd contracts && anvil --block-time 1",
     "deploy": "bash contracts/deployment/curved.local.sh",
     "test": "cd contracts && forge test -vvv",
     "price-chart": "node data/priceCurve.js",
