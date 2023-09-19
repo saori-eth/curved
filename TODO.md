@@ -1,20 +1,41 @@
 ## TODO
 
+**Frontend**
+
 - [ ] upload modal
 - [ ] better mobile styling
-- [ ] gcs image upload
 - [ ] account settings: sig auth for username/pfp change
 - [ ] account page
   - [ ] created tab
   - [ ] owned tab
-- [ ] live feed of uploads with wss
 - [ ] better price/supply/holders details on post card
-- [ ] onchain governance contract for platform fees and token minting
+
+**Backend**
+
+- [ ] gcs image upload
+- [ ] live feed of uploads with wss
+
+**Contracts**
+
+- [ ] onchain governance contract for platform fees and token
+- [ ] update main contract with dynamic price curve per Share
+
+**Backburner**
+
 - [ ] notifications
-- [ ] event logging
+
+## DOING
+
+**Frontend**
+
+**Backend**
+
+- [ ] event logging (Philbert)
   - [ ] user created content
   - [ ] user purchased content
 
-## DOING
+**Contracts**
+
+**Backburner**
 
 ## DONE
