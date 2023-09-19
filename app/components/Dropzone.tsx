@@ -1,10 +1,15 @@
-"use client";
 import { useState } from "react";
 
-export const Dropzone = ({ onDrop, children }) => {
+export const Dropzone = ({
+  onDrop,
+  children,
+}: {
+  onDrop: (file: File) => void;
+  children: React.ReactNode;
+}) => {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
@@ -13,17 +18,12 @@ export const Dropzone = ({ onDrop, children }) => {
     setIsDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
 
-    if (e.dataTransfer.items) {
-      for (let i = 0; i < e.dataTransfer.items.length; i++) {
-        if (e.dataTransfer.items[i].kind === "file") {
-          const file = e.dataTransfer.items[i].getAsFile();
-          onDrop(file);
-        }
-      }
+    for (const file of e.dataTransfer.files) {
+      onDrop(file);
     }
   };
 

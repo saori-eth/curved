@@ -1,7 +1,7 @@
 import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from "./providers";
-import { Header } from "../components";
+import { Header } from "../components/Header";
 import { Handjet } from "next/font/google";
 
 // If loading a variable font, you don't need to specify the font weight
@@ -11,7 +11,11 @@ const font = Handjet({
   display: "swap",
 });
 
-function RootLayout({ children }) {
+interface Props {
+  children: React.ReactNode;
+}
+
+function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
       <body

@@ -1,4 +1,4 @@
-import { PostCard } from "../components";
+import { PostCard } from "./PostCard";
 
 const mockPost = [
   {
@@ -21,7 +21,7 @@ const mockPost = [
   },
 ];
 
-export const PostCardFeed = ({ children }) => {
+export function PostCardFeed() {
   return (
     <div className="flex flex-col items-center overflow-y-scroll h-screen no-scrollbar pt-14">
       {mockPost.map((post, i) => (
@@ -29,4 +29,4 @@ export const PostCardFeed = ({ children }) => {
       ))}
     </div>
   );
-};
+}

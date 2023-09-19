@@ -70,7 +70,11 @@ const wagmiConfig = createConfig({
   webSocketPublicClient,
 });
 
-export function Providers({ children }) {
+interface Props {
+  children: React.ReactNode;
+}
+
+export function Providers({ children }: Props) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
   return (

@@ -1,8 +1,9 @@
 "use client";
-import { PostCardFeed } from "../components";
-import { Dropzone } from "../components";
 
-const handleDrop = (file) => {
+import Dropzone from "../components/Dropzone";
+import { PostCardFeed } from "../components/PostCardFeed";
+
+const handleDrop = (file: File) => {
   const reader = new FileReader();
   reader.onload = () => {
     console.log(reader.result);

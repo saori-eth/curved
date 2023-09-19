@@ -1,14 +1,22 @@
 import Image from "next/image";
 
-export const PostCard = ({
+interface Props {
+  avatar: string;
+  author: string;
+  title: string;
+  description: string;
+  image: string;
+  buttons: string[];
+}
+
+export function PostCard({
   avatar,
   author,
   title,
   description,
   image,
   buttons,
-  data,
-}) => {
+}: Props) {
   return (
     <div
       className="border border-gray-300 p-4 my-4 relative rounded-lg backdrop-blur-sm bg-opacity-20 w-96"
@@ -45,4 +53,4 @@ export const PostCard = ({
       </div>
     </div>
   );
-};
+}
