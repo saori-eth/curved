@@ -20,3 +20,17 @@
   - express http for db operations
   - express ws for live feed of images
 ```
+
+# Setup
+
+```
+cd app && npm run dev
+```
+```
+cd scripts && npm run anvil
+npm run deploy
+```
+```
+cd database && npm run init
+npm run start
+```
