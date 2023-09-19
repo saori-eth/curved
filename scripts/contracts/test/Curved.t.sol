@@ -14,7 +14,7 @@ contract CounterTest is Test {
         // creates a share as user 0
         vm.stopPrank();
         vm.startPrank(users[0]);
-        curved.createShare("ipfs://test");
+        curved.createShare("ipfs://test", 4000);
         _;
     }
 
@@ -46,8 +46,8 @@ contract CounterTest is Test {
         vm.stopPrank();
         vm.startPrank(users[0]);
         uint256 currentId = curved.currentId();
-        curved.createShare("ipfs://test");
-        (address _owner, uint256 _totalSupply, string memory _uri) = curved
+        curved.createShare("ipfs://test", 4000);
+        (address _owner, uint256 _totalSupply, string memory _uri,) = curved
             .shareInfo(currentId);
         assertEq(_owner, users[0]);
         assertEq(_totalSupply, 1);

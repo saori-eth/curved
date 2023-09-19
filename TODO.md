@@ -18,7 +18,7 @@
 **Contracts**
 
 - [ ] onchain governance contract for platform fees and token
-- [ ] update main contract with dynamic price curve per Share
+- [x] update main contract with dynamic price curve per Share
 
 **Backburner**
 

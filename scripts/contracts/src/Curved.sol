@@ -5,7 +5,6 @@ import {Ownable} from "./Owner.sol";
 contract Curved is Ownable {
     address public protocolFeeDestination;
     uint256 public protocolFeePercent; // 0.05 eth = 5%
-    uint256 public curve = 4000;
     uint256 public currentId = 0;
 
     event ShareCreated(address indexed owner, uint256 indexed id);
@@ -24,6 +23,7 @@ contract Curved is Ownable {
         mapping(address => uint256) balances;
         uint256 totalSupply;
         string uri;
+        uint256 crv;
     }
 
     mapping(address => uint256[]) public userOwnedShares;
@@ -48,7 +48,8 @@ contract Curved is Ownable {
 
     function getPrice(
         uint256 supply,
-        uint256 amount
+        uint256 amount,
+        uint256 curve
     ) public view returns (uint256) {
         uint256 sum1 = supply == 0
             ? 0
@@ -62,11 +63,13 @@ contract Curved is Ownable {
         return (summation * 1 ether) / curve;
     }
 
-    function createShare(string calldata _uri) external {
+    function createShare(string calldata _uri, uint256 crv) external {
+        require(crv >= 4000 && crv <= 32000, 'crv too weird');
         shareInfo[currentId].owner = msg.sender;
         shareInfo[currentId].balances[msg.sender] = 1;
         shareInfo[currentId].totalSupply = 1;
         shareInfo[currentId].uri = _uri;
+        shareInfo[currentId].crv = crv;
         userOwnedShares[msg.sender].push(currentId);
         currentId++;
         emit ShareCreated(msg.sender, currentId - 1);
@@ -80,7 +83,7 @@ contract Curved is Ownable {
             supply > 0 || share.owner == msg.sender,
             "Only the shares subject can buy the first share"
         );
-        uint256 price = getPrice(supply, amount);
+        uint256 price = getPrice(supply, amount, share.crv);
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         require(msg.value >= price + protocolFee, "Insufficient payment");
         share.balances[msg.sender] = share.balances[msg.sender] + amount;
@@ -102,7 +105,7 @@ contract Curved is Ownable {
             share.totalSupply - amount > 0,
             "Cannot sell all shares, must leave at least one"
         );
-        uint256 owed = getPrice(supply - amount, amount);
+        uint256 owed = getPrice(supply - amount, amount, share.crv);
         uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         share.balances[msg.sender] = share.balances[msg.sender] - amount;
         share.totalSupply = supply - amount;
@@ -141,7 +144,7 @@ contract Curved is Ownable {
         uint256 amount
     ) public view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        return getPrice(shareInfo[id].totalSupply, amount);
+        return getPrice(shareInfo[id].totalSupply, amount, shareInfo[id].crv);
     }
 
     function getSellPrice(
@@ -149,7 +152,7 @@ contract Curved is Ownable {
         uint256 amount
     ) public view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        return getPrice(shareInfo[id].totalSupply - amount, amount);
+        return getPrice(shareInfo[id].totalSupply - amount, amount, shareInfo[id].crv);
     }
 
     function getBuyPriceAfterFee(
