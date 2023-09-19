@@ -30,6 +30,7 @@
 
 **Backend**
 
+- [ ] client for contract
 - [ ] event logging (Philbert)
   - [ ] user created content
   - [ ] user purchased content
