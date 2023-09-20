@@ -11,7 +11,6 @@ import {
   ledgerWallet,
   trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import * as React from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
@@ -75,20 +74,20 @@ interface Props {
 }
 
 export function Providers({ children }: Props) {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider
         chains={chains}
         appInfo={demoAppInfo}
         theme={darkTheme({
-          borderRadius: "small",
-          overlayBlur: "large",
+          accentColor: "white",
+          accentColorForeground: "black",
+          borderRadius: "medium",
+          overlayBlur: "small",
         })}
-        modalSize="compact"
+        modalSize="wide"
       >
-        {mounted && children}
+        {children}
       </RainbowKitProvider>
     </WagmiConfig>
   );

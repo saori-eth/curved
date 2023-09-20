@@ -18,7 +18,7 @@ export function PostCard({
   price,
 }: Props) {
   return (
-    <div className="group relative w-full max-w-sm select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition hover:cursor-pointer hover:border-slate-400 hover:bg-slate-700 hover:shadow-lg">
+    <div className="group relative w-full max-w-sm select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition hover:cursor-pointer hover:border-neutral-400 hover:bg-neutral-700 hover:shadow-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
@@ -32,12 +32,12 @@ export function PostCard({
           <span className="text-sm">{author}</span>
         </div>
 
-        <div className="text-sm text-slate-400">{price} ETH</div>
+        <div className="text-sm text-neutral-400">{price} ETH</div>
       </div>
 
       <h2 className="text-xl font-semibold">{title}</h2>
 
-      <div className="relative aspect-square w-full rounded-lg bg-slate-900">
+      <div className="relative aspect-square w-full rounded-lg bg-neutral-900">
         <Image
           src={image}
           alt={`${title} image`}
