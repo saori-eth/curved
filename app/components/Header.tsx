@@ -2,10 +2,10 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
 
-export const Header = () => {
+export function Header() {
   return (
-    <div className="flex justify-between p-3 fixed top-0 left-0 right-0 z-10 select-none bg-gradient-to-b from-white/20 to-white/5 shadow">
-      <Link href="/" className="flex items-center cursor-pointer dr">
+    <div className="fixed inset-x-0 top-0 z-10 flex select-none justify-between bg-gradient-to-b from-slate-500/90 to-slate-600/90 p-3 shadow backdrop-blur-sm">
+      <Link href="/" className="flex cursor-pointer items-center">
         <Image
           src="/logo.svg"
           alt="Curved Logo"
@@ -19,4 +19,4 @@ export const Header = () => {
       <ConnectButton accountStatus="address" showBalance={false} />
     </div>
   );
-};
+}

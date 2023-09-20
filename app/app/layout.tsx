@@ -1,12 +1,14 @@
 import "./globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-import { Providers } from "./Providers";
-import { Header } from "../components/Header";
+
 import { Gemunu_Libre } from "next/font/google";
 
+import { Header } from "../components/Header";
+import { Providers } from "./Providers";
+
 const font = Gemunu_Libre({
-  subsets: ["latin"],
   display: "swap",
+  subsets: ["latin"],
 });
 
 interface Props {

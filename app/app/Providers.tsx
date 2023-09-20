@@ -1,17 +1,17 @@
 "use client";
 
-import * as React from "react";
 import {
-  RainbowKitProvider,
-  getDefaultWallets,
   connectorsForWallets,
   darkTheme,
+  getDefaultWallets,
+  RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import {
   argentWallet,
-  trustWallet,
   ledgerWallet,
+  trustWallet,
 } from "@rainbow-me/rainbowkit/wallets";
+import * as React from "react";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
@@ -19,12 +19,12 @@ import { publicProvider } from "wagmi/providers/public";
 const localhost = {
   id: 9_999,
   name: "Localhost",
-  network: "localhost",
   nativeCurrency: {
     decimals: 18,
     name: "Ether",
     symbol: "ETH",
   },
+  network: "localhost",
   rpcUrls: {
     default: { http: ["http://127.0.0.1:8545"] },
     public: { http: ["http://127.0.0.1:8545"] },
@@ -43,8 +43,8 @@ const projectId = "e8f82c27482f4422f45df38f1e3c9ddc";
 
 const { wallets } = getDefaultWallets({
   appName: "RainbowKit demo",
-  projectId,
   chains,
+  projectId,
 });
 
 const demoAppInfo = {
@@ -56,9 +56,9 @@ const connectors = connectorsForWallets([
   {
     groupName: "Other",
     wallets: [
-      argentWallet({ projectId, chains }),
-      trustWallet({ projectId, chains }),
-      ledgerWallet({ projectId, chains }),
+      argentWallet({ chains, projectId }),
+      trustWallet({ chains, projectId }),
+      ledgerWallet({ chains, projectId }),
     ],
   },
 ]);
@@ -83,8 +83,8 @@ export function Providers({ children }: Props) {
         chains={chains}
         appInfo={demoAppInfo}
         theme={darkTheme({
-          overlayBlur: "large",
           borderRadius: "small",
+          overlayBlur: "large",
         })}
         modalSize="compact"
       >

@@ -3,9 +3,9 @@ const devUrl = "http://localhost:3001";
 const prodUrl = "";
 
 const endpoints = {
-  users: "/users",
-  content: "/content",
   auth: "/auth",
+  content: "/content",
+  users: "/users",
 };
 
 export class API {
@@ -27,11 +27,11 @@ export class API {
 
   async post(endpoint, body) {
     const response = await fetch(this.url + endpoint, {
-      method: "POST",
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      method: "POST",
     });
     return await response.json();
   }

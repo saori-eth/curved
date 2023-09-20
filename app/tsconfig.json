@@ -1,12 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "composite": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true,
     "inlineSources": false,
     "isolatedModules": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -28,9 +26,10 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "incremental": true
   },
   "display": "Default",
-  "exclude": ["node_modules", "build", ".next"],
+  "exclude": ["node_modules", ".next"],
   "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"]
 }
