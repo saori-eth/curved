@@ -26,15 +26,11 @@ app.get("/content", async (req, res) => {
     return res.status(400).send("Invalid query.");
   }
   let condition = "1=1"; // Default condition that's always true
-  if (req.query.id) {
-    condition += ` AND id = ${req.query.id}`;
-  } else {
-    if (req.query.shareId) {
-      condition += ` AND shareId = "${req.query.shareId}"`;
-    }
-    if (req.query.owner) {
-      condition += ` AND owner = "${req.query.owner}"`;
-    }
+  if (req.query.shareId) {
+    condition += ` AND shareId = "${req.query.shareId}"`;
+  }
+  if (req.query.owner) {
+    condition += ` AND owner = "${req.query.owner}"`;
   }
 
   try {
@@ -61,15 +57,12 @@ app.get("/users", async (req, res) => {
   }
 
   let condition = "1=1"; // Default condition that's always true
-  if (req.query.id) {
-    condition += ` AND id = ${req.query.id}`;
-  } else {
-    if (req.query.username) {
-      condition += ` AND username = "${req.query.username}"`;
-    }
-    if (req.query.address) {
-      condition += ` AND address = "${req.query.address}"`;
-    }
+
+  if (req.query.username) {
+    condition += ` AND username = "${req.query.username}"`;
+  }
+  if (req.query.address) {
+    condition += ` AND address = "${req.query.address}"`;
   }
 
   try {
@@ -85,54 +78,15 @@ app.get("/users", async (req, res) => {
 });
 
 app.get("/trades", async (req, res) => {
-  const validKeys = ["side", "trader", "owner", "amount", "price", "supply"];
   if (Object.keys(req.query).length === 0) {
     const trades = await db.fetchAll("trades");
     res.send(trades);
     return;
   }
-  if (!Object.keys(req.query).every((key) => validKeys.includes(key))) {
-    return res.status(400).send("Invalid query.");
-  }
-
-  let condition = "1=1"; // Default condition that's always true
-  if (req.query.id) {
-    condition += ` AND id = ${req.query.id}`;
-  } else {
-    if (req.query.side) {
-      condition += ` AND side = ${req.query.side}`;
-    }
-    if (req.query.trader) {
-      condition += ` AND trader = "${req.query.trader}"`;
-    }
-    if (req.query.owner) {
-      condition += ` AND owner = "${req.query.owner}"`;
-    }
-    if (req.query.amount) {
-      condition += ` AND amount = ${req.query.amount}`;
-    }
-    if (req.query.price) {
-      condition += ` AND price = "${req.query.price}"`;
-    }
-    if (req.query.supply) {
-      condition += ` AND supply = ${req.query.supply}`;
-    }
-  }
-
-  try {
-    const trades = await db.fetchOne("trades", condition);
-    if (trades) {
-      res.send(trades);
-    } else {
-      res.status(404).send("Trade not found.");
-    }
-  } catch (err) {
-    res.status(500).send("Internal server error.");
-  }
 });
 
 app.get("/balances", async (req, res) => {
-  const validKeys = ["address"];
+  const validKeys = ["trader"];
   if (Object.keys(req.query).length === 0) {
     const balances = await db.getAllUserBalances();
     res.send(balances);
@@ -142,7 +96,7 @@ app.get("/balances", async (req, res) => {
   }
 
   try {
-    const balances = await db.getUserBalances(req.query.address);
+    const balances = await db.getUserBalances(req.query.trader);
     if (balances) {
       res.send(balances);
     } else {

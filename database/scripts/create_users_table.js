@@ -1,15 +1,19 @@
 const { DB } = require("../DB");
 const db = new DB();
 
+function formatDateToMySQLDateTime(date) {
+  return date.toISOString().slice(0, 19).replace("T", " ");
+}
+
 (async () => {
   await db.createTable(
     "users",
     `
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL,
-      address TEXT NOT NULL,
-      createdAt TEXT NOT NULL,
-      updatedAt TEXT NOT NULL,
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      username VARCHAR(255) NOT NULL,
+      address VARCHAR(255) NOT NULL UNIQUE,
+      createdAt DATETIME NOT NULL,
+      updatedAt DATETIME NOT NULL,
       avatar TEXT NOT NULL
     `
   );
@@ -17,10 +21,12 @@ const db = new DB();
   await db.insert("users", {
     username: "admin",
     address: "0x00000",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: formatDateToMySQLDateTime(new Date()),
+    updatedAt: formatDateToMySQLDateTime(new Date()),
     avatar: "https://i.imgur.com/3GvwN8w.png",
   });
 
-  await db.fetchAll("users").then((rows) => console.log(rows));
+  const rows = await db.fetchAll("users");
+  console.log(rows);
+  db.close();
 })();
