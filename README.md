@@ -12,12 +12,11 @@
 - client (app)
   - next.js app router
   - rainbowkit, wagmi, viem
+  - planetscale mysql2 cloud db
+  - s3 content bucket via cloudflare r2
 - scripts (web3)
   - contracts (forge)
   - ethers.js scripting
-- database
-  - sqlite3
-  - express http for db operations
   - express ws for live feed of images
 ```
 
