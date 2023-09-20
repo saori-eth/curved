@@ -82,7 +82,10 @@ export function Providers({ children }: Props) {
       <RainbowKitProvider
         chains={chains}
         appInfo={demoAppInfo}
-        theme={darkTheme({ overlayBlur: "large", borderRadius: "small" })}
+        theme={darkTheme({
+          overlayBlur: "large",
+          borderRadius: "small",
+        })}
         modalSize="compact"
       >
         {mounted && children}

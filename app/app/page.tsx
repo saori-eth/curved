@@ -11,12 +11,10 @@ const handleDrop = (file: File) => {
   reader.readAsDataURL(file);
 };
 
-const Page = () => {
+export default function Page() {
   return (
     <Dropzone onDrop={handleDrop}>
       <PostCardFeed />
     </Dropzone>
   );
-};
-
-export default Page;
+}
