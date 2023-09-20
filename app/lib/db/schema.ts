@@ -1,7 +1,5 @@
-import { relations } from "drizzle-orm";
 import {
   bigint,
-  char,
   mysqlTable,
   serial,
   timestamp,

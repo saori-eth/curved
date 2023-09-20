@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 const {
   CLOUDFLARE_ACCOUNT_ID,
   CLOUDFLARE_ACCESS_KEY_ID,
@@ -10,19 +10,19 @@ const accessKeyId: string = CLOUDFLARE_ACCESS_KEY_ID || "";
 const secretAccessKey: string = CLOUDFLARE_SECRET_ACCESS_KEY || "";
 
 const s3 = new S3Client({
-  region: "auto",
-  endpoint,
   credentials: {
     accessKeyId,
     secretAccessKey,
   },
+  endpoint,
+  region: "auto",
 });
 
 export async function GET() {
   const command = new PutObjectCommand({
+    Body: "Hello World!",
     Bucket: "content",
     Key: "hello.txt",
-    Body: "Hello World!",
   });
 
   try {
