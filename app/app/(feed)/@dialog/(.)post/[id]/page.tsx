@@ -1,11 +1,21 @@
+import { notFound } from "next/navigation";
+
+import { PostPage } from "@/app/post/[id]/PostPage";
+import { fetchPost } from "@/lib/fetchPost";
+
 interface Props {
   params: { id: string };
 }
 
-export default function Post({ params }: Props) {
+export default async function Post({ params }: Props) {
+  const post = await fetchPost(params.id);
+  if (!post) {
+    notFound();
+  }
+
   return (
     <div className="h-full w-full max-w-6xl rounded-2xl bg-neutral-800 p-8 shadow-xl">
-      <div>Dialog {params.id}</div>
+      <PostPage post={post} />;
     </div>
   );
 }

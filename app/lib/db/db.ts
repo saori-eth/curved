@@ -1,9 +1,13 @@
 import { connect } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 
+import * as schema from "./schema";
+
 const { MODE, DEV_DATABASE_URL, DATABASE_URL } = process.env;
 
 const dbUrl = MODE === "dev" ? DEV_DATABASE_URL : DATABASE_URL;
+
+console.log("mode", MODE, "dbUrl", dbUrl);
 
 const secureUrl = dbUrl?.replace(
   "?sslaccept=strict",
@@ -11,4 +15,4 @@ const secureUrl = dbUrl?.replace(
 );
 
 export const planetscaleConnection = connect({ url: secureUrl });
-export const db = drizzle(planetscaleConnection);
+export const db = drizzle(planetscaleConnection, { schema });

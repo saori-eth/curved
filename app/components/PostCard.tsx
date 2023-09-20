@@ -1,19 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Post } from "@/lib/fetchPost";
+
 interface Props {
-  id: string;
-  avatar: string;
-  author: string;
-  title: string;
-  image: string;
-  price: number;
+  post: Post;
 }
 
-export function PostCard({ id, avatar, author, title, image, price }: Props) {
+export function PostCard({ post }: Props) {
+  const avatar = "";
+  const author = "Saori";
+  const price = "0.0156";
+
   return (
     <Link
-      href={`/post/${id}`}
+      href={`/post/${post.shareId}`}
       className="group block w-full select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition hover:cursor-pointer hover:border-neutral-400 hover:bg-neutral-700 hover:shadow-lg"
     >
       <div className="flex items-center justify-between">
@@ -32,12 +33,12 @@ export function PostCard({ id, avatar, author, title, image, price }: Props) {
         <div className="text-sm text-neutral-400">{price} ETH</div>
       </div>
 
-      <h2 className="text-xl font-semibold">{title}</h2>
+      <h2 className="text-xl font-semibold">{post.title}</h2>
 
       <div className="relative aspect-square w-full rounded-lg bg-neutral-900">
         <Image
-          src={image}
-          alt={`${title} image`}
+          src={post.url}
+          alt={`${post.title} image`}
           fill
           draggable={false}
           className="rounded-lg"

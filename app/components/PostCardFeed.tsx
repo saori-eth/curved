@@ -1,4 +1,4 @@
-"use client";
+import { db } from "@/lib/db/db";
 
 import { PostCard } from "./PostCard";
 
@@ -27,12 +27,17 @@ for (let i = 0; i < 6; i++) {
   });
 }
 
-export function PostCardFeed() {
+export async function PostCardFeed() {
+  const data = await db.query.content.findMany({
+    limit: 10,
+    orderBy: (row, { desc }) => [desc(row.createdAt)],
+  });
+
   return (
     <div className="no-scrollbar flex w-full justify-center overflow-y-auto pt-4">
       <div className="w-full max-w-sm space-y-4">
-        {mockPost.map((post) => (
-          <PostCard key={post.id} {...post} />
+        {data.map((post) => (
+          <PostCard key={post.id} post={post} />
         ))}
       </div>
     </div>

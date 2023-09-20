@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    },
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
