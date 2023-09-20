@@ -17,6 +17,7 @@ const description = "Welcome to Curved!";
 
 export const metadata: Metadata = {
   description,
+  icons: "/logo.svg",
   openGraph: {
     description,
     title,
