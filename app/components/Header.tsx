@@ -5,7 +5,7 @@ import Link from "next/link";
 export const Header = () => {
   return (
     <div className="flex justify-between p-3 fixed top-0 left-0 right-0 z-10 select-none bg-gradient-to-b from-white/20 to-white/5 shadow">
-      <Link href="/" className="flex items-center cursor-pointer">
+      <Link href="/" className="flex items-center cursor-pointer dr">
         <Image
           src="/logo.svg"
           alt="Curved Logo"

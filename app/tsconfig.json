@@ -9,11 +9,7 @@
     "incremental": true,
     "inlineSources": false,
     "isolatedModules": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
     "moduleResolution": "node",
     "noUncheckedIndexedAccess": true,
@@ -35,15 +31,6 @@
     ]
   },
   "display": "Default",
-  "exclude": [
-    "node_modules",
-    "build",
-    ".next"
-  ],
-  "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", "build", ".next"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"]
 }

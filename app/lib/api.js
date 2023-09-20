@@ -18,7 +18,7 @@ export class API {
     const url = new URL(this.url + endpoint);
     if (params) {
       Object.keys(params).forEach((key) =>
-        url.searchParams.append(key, params[key])
+        url.searchParams.append(key, params[key]),
       );
     }
     const response = await fetch(url);
