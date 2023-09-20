@@ -1,6 +1,9 @@
+"use client";
+
 import { PostCard } from "./PostCard";
 
 type Post = {
+  id: string;
   title: string;
   description: string;
   image: string;
@@ -17,6 +20,7 @@ for (let i = 0; i < 6; i++) {
     avatar:
       "https://pbs.twimg.com/profile_images/1699999020679139328/8pur40mN_400x400.jpg",
     description: "This is a sample description for the first card.",
+    id: i.toString(),
     image: "https://i.imgur.com/6T3pNMB.jpeg",
     price: 0.0156,
     title: "Sample Title 1",
@@ -25,10 +29,12 @@ for (let i = 0; i < 6; i++) {
 
 export function PostCardFeed() {
   return (
-    <div className="no-scrollbar flex h-screen flex-col items-center space-y-6 overflow-y-scroll pt-20">
-      {mockPost.map((post, i) => (
-        <PostCard key={`${post.title}${i}`} {...post} />
-      ))}
+    <div className="no-scrollbar flex w-full justify-center overflow-y-auto pt-4">
+      <div className="w-full max-w-sm space-y-4">
+        {mockPost.map((post) => (
+          <PostCard key={post.id} {...post} />
+        ))}
+      </div>
     </div>
   );
 }

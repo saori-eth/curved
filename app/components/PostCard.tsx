@@ -1,24 +1,21 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
+  id: string;
   avatar: string;
   author: string;
   title: string;
-  description: string;
   image: string;
   price: number;
 }
 
-export function PostCard({
-  avatar,
-  author,
-  title,
-  description,
-  image,
-  price,
-}: Props) {
+export function PostCard({ id, avatar, author, title, image, price }: Props) {
   return (
-    <div className="group relative w-full max-w-sm select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition hover:cursor-pointer hover:border-neutral-400 hover:bg-neutral-700 hover:shadow-lg">
+    <Link
+      href={`/post/${id}`}
+      className="group block w-full select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition hover:cursor-pointer hover:border-neutral-400 hover:bg-neutral-700 hover:shadow-lg"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
@@ -46,6 +43,6 @@ export function PostCard({
           className="rounded-lg"
         />
       </div>
-    </div>
+    </Link>
   );
 }
