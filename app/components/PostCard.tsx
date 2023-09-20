@@ -6,7 +6,7 @@ interface Props {
   title: string;
   description: string;
   image: string;
-  buttons: string[];
+  price: number;
 }
 
 export function PostCard({
@@ -15,42 +15,36 @@ export function PostCard({
   title,
   description,
   image,
-  buttons,
+  price,
 }: Props) {
   return (
-    <div className="relative my-4 w-96 rounded-lg border border-gray-300 bg-slate-700 p-4">
-      <div className="absolute left-0 top-0 flex select-none items-center space-x-2 p-3 pl-4">
-        <Image
-          src={avatar}
-          alt={`${author}'s Avatar`}
-          width={32}
-          height={32}
-          className="rounded-full"
-        />
-        <span className="text-sm text-white">{author}</span>
+    <div className="group relative w-full max-w-sm select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition hover:cursor-pointer hover:border-slate-400 hover:bg-slate-700 hover:shadow-lg">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Image
+            src={avatar}
+            alt={`${author}'s Avatar`}
+            width={32}
+            height={32}
+            draggable={false}
+            className="rounded-full"
+          />
+          <span className="text-sm">{author}</span>
+        </div>
+
+        <div className="text-sm text-slate-400">{price} ETH</div>
       </div>
 
-      <h2 className="mt-8 text-center text-xl text-white">{title}</h2>
+      <h2 className="text-xl font-semibold">{title}</h2>
 
-      <p className="my-4 text-center text-white">{description}</p>
-
-      <Image
-        src={image}
-        alt={`${title} image`}
-        width={640}
-        height={480}
-        className="h-auto w-full rounded-lg"
-      />
-
-      <div className="mt-4 flex select-none items-center justify-center space-x-12">
-        {buttons.map((btn) => (
-          <button
-            key={btn}
-            className="w-full rounded border border-white bg-white/10 py-2 text-white hover:bg-white/20"
-          >
-            {btn}
-          </button>
-        ))}
+      <div className="relative aspect-square w-full rounded-lg bg-slate-900">
+        <Image
+          src={image}
+          alt={`${title} image`}
+          fill
+          draggable={false}
+          className="rounded-lg"
+        />
       </div>
     </div>
   );

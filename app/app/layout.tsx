@@ -18,7 +18,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
-      <body className="bg-gradient-to-b from-slate-700 to-slate-800">
+      <body className="bg-gradient-to-b from-slate-800 to-slate-900 px-4 text-white">
         <Providers>
           <Header />
           {children}
