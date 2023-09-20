@@ -1,46 +1,40 @@
-const sqlite3 = require("sqlite3");
+const mysql = require("mysql2");
 const path = require("path");
-const dotenv = require("dotenv");
-dotenv.config();
-const { MODE } = process.env;
+require("dotenv").config();
+const { MODE, DEV_DATABASE_URL, DATABASE_URL } = process.env;
+
+const dbUrl = MODE === "dev" ? DEV_DATABASE_URL : DATABASE_URL;
 
 class DB {
   constructor() {
-    this.path =
-      MODE === "dev"
-        ? path.join(__dirname, "dev.sqlite3")
-        : path.join(__dirname, "prod.sqlite3");
-    this.db = new sqlite3.Database(this.path);
+    this.connection = mysql.createConnection(dbUrl);
   }
 
-  // Example: createTable('users', 'id INTEGER PRIMARY KEY, name TEXT, age INTEGER')
   createTable(table, schema) {
     return new Promise((resolve, reject) => {
-      this.db.run(`CREATE TABLE IF NOT EXISTS ${table}(${schema})`, (err) => {
-        if (err) reject(err);
-        resolve(true);
-      });
+      this.connection.query(
+        `CREATE TABLE IF NOT EXISTS ${table}(${schema})`,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results);
+        }
+      );
     });
   }
 
   insert(table, data) {
-    const columns = Object.keys(data).join(",");
-    // Use ? placeholders for values to prevent SQL injection
-    const placeholders = Object.keys(data)
-      .map(() => "?")
-      .join(",");
-    // Extract the actual values to be inserted
-    const values = Object.values(data);
     return new Promise((resolve, reject) => {
-      this.db.run(
+      const columns = Object.keys(data).join(",");
+      const placeholders = Object.keys(data)
+        .map(() => "?")
+        .join(",");
+      const values = Object.values(data);
+      this.connection.query(
         `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`,
-        values, // Binding the values to the placeholders
-        function (err) {
-          if (err) {
-            console.error(err); // Log only if there's an error
-            return reject(err);
-          }
-          resolve(this.lastID);
+        values,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results);
         }
       );
     });
@@ -48,119 +42,101 @@ class DB {
 
   fetchAll(table) {
     return new Promise((resolve, reject) => {
-      this.db.all(`SELECT * FROM ${table}`, (err, rows) => {
+      this.connection.query(`SELECT * FROM ${table}`, (err, results) => {
         if (err) reject(err);
-        resolve(rows);
+        else resolve(results);
       });
     });
   }
 
   fetchAllConditional(table, condition) {
     return new Promise((resolve, reject) => {
-      this.db.all(`SELECT * FROM ${table} WHERE ${condition}`, (err, rows) => {
-        if (err) reject(err);
-        resolve(rows);
-      });
-    });
-  }
-
-  // Example: fetchOne('users', 'name = "John"')
-  fetchOne(table, condition) {
-    return new Promise((resolve, reject) => {
-      this.db.get(`SELECT * FROM ${table} WHERE ${condition}`, (err, row) => {
-        if (err) reject(err);
-        resolve(row);
-      });
-    });
-  }
-
-  // Example: update('users', {name: 'Jane'}, 'id = 1')
-  update(table, data, condition) {
-    const setData = Object.keys(data)
-      .map((key) => `${key} = '${data[key]}'`)
-      .join(",");
-    return new Promise((resolve, reject) => {
-      this.db.run(
-        `UPDATE ${table} SET ${setData} WHERE ${condition}`,
-        function (err) {
+      this.connection.query(
+        `SELECT * FROM ${table} WHERE ${condition}`,
+        (err, results) => {
           if (err) reject(err);
-          resolve(this.changes);
+          else resolve(results);
         }
       );
     });
   }
 
-  // Example: delete('users', 'id = 1')
+  fetchOne(table, condition) {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `SELECT * FROM ${table} WHERE ${condition}`,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results[0]);
+        }
+      );
+    });
+  }
+
+  update(table, data, condition) {
+    return new Promise((resolve, reject) => {
+      const setData = Object.keys(data)
+        .map((key) => `${key} = ?`)
+        .join(",");
+      const values = Object.values(data);
+      this.connection.query(
+        `UPDATE ${table} SET ${setData} WHERE ${condition}`,
+        values,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results);
+        }
+      );
+    });
+  }
+
   delete(table, condition) {
     return new Promise((resolve, reject) => {
-      this.db.run(`DELETE FROM ${table} WHERE ${condition}`, function (err) {
-        if (err) reject(err);
-        resolve(this.changes);
-      });
+      this.connection.query(
+        `DELETE FROM ${table} WHERE ${condition}`,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results);
+        }
+      );
     });
   }
 
   listTables() {
     return new Promise((resolve, reject) => {
-      this.db.all(
-        "SELECT name FROM sqlite_master WHERE type='table'",
-        (err, rows) => {
-          if (err) reject(err);
-          resolve(rows);
-        }
-      );
-    });
-  }
-
-  listKeys(table) {
-    return new Promise((resolve, reject) => {
-      this.db.all(`PRAGMA table_info(${table})`, (err, rows) => {
+      this.connection.query("SHOW TABLES", (err, results) => {
         if (err) reject(err);
-        resolve(rows);
+        else resolve(results);
       });
     });
   }
 
   dropTable(table) {
     return new Promise((resolve, reject) => {
-      this.db.run(`DROP TABLE ${table}`, (err) => {
+      this.connection.query(`DROP TABLE ${table}`, (err, results) => {
         if (err) reject(err);
-        resolve(true);
+        else resolve(results);
       });
     });
   }
 
   close() {
-    return new Promise((resolve, reject) => {
-      this.db.close((err) => {
-        if (err) reject(err);
-        resolve(true);
-      });
-    });
+    this.connection.end();
   }
-
-  /****************************************
-   * Specialized methods
-   *****************************************/
 
   getUserBalances(address) {
     return new Promise((resolve, reject) => {
-      this.db.all(
+      this.connection.query(
         `SELECT
-          shareId,
-          SUM(CASE WHEN side = 0 THEN amount ELSE 0 END) - SUM(CASE WHEN side = 1 THEN amount ELSE 0 END) as balance
+        shareId,
+        SUM(CASE WHEN side = 0 THEN amount ELSE 0 END) - SUM(CASE WHEN side = 1 THEN amount ELSE 0 END) as balance
       FROM trades
       WHERE trader = ?
       GROUP BY shareId`,
         [address],
-        (err, rows) => {
-          if (err) {
-            reject(err);
-          } else {
-            // Filter out rows where balance is 0
-            const nonZeroBalances = rows.filter((row) => row.balance !== 0);
-            resolve(nonZeroBalances);
-          }
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results.filter((row) => row.balance !== "0"));
         }
       );
     });
@@ -168,22 +144,17 @@ class DB {
 
   getAllUserBalances() {
     return new Promise((resolve, reject) => {
-      this.db.all(
+      this.connection.query(
         `SELECT 
           trader, 
           shareId,
           SUM(CASE WHEN side = 0 THEN amount ELSE 0 END) - SUM(CASE WHEN side = 1 THEN amount ELSE 0 END) as balance
-      FROM trades 
-      GROUP BY trader, shareId
-      ORDER BY trader, shareId, balance`, // Order results by trader, then shareId, and finally balance
-        [],
-        (err, rows) => {
-          if (err) {
-            reject(err);
-          } else {
-            const nonZeroBalances = rows.filter((row) => row.balance !== 0);
-            resolve(nonZeroBalances);
-          }
+        FROM trades 
+        GROUP BY trader, shareId
+        ORDER BY trader, shareId, balance`,
+        (err, results) => {
+          if (err) reject(err);
+          else resolve(results.filter((row) => row.balance !== "0"));
         }
       );
     });
