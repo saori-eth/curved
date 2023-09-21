@@ -15,6 +15,7 @@ export async function createUser({
 }) {
   // Create user
 
+  console.log("doing auth.createUser thing");
   const user = await auth.createUser({
     attributes: {
       address,
@@ -27,6 +28,7 @@ export async function createUser({
   });
 
   // Create profile
+  console.log("doing db.insert thing");
   await db.insert(users).values({
     address: address,
   });
