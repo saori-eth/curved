@@ -30,11 +30,9 @@ export function CreatePost() {
 
   const disabled = !write || isError;
 
-  function createPost(e: React.FormEvent<HTMLFormElement>) {
+  function sendTx(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    if (!write) return;
-
+    if (disabled) return;
     write();
   }
 
@@ -42,7 +40,7 @@ export function CreatePost() {
     <div className="m-4 h-fit w-96 rounded-lg border border-neutral-400 p-4">
       <h3 className="text-center">New Post</h3>
 
-      <form onSubmit={createPost} className="space-y-2">
+      <form onSubmit={sendTx} className="space-y-2">
         <label className="block">
           <span className="text-neutral-400">Title</span>
           <input
