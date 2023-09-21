@@ -12,11 +12,11 @@ import { Chain, Config, configureChains, createConfig } from "wagmi";
 import { base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     ethereum: WindowProvider | undefined;
+//   }
+// }
 
 const localhost = {
   id: 9_999,

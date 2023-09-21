@@ -18,7 +18,6 @@ export async function createUser({
   const user = await auth.createUser({
     attributes: {
       address,
-      username: address,
     } as GlobalDatabaseUserAttributes,
     key: {
       password: null,
