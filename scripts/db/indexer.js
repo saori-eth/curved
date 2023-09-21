@@ -1,8 +1,8 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
-const { ethers } = require("ethers");
-const { DB } = require("./DB.js");
-const CurveABI = require("./abi/Curved.json");
+import { ethers } from "ethers";
+import { DB } from "./DB.js";
+import CurveABI from "./abi/Curved.json";
 const { MODE, ALCHEMY_WS, LOCAL_WS, LOCAL_CURVED_ADDRESS } = process.env;
 
 const wsUrl = MODE === "dev" ? LOCAL_WS : ALCHEMY_WS;

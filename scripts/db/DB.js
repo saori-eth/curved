@@ -1,11 +1,14 @@
-const mysql = require("mysql2");
-const path = require("path");
-require("dotenv").config();
+import mysql from "mysql2";
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 const { MODE, DEV_DATABASE_URL, DATABASE_URL } = process.env;
 
 const dbUrl = MODE === "dev" ? DEV_DATABASE_URL : DATABASE_URL;
 
-class DB {
+console.log("dbUrl", dbUrl);
+
+export class DB {
   constructor() {
     this.connection = mysql.createConnection(dbUrl);
   }
@@ -160,5 +163,3 @@ class DB {
     });
   }
 }
-
-module.exports = { DB };

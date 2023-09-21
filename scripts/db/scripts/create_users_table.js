@@ -1,4 +1,4 @@
-const { DB } = require("../DB");
+import { DB } from "../DB.js";
 const db = new DB();
 
 function formatDateToMySQLDateTime(date) {
