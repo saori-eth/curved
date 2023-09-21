@@ -7,8 +7,6 @@ const { MODE, DEV_DATABASE_URL, DATABASE_URL } = process.env;
 
 const dbUrl = MODE === "dev" ? DEV_DATABASE_URL : DATABASE_URL;
 
-console.log("mode", MODE, "dbUrl", dbUrl);
-
 const secureUrl = dbUrl?.replace(
   "?sslaccept=strict",
   `?ssl={"rejectUnauthorized":true}`,
