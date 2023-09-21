@@ -37,7 +37,7 @@ export function CreatePost() {
   }
 
   return (
-    <div className="m-4 h-fit w-96 rounded-lg border border-neutral-400 p-4">
+    <div className="mt-4 h-fit w-96 rounded-lg border border-neutral-400 p-4">
       <h3 className="text-center">New Post</h3>
 
       <form onSubmit={sendTx} className="space-y-2">
@@ -57,9 +57,8 @@ export function CreatePost() {
         <button
           disabled={disabled}
           type="submit"
-          className={`rounded bg-neutral-900 px-2 py-0.5 transition ${
-            disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
-          }`}
+          className={`rounded bg-neutral-900 px-2 py-0.5 transition ${disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
+            }`}
         >
           Submit
         </button>
