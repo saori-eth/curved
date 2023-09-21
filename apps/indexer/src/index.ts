@@ -19,7 +19,7 @@ if (!curveAddr) {
 }
 
 const provider = new ethers.providers.WebSocketProvider(wsUrl);
-const curve = new ethers.Contract(curveAddr, CurveABI as any, provider);
+const curve = new ethers.Contract(curveAddr, CurveABI.abi, provider);
 const db = new DB();
 
 curve.on("*", (event) => {
