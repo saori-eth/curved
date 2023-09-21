@@ -1,7 +1,7 @@
 import {
   bigint,
-  boolean,
   char,
+  index,
   mysqlTable,
   serial,
   timestamp,
@@ -16,6 +16,7 @@ import {
   ETH_ADDRESS_LENGTH,
   ETH_AUTH_ID_LENGTH,
   ETH_AUTH_NONCE_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
   MAX_USERNAME_LENGTH,
   USER_ID_LENGTH,
 } from "./constants";
@@ -24,17 +25,31 @@ export const content = mysqlTable(
   "content",
   {
     createdAt: timestamp("created_at").defaultNow(),
-    description: varchar("description", { length: 1000 }),
+    description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
     id: serial("id").primaryKey(),
     owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    pending: boolean("pending").notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
-    title: varchar("title", { length: 50 }),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-    url: varchar("url", { length: 1000 }).notNull(),
+    url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({
+    ownerIndex: index("owner").on(table.owner),
     shareIdIndex: uniqueIndex("shareId").on(table.shareId),
+  }),
+);
+
+export const pendingContent = mysqlTable(
+  "pending_content",
+  {
+    createdAt: timestamp("created_at").defaultNow(),
+    description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
+    id: serial("id").primaryKey(),
+    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+    url: varchar("url", { length: 255 }).notNull(),
+  },
+  (table) => ({
+    ownerUrlIndex: index("ownerUrl").on(table.owner, table.url),
   }),
 );
 

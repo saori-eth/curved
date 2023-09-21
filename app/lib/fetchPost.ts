@@ -4,8 +4,7 @@ import { db } from "./db";
 
 export type Post = {
   shareId: number;
-  title: string | null;
-  description: string | null;
+  description: string;
   owner: string;
   url: string;
 };
@@ -29,7 +28,6 @@ export const fetchPost = cache(
         columns: {
           description: true,
           owner: true,
-          title: true,
           url: true,
         },
         where: (row, { eq }) => eq(row.shareId, shareId),
@@ -40,10 +38,9 @@ export const fetchPost = cache(
       }
 
       return {
-        description: data.description,
+        description: data.description ?? "",
         owner: data.owner,
         shareId,
-        title: data.title,
         url: data.url,
       };
     } catch (error) {

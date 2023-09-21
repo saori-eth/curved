@@ -14,7 +14,6 @@ enum PRICE_CURVE {
 }
 
 export function CreatePost() {
-  const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const [url] = useState("https://i.imgur.com/6T3pNMB.jpeg");
@@ -64,7 +63,6 @@ export function CreatePost() {
     startTransition(() => {
       publish({
         description: descriptionRef.current?.value || "",
-        title: titleRef.current?.value || "",
         url,
       });
     });
@@ -76,21 +74,13 @@ export function CreatePost() {
 
       <form onSubmit={sendTx} className="space-y-2">
         <label className="block">
-          <span className="text-neutral-400">Title</span>
-          <input
-            ref={titleRef}
-            disabled={disabled}
-            type="text"
-            className="w-full rounded border border-neutral-400 bg-neutral-900 px-2"
-          />
-        </label>
-
-        <label className="block">
           <span className="text-neutral-400">Description</span>
           <textarea
             ref={descriptionRef}
             disabled={disabled}
-            className="w-full rounded border border-neutral-400 bg-neutral-900 px-2"
+            className={`w-full rounded border border-neutral-400 bg-neutral-900 px-2 ${
+              disabled ? "opacity-50" : ""
+            }`}
           />
         </label>
 
