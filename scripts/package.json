@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "node dev/index.js",
-    "anvil": "cd contracts && anvil --block-time 1",
+    "anvil": "cd contracts && anvil --block-time 1 --chain-id 9999",
     "deploy": "bash contracts/deployment/curved.local.sh",
     "db": "node db/index.js",
     "test": "cd contracts && forge test -vvv",
