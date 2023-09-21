@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "sleep 5 && nodemon --watch src --ext ts --exec \"pnpm build && pnpm start\"",
+    "dev": "nodemon --watch src --ext ts --exec \"pnpm build && pnpm start\"",
     "lint": "cd ../.. && eslint --fix \"apps/indexer/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore",
     "start": "node --experimental-specifier-resolution=node ./dist/index.js"
   },
