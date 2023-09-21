@@ -1,6 +1,6 @@
 import { cache } from "react";
 
-import { db } from "./db/db";
+import { db } from "./db";
 
 export type Post = {
   shareId: number;

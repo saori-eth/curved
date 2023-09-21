@@ -5,19 +5,22 @@ import {
   timestamp,
   uniqueIndex,
   varchar,
+  char,
 } from "drizzle-orm/mysql-core";
+
+import { ETH_AUTH_ID_LENGTH, ETH_AUTH_NONCE_LENGTH } from "./constants";
 
 export const content = mysqlTable(
   "content",
   {
-    createdAt: timestamp("created_at").defaultNow(),
-    description: varchar("description", { length: 1000 }),
     id: serial("id").primaryKey(),
+    description: varchar("description", { length: 1000 }),
     owner: varchar("owner", { length: 12 }).notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
     title: varchar("title", { length: 50 }),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     url: varchar("url", { length: 1000 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
   },
   (table) => ({
     shareIdIndex: uniqueIndex("shareId").on(table.shareId),
@@ -27,8 +30,8 @@ export const content = mysqlTable(
 export const trades = mysqlTable(
   "trades",
   {
-    amount: bigint("amount", { mode: "number" }).notNull(),
     id: serial("id").primaryKey(),
+    amount: bigint("amount", { mode: "number" }).notNull(),
     owner: varchar("owner", { length: 12 }).notNull(),
     price: varchar("price", { length: 255 }).notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
@@ -44,14 +47,28 @@ export const trades = mysqlTable(
 export const users = mysqlTable(
   "users",
   {
-    address: varchar("address", { length: 255 }).notNull(),
-    avatar: varchar("avatar", { length: 1000 }).notNull(),
-    createdAt: timestamp("created_at").defaultNow(),
     id: serial("id").primaryKey(),
+    address: varchar("address", { length: 255 }).notNull(),
+    avatar: varchar("avatar", { length: 1000 }),
+    username: varchar("username", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-    username: varchar("username", { length: 255 }).notNull(),
   },
   (table) => ({
     addressIndex: uniqueIndex("address").on(table.address),
+  }),
+);
+
+export const ethereumSession = mysqlTable(
+  "auth_ethereum_session",
+  {
+    id: serial("id").primaryKey(),
+    nonce: char("nonce", { length: ETH_AUTH_NONCE_LENGTH }).notNull(),
+    publicId: char("public_id", { length: ETH_AUTH_ID_LENGTH }).notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+  },
+  (table) => ({
+    publicIdIndex: uniqueIndex("publicId").on(table.publicId),
   }),
 );
