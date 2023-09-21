@@ -1,7 +1,4 @@
-import { GlobalDatabaseUserAttributes } from "lucia";
-
-import { db } from "../db";
-import { users } from "../db/schema";
+import { nanoidLowercase } from "../db/nanoid";
 import { auth } from "./lucia";
 
 export async function createUser({
@@ -14,12 +11,13 @@ export async function createUser({
   address: string;
 }) {
   // Create user
-
   console.log("doing auth.createUser thing");
-  const user = await auth.createUser({
+  const data = await auth.createUser({
     attributes: {
       address,
-    } as GlobalDatabaseUserAttributes,
+      avatar: "",
+      username: nanoidLowercase(),
+    },
     key: {
       password: null,
       providerId,
@@ -27,11 +25,5 @@ export async function createUser({
     },
   });
 
-  // Create profile
-  console.log("doing db.insert thing");
-  await db.insert(users).values({
-    address: address,
-  });
-
-  return user;
+  return data;
 }

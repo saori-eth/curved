@@ -19,14 +19,16 @@ export function PostCard({ post }: Props) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Image
-            src={avatar}
-            alt={`${author}'s Avatar`}
-            width={32}
-            height={32}
-            draggable={false}
-            className="rounded-full"
-          />
+          {avatar && (
+            <Image
+              src={avatar}
+              alt={`${author}'s Avatar`}
+              width={32}
+              height={32}
+              draggable={false}
+              className="rounded-full"
+            />
+          )}
           <span className="text-sm">{author}</span>
         </div>
 
@@ -36,13 +38,15 @@ export function PostCard({ post }: Props) {
       <h2 className="text-xl font-semibold">{post.title}</h2>
 
       <div className="relative aspect-square w-full rounded-lg bg-neutral-900">
-        <Image
-          src={post.url}
-          alt={`${post.title} image`}
-          fill
-          draggable={false}
-          className="rounded-lg"
-        />
+        {post.url && (
+          <Image
+            src={post.url}
+            alt={`${post.title} image`}
+            fill
+            draggable={false}
+            className="rounded-lg"
+          />
+        )}
       </div>
     </Link>
   );

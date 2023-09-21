@@ -13,13 +13,9 @@ import { LoginResponse } from "./types";
  * User login
  */
 export async function POST(request: NextRequest) {
-  console.log("POST function called"); // Logs when function is called
-
   const parsedInput = AuthSchema.safeParse(await request.json());
-  console.log("Parsed Input: ", parsedInput); // Logs parsed input
 
   if (!parsedInput.success) {
-    console.log("Invalid input"); // Logs if the input is invalid
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
@@ -39,7 +35,6 @@ export async function POST(request: NextRequest) {
       result.data.address,
       null,
     );
-    console.log("Key: ", key); // Logs key
 
     user = await auth.getUser(key.userId);
     console.log("Existing user: ", user); // Logs existing user data

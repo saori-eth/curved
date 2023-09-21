@@ -1,5 +1,6 @@
 import "lucia/polyfill/node";
 
+import { planetscale } from "@lucia-auth/adapter-mysql";
 import { lucia } from "lucia";
 import { nextjs } from "lucia/middleware";
 
@@ -11,18 +12,13 @@ import {
 } from "../db/constants";
 import { SESSION_COOKIE_NAME } from "./constants";
 
-async function getPlanetscaleAdapter() {
-  const { planetscale } = await import("@lucia-auth/adapter-mysql");
-  return planetscale(planetscaleConnection, {
-    key: AUTH_KEY_TABLE_NAME,
-    session: AUTH_SESSION_TABLE_NAME,
-    user: AUTH_USER_TABLE_NAME,
-  });
-}
+const adapter = planetscale(planetscaleConnection, {
+  key: AUTH_KEY_TABLE_NAME,
+  session: AUTH_SESSION_TABLE_NAME,
+  user: AUTH_USER_TABLE_NAME,
+});
 
 export const luciaEnv = process.env.NODE_ENV === "development" ? "DEV" : "PROD";
-
-const adapter = await getPlanetscaleAdapter();
 
 export const auth = lucia({
   adapter,
@@ -30,7 +26,7 @@ export const auth = lucia({
   getUserAttributes: (data) => {
     return {
       address: data.address,
-      did: data.did,
+      avatar: data.avatar,
       username: data.username,
     };
   },

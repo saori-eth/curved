@@ -1,5 +1,6 @@
 import {
   bigint,
+  boolean,
   char,
   mysqlTable,
   serial,
@@ -26,6 +27,7 @@ export const content = mysqlTable(
     description: varchar("description", { length: 1000 }),
     id: serial("id").primaryKey(),
     owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    pending: boolean("pending").notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
     title: varchar("title", { length: 50 }),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
@@ -50,21 +52,6 @@ export const trades = mysqlTable(
   },
   (table) => ({
     shareIdIndex: uniqueIndex("shareId").on(table.shareId),
-  }),
-);
-
-export const users = mysqlTable(
-  "users",
-  {
-    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    avatar: varchar("avatar", { length: 1000 }),
-    createdAt: timestamp("created_at").defaultNow(),
-    id: serial("id").primaryKey(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-    username: varchar("username", { length: MAX_USERNAME_LENGTH }),
-  },
-  (table) => ({
-    addressIndex: uniqueIndex("address").on(table.address),
   }),
 );
 
@@ -99,9 +86,12 @@ export const user = mysqlTable(
   AUTH_USER_TABLE_NAME,
   {
     address: char("address", { length: 42 }).notNull(),
+    avatar: varchar("avatar", { length: 225 }),
     id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
+    username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
   },
   (table) => ({
     addressIndex: uniqueIndex("address").on(table.address),
+    usernameIndex: uniqueIndex("username").on(table.username),
   }),
 );

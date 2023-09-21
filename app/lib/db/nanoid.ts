@@ -7,20 +7,3 @@ export const nanoidLowercase = customAlphabet(
   "0123456789abcdefghijklmnopqrstuvwxyz",
   NANOID_SHORT_LENGTH,
 );
-
-/**
- * Generate a short nanoid that does not start with 0x
- */
-export const nanoidShort = (): string => {
-  const id = nanoidLowercase();
-
-  if (id.startsWith("0x")) {
-    return nanoidShort();
-  }
-
-  return id;
-};
-
-export function genName(prefix: string) {
-  return `${prefix}_${nanoidLowercase(6)}`;
-}
