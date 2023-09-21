@@ -127,6 +127,11 @@ export const CURVED_ABI = [
         name: "_uri",
         type: "string",
       },
+      {
+        internalType: "uint256",
+        name: "crv",
+        type: "uint256",
+      },
     ],
     name: "createShare",
     outputs: [],
@@ -136,19 +141,6 @@ export const CURVED_ABI = [
   {
     inputs: [],
     name: "currentId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "curve",
     outputs: [
       {
         internalType: "uint256",
@@ -235,6 +227,11 @@ export const CURVED_ABI = [
       {
         internalType: "uint256",
         name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "curve",
         type: "uint256",
       },
     ],
@@ -483,6 +480,11 @@ export const CURVED_ABI = [
         internalType: "string",
         name: "uri",
         type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "crv",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

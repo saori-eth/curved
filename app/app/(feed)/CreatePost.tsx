@@ -5,8 +5,15 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
 
+enum PRICE_CURVE {
+  STEEP = 4000,
+  NORMAL = 16000,
+  GENTLE = 32000,
+}
+
 export function CreatePost() {
   const [url] = useState("https://i.imgur.com/6T3pNMB.jpeg");
+  const [priceCurve] = useState(PRICE_CURVE.NORMAL);
 
   const { address } = useAccount();
 
@@ -14,7 +21,7 @@ export function CreatePost() {
     abi: CURVED_ABI,
     account: address,
     address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as any,
-    args: [url],
+    args: [url, BigInt(priceCurve)],
     enabled: Boolean(address),
     functionName: "createShare",
   });
@@ -22,8 +29,6 @@ export function CreatePost() {
   const { write } = useContractWrite(config);
 
   const disabled = !write || isError;
-
-  console.log({ isError, write: Boolean(write) });
 
   function createPost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
