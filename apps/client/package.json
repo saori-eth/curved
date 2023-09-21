@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsc --noEmit && next build",
     "start": "next start",
     "db:push": "drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
     "db:studio": "drizzle-kit studio",
