@@ -9,9 +9,6 @@ const nextConfig = {
   images: {
     domains: ["pbs.twimg.com", "i.imgur.com"],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 };
 
 export default nextConfig;
