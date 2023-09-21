@@ -1,0 +1,53 @@
+
+> client@0.0.0 build /home/kayh/Projects/curved/apps/client
+> next build
+
+   Creating an optimized production build...
+ ✓ Compiled successfully
+   Skipping linting
+   Checking validity of types...
+ ⚠ TypeScript project references are not fully supported. Attempting to build in incremental mode.
+   Collecting page data...
+   Generating static pages (0/8)...
+   Generating static pages (2/8)
+
+   Generating static pages (4/8)
+
+
+ ⚠ metadata.metadataBase is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+
+ ⚠ metadata.metadataBase is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+Error Error: write EPROTO C0B7AE19EE7F0000:error:0A000410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure:ssl/record/rec_layer_s3.c:1586:SSL alert number 40
+
+    at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:94:16)
+    at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17) {
+  errno: -71,
+  code: 'EPROTO',
+  syscall: 'write',
+  '$metadata': { attempts: 1, totalRetryDelay: 0 }
+}
+   Generating static pages (6/8)
+
+ ✓ Generating static pages (8/8)
+   Finalizing page optimization...
+
+Route (app)                              Size     First Load JS
+┌ λ /                                    1.77 kB         182 kB
+├ ○ /_not-found                          884 B          84.6 kB
+├ λ /(.)post/[id]                        396 B          84.1 kB
+├ λ /api/auth/login                      0 B                0 B
+├ λ /api/auth/logout                     0 B                0 B
+├ λ /api/auth/methods/ethereum/nonce     0 B                0 B
+├ λ /api/auth/status                     0 B                0 B
+├ ○ /api/upload                          0 B                0 B
+└ λ /post/[id]                           396 B          84.1 kB
++ First Load JS shared by all            83.7 kB
+  ├ chunks/1426-d2f7b19cc9a3f348.js      27.3 kB
+  ├ chunks/e3e51105-d4a4b97a1b06ffc7.js  53.6 kB
+  ├ chunks/main-app-83e97b244e1b4307.js  226 B
+  └ chunks/webpack-aa0651bdee544f8b.js   2.59 kB
+
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+

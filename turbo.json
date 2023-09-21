@@ -1,0 +1,41 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", "dist/**"]
+    },
+    "client#build": {
+      "outputs": [".next/**"],
+      "env": [
+        "MODE",
+        "NEXT_PUBLIC_CURVED_ADDRESS",
+        "NEXT_PUBLIC_ENABLE_TESTNETS",
+        "DATABASE_URL",
+        "DEV_DATABASE_URL",
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_ACCESS_KEY_ID",
+        "CLOUDFLARE_SECRET_ACCESS_KEY"
+      ]
+    },
+    "indexer#build": {
+      "env": [
+        "MODE",
+        "DEV_DATABASE_URL",
+        "DATABASE_URL",
+        "ALCHEMY_WS",
+        "LOCAL_WS",
+        "LOCAL_CURVED_ADDRESS"
+      ]
+    },
+    "start": {
+      "dependsOn": ["build", "^start"],
+      "outputs": ["build/**", "dist/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

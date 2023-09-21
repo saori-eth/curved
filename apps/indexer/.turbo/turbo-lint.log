@@ -1,0 +1,4 @@
+
+> indexer@1.0.0 lint /home/kayh/Projects/curved/apps/indexer
+> cd ../.. && eslint --fix "apps/indexer/**/*.{ts,tsx,cjs,mjs}" --ignore-path .gitignore
+

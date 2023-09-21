@@ -1,0 +1,4 @@
+
+> client@0.0.0 lint /home/kayh/Projects/curved/apps/client
+> cd ../.. && eslint --fix "apps/client/**/*.{ts,tsx,cjs,mjs}" --ignore-path .gitignore
+

@@ -1,0 +1,26 @@
+{
+  "name": "indexer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon --watch src --ext ts --exec \"pnpm build && pnpm start\"",
+    "lint": "cd ../.. && eslint --fix \"apps/indexer/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore",
+    "start": "node --experimental-specifier-resolution=node ./dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.1",
+    "mysql2": "^3.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.3",
+    "eslint-config-custom": "workspace:*",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.2.2"
+  }
+}

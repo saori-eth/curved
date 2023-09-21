@@ -25,13 +25,16 @@
 ```
 cd app && npm run dev
 ```
+
 ```
 cd scripts/contracts && forge install
 ```
+
 ```
 cd scripts && npm run anvil
 npm run deploy
 ```
+
 ```
 cd database && npm run init
 npm run start

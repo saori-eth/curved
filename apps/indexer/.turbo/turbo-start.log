@@ -1,0 +1,18 @@
+
+> indexer@1.0.0 start /home/kayh/Projects/curved/apps/indexer
+> node --experimental-specifier-resolution=node ./dist/index.js
+
+(node:3966373) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3966373) ExperimentalWarning: Import assertions are not a stable feature of the JavaScript language. Avoid relying on their current behavior and syntax as those might change in a future version of Node.js.
+dbUrl mysql://fmswrh9xcftyhzrvpet6:pscale_pw_vo3616eLplCFLU9SPhNDEP7uV6iZpDZdkxEEAOVs6mU@aws.connect.psdb.cloud/curved?ssl={"rejectUnauthorized":true}
+file:///home/kayh/Projects/curved/apps/indexer/dist/index.js:10
+    throw new Error("Websocket URL not found");
+          ^
+
+Error: Websocket URL not found
+    at file:///home/kayh/Projects/curved/apps/indexer/dist/index.js:10:11
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
+
+Node.js v18.16.1
+ ELIFECYCLE  Command failed with exit code 1.

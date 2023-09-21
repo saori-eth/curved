@@ -1,0 +1,17 @@
+{
+  "name": "solady",
+  "version": "0.0.123",
+  "description": "Optimized Solidity snippets.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vectorized/solady.git"
+  },
+  "license": "MIT",
+  "main": "js/solady.js",
+  "module": "js/solady.js",
+  "types": "js/solady.d.ts",
+  "files": [
+    "src/**/*.sol",
+    "js/**/*"
+  ]
+}
