@@ -1,6 +1,6 @@
 import { NANOID_LENGTH, NANOID_SHORT_LENGTH } from "./nanoid";
 
-export const AUTH_USER_TABLE_NAME = "auth_user";
+export const AUTH_USER_TABLE_NAME = "auth_ethereum_session";
 export const AUTH_KEY_TABLE_NAME = "auth_key";
 export const AUTH_SESSION_TABLE_NAME = "auth_session";
 

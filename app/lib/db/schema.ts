@@ -72,3 +72,16 @@ export const ethereumSession = mysqlTable(
     publicIdIndex: uniqueIndex("publicId").on(table.publicId),
   }),
 );
+
+export const key = mysqlTable("auth_key", {
+  hashedPassword: varchar("hashed_password", { length: 255 }),
+  id: varchar("id", { length: 255 }).primaryKey(),
+  address: varchar("address", { length: 255 }),
+});
+
+export const session = mysqlTable("auth_session", {
+  activeExpires: bigint("active_expires", { mode: "number" }).notNull(),
+  id: varchar("id", { length: 128 }).primaryKey(),
+  idleExpires: bigint("idle_expires", { mode: "number" }).notNull(),
+  address: varchar("address", { length: 255 }),
+});

@@ -1,11 +1,12 @@
 import "./globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 
 import { Metadata } from "next";
 import { Gemunu_Libre } from "next/font/google";
 
 import { Header } from "../components/Header";
-import { Providers } from "./Providers";
+
+import { lazy, Suspense } from "react";
+const ClientWrapper = lazy(() => import("./ClientWrapper"));
 
 const font = Gemunu_Libre({
   display: "swap",
@@ -40,10 +41,10 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
       <body className="bg-neutral-800 text-white">
-        <Providers>
+        <ClientWrapper>
           <Header />
           {children}
-        </Providers>
+        </ClientWrapper>
       </body>
     </html>
   );
