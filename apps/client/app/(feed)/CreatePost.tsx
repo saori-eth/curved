@@ -5,6 +5,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
 
+import { useAuth } from "../AuthProvider";
 import { publish } from "./publish";
 
 enum PRICE_CURVE {
@@ -20,6 +21,7 @@ export function CreatePost() {
   const [priceCurve] = useState(PRICE_CURVE.NORMAL);
 
   const { address } = useAccount();
+  const { status } = useAuth();
 
   const {
     config,
@@ -29,7 +31,7 @@ export function CreatePost() {
   } = usePrepareContractWrite({
     abi: CURVED_ABI,
     account: address,
-    address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as any,
+    address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}`,
     args: [url, BigInt(priceCurve)],
     enabled: Boolean(address),
     functionName: "createShare",
@@ -48,7 +50,7 @@ export function CreatePost() {
   const isLoading = isLoadingPrepare || isLoadingWrite || isPublishing;
   const isError = isErrorPrepare || isErrorWrite;
   const error = errorPrepare || errorWrite;
-  const disabled = isLoading || isError || !write;
+  const disabled = status !== "authenticated" || isLoading || isError || !write;
 
   function sendTx(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -87,7 +89,7 @@ export function CreatePost() {
         <button
           disabled={disabled}
           type="submit"
-          className={`rounded bg-neutral-900 px-2 py-0.5 transition ${
+          className={`rounded bg-neutral-900 px-2 py-0.5 ${
             disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
           }`}
         >
