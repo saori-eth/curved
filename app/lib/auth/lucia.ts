@@ -3,12 +3,12 @@ import "lucia/polyfill/node";
 import { lucia } from "lucia";
 import { nextjs } from "lucia/middleware";
 
+import { planetscaleConnection } from "../db/";
 import {
   AUTH_KEY_TABLE_NAME,
   AUTH_SESSION_TABLE_NAME,
   AUTH_USER_TABLE_NAME,
 } from "../db/constants";
-import { planetscaleConnection } from "../db/";
 import { SESSION_COOKIE_NAME } from "./constants";
 
 async function getPlanetscaleAdapter() {

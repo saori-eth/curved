@@ -1,8 +1,8 @@
 import { GlobalDatabaseUserAttributes } from "lucia";
 
-import { auth } from "./lucia";
 import { db } from "../db";
 import { users } from "../db/schema";
+import { auth } from "./lucia";
 
 export async function createUser({
   providerId,

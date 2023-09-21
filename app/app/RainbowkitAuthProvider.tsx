@@ -5,10 +5,10 @@ import {
 import { ReactNode, useMemo } from "react";
 import { SiweMessage } from "siwe";
 
-import { useAuth } from "./AuthProvider";
 import { AuthMethod } from "@/lib/auth/types";
 
 import { getNonce } from "./api/auth/methods/ethereum/nonce/helper";
+import { useAuth } from "./AuthProvider";
 
 type UnconfigurableMessageOptions = {
   address: string;

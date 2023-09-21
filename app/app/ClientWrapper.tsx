@@ -6,9 +6,8 @@ import { lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 
 import AuthProvider from "./AuthProvider";
-import { chains, config } from "./wagmi";
-
 import { RainbowKitAuthProvider } from "./RainbowkitAuthProvider";
+import { chains, config } from "./wagmi";
 
 const theme = lightTheme({
   accentColor: "#000000",

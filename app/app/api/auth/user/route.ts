@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
   if (!found) return new Response(null, { status: 404 });
 
   const json: any = {
-    username: found.username ?? undefined,
     avatar: found.avatar ?? undefined,
+    username: found.username ?? undefined,
   };
 
   return NextResponse.json(json);
@@ -47,8 +47,8 @@ export async function PATCH(request: NextRequest) {
     await tx
       .insert(users)
       .values({
-        avatar,
         address: session.user.address,
+        avatar,
       })
       .onDuplicateKeyUpdate({
         set: {

@@ -2,10 +2,9 @@ import "./globals.css";
 
 import { Metadata } from "next";
 import { Gemunu_Libre } from "next/font/google";
+import { lazy } from "react";
 
 import { Header } from "../components/Header";
-
-import { lazy, Suspense } from "react";
 const ClientWrapper = lazy(() => import("./ClientWrapper"));
 
 const font = Gemunu_Libre({
