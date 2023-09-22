@@ -1,7 +1,6 @@
 "use server";
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
@@ -57,6 +56,8 @@ export async function publish(_data: PublishData) {
       Bucket: S3_BUCKET,
       Key: `/posts/${post.publicId}`,
     });
+
+    const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");
 
     const uploadUrl = await getSignedUrl(s3, command, {
       expiresIn: 300,
