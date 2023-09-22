@@ -7,7 +7,7 @@
     "anvil": "cd contracts && anvil --block-time 1 --chain-id 9999",
     "build": "cd contracts && forge build",
     "db": "node db/index.js",
-    "deploy": "bash contracts/deployment/curved.local.sh",
+    "deploy": "cd contracts && bash deployment/curved.local.sh",
     "dev": "conc \"pnpm run anvil --silent\" \"pnpm run deploy\"",
     "mock-events": "node dev/mockEvents.js",
     "price-chart": "node data/priceCurve.js",
