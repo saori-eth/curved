@@ -4,9 +4,10 @@ import Link from "next/link";
 interface Props {
   shareId: number;
   url: string;
+  description: string;
 }
 
-export function PostCard({ url, shareId }: Props) {
+export function PostCard({ url, shareId, description }: Props) {
   const avatar = "";
   const author = "Saori";
   const price = "0.0156";
@@ -45,6 +46,8 @@ export function PostCard({ url, shareId }: Props) {
           />
         )}
       </div>
+
+      <h3 className="text-ellipsis text-sm">{description}</h3>
     </Link>
   );
 }

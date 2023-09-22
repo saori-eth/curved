@@ -5,6 +5,7 @@ import { PostCard } from "./PostCard";
 export async function PostCardFeed() {
   const data = await db.query.content.findMany({
     columns: {
+      description: true,
       shareId: true,
       url: true,
     },
@@ -16,7 +17,12 @@ export async function PostCardFeed() {
     <div className="no-scrollbar flex w-full justify-center overflow-y-auto pt-4">
       <div className="w-full max-w-sm space-y-4">
         {data.map((post) => (
-          <PostCard key={post.shareId} shareId={post.shareId} url={post.url} />
+          <PostCard
+            key={post.shareId}
+            shareId={post.shareId}
+            url={post.url}
+            description={post.description ?? ""}
+          />
         ))}
       </div>
     </div>

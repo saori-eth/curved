@@ -67,6 +67,10 @@ export function CreatePost() {
         description: descriptionRef.current?.value || "",
         url,
       });
+
+      if (descriptionRef.current) {
+        descriptionRef.current.value = "";
+      }
     });
   }, [isSuccessWrite, url]);
 

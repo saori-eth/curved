@@ -5,6 +5,10 @@ const {
   CLOUDFLARE_SECRET_ACCESS_KEY,
 } = process.env;
 
+if (!CLOUDFLARE_ACCOUNT_ID) {
+  console.warn("Missing CLOUDFLARE_ACCOUNT_ID");
+}
+
 const endpoint: string = `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`;
 const accessKeyId: string = CLOUDFLARE_ACCESS_KEY_ID || "";
 const secretAccessKey: string = CLOUDFLARE_SECRET_ACCESS_KEY || "";
