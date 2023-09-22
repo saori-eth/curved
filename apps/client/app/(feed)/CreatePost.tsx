@@ -1,6 +1,8 @@
 "use client";
 
+import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { RiImageAddFill } from "react-icons/ri";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
@@ -74,34 +76,45 @@ export function CreatePost() {
     });
   }, [isSuccessWrite, url]);
 
+  if (status !== "authenticated") return null;
+
   return (
-    <div className="mt-4 h-fit w-96 rounded-lg border border-neutral-400 p-4">
-      <h3 className="text-center">New Post</h3>
+    <Dialog.Root>
+      <Dialog.Trigger className="flex items-center space-x-3 rounded-2xl bg-neutral-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-neutral-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4">
+        <RiImageAddFill className="text-2xl" />
+        <span className="hidden text-xl font-bold sm:block">Upload</span>
+      </Dialog.Trigger>
 
-      <form onSubmit={sendTx} className="space-y-2">
-        <label className="block">
-          <span className="text-neutral-400">Description</span>
-          <textarea
-            ref={descriptionRef}
-            disabled={disabled}
-            className={`w-full rounded border border-neutral-400 bg-neutral-900 px-2 ${
-              disabled ? "opacity-50" : ""
-            }`}
-          />
-        </label>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-lg border border-neutral-400 bg-neutral-800 p-4">
+            <form onSubmit={sendTx} className="space-y-2">
+              <label className="block">
+                <span className="text-neutral-400">Description</span>
+                <textarea
+                  ref={descriptionRef}
+                  disabled={disabled}
+                  className={`w-full rounded border border-neutral-400 bg-neutral-900 px-2 ${
+                    disabled ? "opacity-50" : ""
+                  }`}
+                />
+              </label>
 
-        <button
-          disabled={disabled}
-          type="submit"
-          className={`rounded bg-neutral-900 px-2 py-0.5 ${
-            disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
-          }`}
-        >
-          Submit
-        </button>
+              <button
+                disabled={disabled}
+                type="submit"
+                className={`rounded bg-neutral-900 px-2 py-0.5 ${
+                  disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
+                }`}
+              >
+                Submit
+              </button>
 
-        {error && <p className="text-xs text-red-500">{error.message}</p>}
-      </form>
-    </div>
+              {error && <p className="text-xs text-red-500">{error.message}</p>}
+            </form>
+          </Dialog.Content>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

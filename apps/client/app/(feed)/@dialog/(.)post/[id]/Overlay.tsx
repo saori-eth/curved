@@ -21,7 +21,7 @@ export default function Overlay({ children }: Props) {
         onClick={(e) => {
           e.stopPropagation();
         }}
-        className="absolute inset-0 z-20 mx-4 my-auto flex h-2/3 items-center justify-center"
+        className="absolute inset-0 z-20 mx-2 my-auto flex h-2/3 items-center justify-center"
       >
         {children}
       </div>

@@ -1,11 +1,12 @@
 import "./globals.css";
 
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Gemunu_Libre } from "next/font/google";
-import { lazy } from "react";
 
-import { Header } from "../components/Header";
-const ClientWrapper = lazy(() => import("./ClientWrapper"));
+import { Header } from "./Header";
+
+const ClientWrapper = dynamic(() => import("./ClientWrapper"), { ssr: false });
 
 const font = Gemunu_Libre({
   display: "swap",

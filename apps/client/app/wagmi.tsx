@@ -43,8 +43,9 @@ export const {
   publicClient: any;
 } = configureChains(
   [
-    base,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [localhost] : []),
+    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+      ? [localhost]
+      : [base]),
   ],
   [publicProvider()],
 );

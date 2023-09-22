@@ -2,16 +2,16 @@
 
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 
 import AuthProvider from "./AuthProvider";
 import { RainbowKitAuthProvider } from "./RainbowkitAuthProvider";
 import { chains, config } from "./wagmi";
 
-const theme = lightTheme({
-  accentColor: "#000000",
-  accentColorForeground: "#ffffff",
+const theme = darkTheme({
+  accentColor: "#ffffff",
+  accentColorForeground: "#000000",
   borderRadius: "large",
   fontStack: "system",
   overlayBlur: "small",
