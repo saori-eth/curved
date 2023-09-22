@@ -1,15 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { fetchProfile } from "@/lib/fetchProfile";
+
+import Avatar from "./Avatar";
+
 interface Props {
   shareId: number;
   url: string;
+  owner: string;
   description: string;
 }
 
-export function PostCard({ url, shareId, description }: Props) {
-  const avatar = "";
-  const author = "Saori";
+export async function PostCard({ url, owner, shareId, description }: Props) {
+  const profile = await fetchProfile(owner);
+
   const price = "0.0156";
 
   return (
@@ -19,17 +24,14 @@ export function PostCard({ url, shareId, description }: Props) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          {avatar && (
-            <Image
-              src={avatar}
-              alt={`${author}'s Avatar`}
-              width={32}
-              height={32}
-              draggable={false}
-              className="rounded-full"
-            />
-          )}
-          <span className="text-sm">{author}</span>
+          <Avatar
+            src={profile?.avatar}
+            uniqueKey={profile?.username ?? owner}
+            size={32}
+          />
+          <span className="text-sm text-neutral-400">
+            {profile ? `@${profile.username}` : owner}
+          </span>
         </div>
 
         <div className="text-sm text-neutral-400">{price} ETH</div>
