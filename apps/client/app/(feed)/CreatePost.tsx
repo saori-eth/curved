@@ -97,16 +97,15 @@ export function CreatePost() {
           const { contentUrl, uploadUrl } = publishRes;
 
           // Upload image
-          const formData = new FormData();
-          formData.append("image", file);
+          const blob = new Blob([file], { type: file.type });
 
           const res = await fetch(uploadUrl, {
-            body: formData,
+            body: blob,
             headers: {
-              "Content-Type": "multipart/form-data",
+              "Content-Type": file.type,
               "x-amz-acl": "public-read",
             },
-            method: "POST",
+            method: "PUT",
           });
 
           if (!res.ok) {
@@ -125,7 +124,7 @@ export function CreatePost() {
     input.click();
   }
 
-  if (status !== "authenticated") return null;
+  if (status !== "authenticated" || !address) return null;
 
   return (
     <Dialog.Root
@@ -146,16 +145,19 @@ export function CreatePost() {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-neutral-800 p-8">
+          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-neutral-800 px-8 pb-8 pt-4 shadow-lg">
+            <h1 className="pb-4 text-center text-xl font-bold">Create Post</h1>
+
             <form onSubmit={submit} className="space-y-4">
               {file ? (
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${
+                    disabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
-                    }`}
+                  }`}
                   alt="Upload preview"
                 />
               ) : (
@@ -167,18 +169,20 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${disabled ? "opacity-50" : ""
-                  }`}
+                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${
+                  disabled ? "opacity-50" : ""
+                }`}
               />
 
               <div className="flex justify-end">
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-neutral-900 px-4 py-1 ${disabled
+                  className={`rounded-full bg-neutral-900 px-4 py-1 ${
+                    disabled
                       ? "opacity-50"
                       : "transition hover:bg-black active:opacity-90"
-                    }`}
+                  }`}
                 >
                   Submit
                 </button>

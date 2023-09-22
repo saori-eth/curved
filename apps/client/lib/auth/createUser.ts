@@ -11,12 +11,11 @@ export async function createUser({
   address: string;
 }) {
   // Create user
-  console.log("doing auth.createUser thing");
   const data = await auth.createUser({
     attributes: {
       address,
       avatar: "",
-      username: nanoidLowercase(),
+      username: nanoidLowercase(10),
     },
     key: {
       password: null,

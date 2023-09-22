@@ -8,7 +8,7 @@ import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
 import { pendingContent } from "@/lib/db/schema";
-import { s3, S3_ENDPOINT } from "@/lib/s3";
+import { s3, S3_BUCKET, S3_ENDPOINT } from "@/lib/s3";
 
 const PublishSchema = z.object({
   description: z.string(),
@@ -54,8 +54,8 @@ export async function publish(_data: PublishData) {
 
     const command = new PutObjectCommand({
       ACL: "public-read",
-      Bucket: "content",
-      Key: `posts/${post.publicId}`,
+      Bucket: S3_BUCKET,
+      Key: `${S3_BUCKET}/posts/${post.publicId}`,
     });
 
     const uploadUrl = await getSignedUrl(s3, command, {
@@ -63,8 +63,6 @@ export async function publish(_data: PublishData) {
     });
 
     const contentUrl = `${S3_ENDPOINT}/content/posts/${post.publicId}`;
-
-    console.log("Publishing to", contentUrl);
 
     return { contentUrl, uploadUrl };
   } catch (e) {
