@@ -1,13 +1,14 @@
 "use server";
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
 import { pendingContent } from "@/lib/db/schema";
-import { s3, S3_BUCKET, S3_ENDPOINT } from "@/lib/s3";
+import { s3, S3_ENDPOINT } from "@/lib/s3";
 
 const PublishSchema = z.object({
   description: z.string(),
@@ -53,17 +54,17 @@ export async function publish(_data: PublishData) {
 
     const command = new PutObjectCommand({
       ACL: "public-read",
-      Bucket: S3_BUCKET,
+      Bucket: "content",
       Key: `posts/${post.publicId}`,
     });
-
-    const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");
 
     const uploadUrl = await getSignedUrl(s3, command, {
       expiresIn: 300,
     });
 
-    const contentUrl = `${S3_ENDPOINT}/posts/${post.publicId}`;
+    const contentUrl = `${S3_ENDPOINT}/content/posts/${post.publicId}`;
+
+    console.log("Publishing to", contentUrl);
 
     return { contentUrl, uploadUrl };
   } catch (e) {

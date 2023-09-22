@@ -21,7 +21,7 @@ export function CreatePost() {
 
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [url, setUrl] = useState("https://i.imgur.com/6T3pNMB.jpeg");
+  const [url, setUrl] = useState("");
   const [priceCurve] = useState(PRICE_CURVE.NORMAL);
 
   const { address } = useAccount();
@@ -79,6 +79,7 @@ export function CreatePost() {
       if (!file) return;
 
       setFile(file);
+      setUrl("");
       setOpen(true);
 
       startTransition(async () => {
@@ -88,7 +89,10 @@ export function CreatePost() {
             description: descriptionRef.current?.value || "",
             url,
           });
-          if (!publishRes) return;
+          if (!publishRes) {
+            console.error("Failed to publish");
+            return;
+          }
 
           const { contentUrl, uploadUrl } = publishRes;
 
