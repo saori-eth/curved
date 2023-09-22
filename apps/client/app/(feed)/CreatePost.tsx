@@ -167,7 +167,7 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded bg-neutral-900 px-2 ${disabled ? "opacity-50" : ""
+                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${disabled ? "opacity-50" : ""
                   }`}
               />
 
