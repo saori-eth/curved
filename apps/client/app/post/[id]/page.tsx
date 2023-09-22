@@ -14,5 +14,11 @@ export default async function Post({ params }: Props) {
     notFound();
   }
 
-  return <PostPage post={post} />;
+  return (
+    <div className="flex w-full justify-center pt-20">
+      <div className="w-full max-w-5xl">
+        <PostPage post={post} />
+      </div>
+    </div>
+  );
 }
