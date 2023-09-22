@@ -19,7 +19,9 @@ enum PRICE_CURVE {
 export function CreatePost() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
-  const [url] = useState("https://i.imgur.com/6T3pNMB.jpeg");
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [url, setUrl] = useState("https://i.imgur.com/6T3pNMB.jpeg");
   const [priceCurve] = useState(PRICE_CURVE.NORMAL);
 
   const { address } = useAccount();
@@ -43,16 +45,15 @@ export function CreatePost() {
     write,
     isSuccess: isSuccessWrite,
     isLoading: isLoadingWrite,
-    isError: isErrorWrite,
     error: errorWrite,
   } = useContractWrite(config);
 
   const [isPublishing, startTransition] = useTransition();
 
   const isLoading = isLoadingPrepare || isLoadingWrite || isPublishing;
-  const isError = isErrorPrepare || isErrorWrite;
   const error = errorPrepare || errorWrite;
-  const disabled = status !== "authenticated" || isLoading || isError || !write;
+  const disabled =
+    status !== "authenticated" || isLoading || isErrorPrepare || !write;
 
   function sendTx(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -65,53 +66,97 @@ export function CreatePost() {
 
     // Transaction was sent, upload data
     startTransition(() => {
+      setOpen(false);
       publish({
         description: descriptionRef.current?.value || "",
         url,
       });
-
-      if (descriptionRef.current) {
-        descriptionRef.current.value = "";
-      }
     });
   }, [isSuccessWrite, url]);
+
+  function promptFile(e: React.MouseEvent<unknown>) {
+    e.preventDefault();
+    if (disabled) return;
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      setFile(file);
+      setOpen(true);
+    };
+    input.click();
+  }
 
   if (status !== "authenticated") return null;
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger className="flex items-center space-x-3 rounded-2xl bg-neutral-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-neutral-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4">
+    <Dialog.Root
+      open={open}
+      onOpenChange={(o) => {
+        if (!disabled) {
+          setOpen(o);
+        }
+      }}
+    >
+      <Dialog.Trigger
+        onClick={promptFile}
+        className="flex items-center space-x-3 rounded-2xl bg-neutral-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-neutral-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4"
+      >
         <RiImageAddFill className="text-2xl" />
         <span className="hidden text-xl font-bold sm:block">Upload</span>
       </Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-lg border border-neutral-400 bg-neutral-800 p-4">
-            <form onSubmit={sendTx} className="space-y-2">
+          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-neutral-800 p-8">
+            <form onSubmit={sendTx} className="space-y-4">
+              {file ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  onClick={promptFile}
+                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
+                      ? "opacity-50"
+                      : "hover:cursor-pointer hover:opacity-80"
+                    }`}
+                  alt="Upload preview"
+                />
+              ) : (
+                <div className="h-64 w-full rounded-lg bg-neutral-700" />
+              )}
+
               <label className="block">
                 <span className="text-neutral-400">Description</span>
                 <textarea
                   ref={descriptionRef}
                   disabled={disabled}
-                  className={`w-full rounded border border-neutral-400 bg-neutral-900 px-2 ${
-                    disabled ? "opacity-50" : ""
-                  }`}
+                  rows={2}
+                  className={`w-full rounded bg-neutral-900 px-2 ${disabled ? "opacity-50" : ""
+                    }`}
                 />
               </label>
 
-              <button
-                disabled={disabled}
-                type="submit"
-                className={`rounded bg-neutral-900 px-2 py-0.5 ${
-                  disabled ? "opacity-50" : "hover:bg-black active:opacity-90"
-                }`}
-              >
-                Submit
-              </button>
-
-              {error && <p className="text-xs text-red-500">{error.message}</p>}
+              <div className="flex justify-end">
+                <button
+                  disabled={disabled}
+                  type="submit"
+                  className={`rounded-full bg-neutral-900 px-4 py-1 ${disabled
+                      ? "opacity-50"
+                      : "transition hover:bg-black active:opacity-90"
+                    }`}
+                >
+                  Submit
+                </button>
+              </div>
             </form>
+
+            {error && (
+              <p className="overflow-hidden text-ellipsis text-xs text-red-500">
+                {error.message}
+              </p>
+            )}
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>
