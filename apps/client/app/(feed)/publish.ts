@@ -54,7 +54,7 @@ export async function publish(_data: PublishData) {
     const command = new PutObjectCommand({
       ACL: "public-read",
       Bucket: S3_BUCKET,
-      Key: `/posts/${post.publicId}`,
+      Key: `posts/${post.publicId}`,
     });
 
     const { getSignedUrl } = await import("@aws-sdk/s3-request-presigner");

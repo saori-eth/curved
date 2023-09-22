@@ -82,36 +82,40 @@ export function CreatePost() {
       setOpen(true);
 
       startTransition(async () => {
-        // Create db post
-        const publishRes = await publish({
-          description: descriptionRef.current?.value || "",
-          url,
-        });
-        if (!publishRes) return;
+        try {
+          // Create db post
+          const publishRes = await publish({
+            description: descriptionRef.current?.value || "",
+            url,
+          });
+          if (!publishRes) return;
 
-        const { contentUrl, uploadUrl } = publishRes;
+          const { contentUrl, uploadUrl } = publishRes;
 
-        // Upload image
-        const formData = new FormData();
-        formData.append("image", file);
+          // Upload image
+          const formData = new FormData();
+          formData.append("image", file);
 
-        const res = await fetch(uploadUrl, {
-          body: formData,
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "x-amz-acl": "public-read",
-          },
-          method: "POST",
-        });
+          const res = await fetch(uploadUrl, {
+            body: formData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "x-amz-acl": "public-read",
+            },
+            method: "POST",
+          });
 
-        if (!res.ok) {
-          console.error("Failed to upload image");
-          return;
+          if (!res.ok) {
+            console.error("Failed to upload image");
+            return;
+          }
+
+          // Update url
+          console.log("Uploaded image to", contentUrl);
+          setUrl(contentUrl);
+        } catch (e) {
+          console.error(e);
         }
-
-        // Update url
-        console.log("Uploaded image to", contentUrl);
-        setUrl(contentUrl);
       });
     };
     input.click();
