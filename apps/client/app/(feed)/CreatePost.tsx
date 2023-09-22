@@ -55,24 +55,17 @@ export function CreatePost() {
   const disabled =
     status !== "authenticated" || isLoading || isErrorPrepare || !write;
 
-  function sendTx(e: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    if (!isSuccessWrite) return;
+    // Transaction was sent
+    setOpen(false);
+  }, [isSuccessWrite]);
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (disabled) return;
     write();
   }
-
-  useEffect(() => {
-    if (!isSuccessWrite) return;
-
-    // Transaction was sent, upload data
-    startTransition(() => {
-      setOpen(false);
-      publish({
-        description: descriptionRef.current?.value || "",
-        url,
-      });
-    });
-  }, [isSuccessWrite, url]);
 
   function promptFile(e: React.MouseEvent<unknown>) {
     e.preventDefault();
@@ -81,11 +74,45 @@ export function CreatePost() {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
+
       setFile(file);
       setOpen(true);
+
+      startTransition(async () => {
+        // Create db post
+        const publishRes = await publish({
+          description: descriptionRef.current?.value || "",
+          url,
+        });
+        if (!publishRes) return;
+
+        const { contentUrl, uploadUrl } = publishRes;
+
+        // Upload image
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch(uploadUrl, {
+          body: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-amz-acl": "public-read",
+          },
+          method: "POST",
+        });
+
+        if (!res.ok) {
+          console.error("Failed to upload image");
+          return;
+        }
+
+        // Update url
+        console.log("Uploaded image to", contentUrl);
+        setUrl(contentUrl);
+      });
     };
     input.click();
   }
@@ -112,7 +139,7 @@ export function CreatePost() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-neutral-800 p-8">
-            <form onSubmit={sendTx} className="space-y-4">
+            <form onSubmit={submit} className="space-y-4">
               {file ? (
                 <img
                   src={URL.createObjectURL(file)}
@@ -127,16 +154,14 @@ export function CreatePost() {
                 <div className="h-64 w-full rounded-lg bg-neutral-700" />
               )}
 
-              <label className="block">
-                <span className="text-neutral-400">Description</span>
-                <textarea
-                  ref={descriptionRef}
-                  disabled={disabled}
-                  rows={2}
-                  className={`w-full rounded bg-neutral-900 px-2 ${disabled ? "opacity-50" : ""
-                    }`}
-                />
-              </label>
+              <textarea
+                ref={descriptionRef}
+                disabled={disabled}
+                placeholder="Write a caption..."
+                rows={2}
+                className={`w-full rounded bg-neutral-900 px-2 ${disabled ? "opacity-50" : ""
+                  }`}
+              />
 
               <div className="flex justify-end">
                 <button

@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:push": "drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
+    "db:push": "dotenv -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
     "db:studio": "drizzle-kit studio",
     "lint": "cd ../.. && eslint --fix \"apps/client/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.414.0",
+    "@aws-sdk/client-s3": "~3.418.0",
+    "@aws-sdk/s3-request-presigner": "~3.418.0",
+    "@aws-sdk/signature-v4-crt": "^3.418.0",
     "@lucia-auth/adapter-mysql": "^2.0.0",
     "@planetscale/database": "^1.11.0",
     "@radix-ui/react-dialog": "^1.0.4",
@@ -24,7 +26,7 @@
     "lucia": "^2.6.0",
     "mysql2": "^3.6.1",
     "nanoid": "^5.0.1",
-    "next": "^13.5.1",
+    "next": "^13.5.2",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@types/react": "18.2.22",
+    "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.49.0",
     "eslint-config-custom": "workspace:*",

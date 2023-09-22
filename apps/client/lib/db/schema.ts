@@ -20,6 +20,7 @@ import {
   MAX_USERNAME_LENGTH,
   USER_ID_LENGTH,
 } from "./constants";
+import { NANOID_LENGTH } from "./nanoid";
 
 export const content = mysqlTable(
   "content",
@@ -45,10 +46,12 @@ export const pendingContent = mysqlTable(
     description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
     id: serial("id").primaryKey(),
     owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({
+    ownerIndex: uniqueIndex("owner").on(table.owner),
     ownerUrlIndex: index("ownerUrl").on(table.owner, table.url),
   }),
 );
