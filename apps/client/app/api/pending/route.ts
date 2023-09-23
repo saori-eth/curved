@@ -1,7 +1,6 @@
-"use server";
-
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
@@ -9,15 +8,10 @@ import { nanoidLowercase } from "@/lib/db/nanoid";
 import { pendingContent } from "@/lib/db/schema";
 import { s3, S3_BUCKET, S3_READ_ENDPOINT } from "@/lib/s3";
 
-/**
- * Not in use, was breaking from what I can only tell is a bug in next
- * Moved to /api/pending/route.ts
- */
-export async function createPending() {
+export async function POST() {
   const session = await getSession();
   if (!session) {
-    console.error("No session");
-    return;
+    return new Response("Unauthorized", { status: 401 });
   }
 
   try {
@@ -51,8 +45,17 @@ export async function createPending() {
       expiresIn: 300,
     });
 
-    return { uploadUrl, url };
+    return NextResponse.json(
+      {
+        uploadUrl,
+        url,
+      },
+      {
+        status: 201,
+      },
+    );
   } catch (e) {
     console.error(e);
+    return new Response("Internal Server Error", { status: 500 });
   }
 }

@@ -15,7 +15,6 @@ import { CURVED_ABI } from "@/lib/abi/curved";
 import { cropImage } from "@/lib/cropImage";
 
 import { useAuth } from "../AuthProvider";
-import { createPending } from "./createPending";
 import { editPending } from "./editPending";
 import { getPublishedId } from "./getPublishedId";
 
@@ -148,12 +147,19 @@ export function CreatePost() {
 
       startTransition(async () => {
         // Create db post
-        const created = await createPending();
+        const createdRes = await fetch("/api/pending", {
+          method: "POST",
+        });
 
-        if (!created) {
+        if (!createdRes.ok) {
           console.error("Failed to create pending");
           return;
         }
+
+        const created = (await createdRes.json()) as {
+          url: string;
+          uploadUrl: string;
+        };
 
         console.log("Created pending");
         setUrl(created.url);
