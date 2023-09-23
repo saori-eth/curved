@@ -22,7 +22,11 @@ const provider = new ethers.providers.WebSocketProvider(wsUrl);
 const curve = new ethers.Contract(curveAddr, CurveABI.abi, provider);
 const db = new DB();
 
+console.log("STARTING INDEXER", { curveAddr, wsUrl });
+
 curve.on("*", async (event) => {
+  console.log("Event", event.event);
+
   switch (event.event) {
     case "ShareCreated": {
       const owner = event.args[0];
@@ -36,6 +40,7 @@ curve.on("*", async (event) => {
 
         if (!pending) {
           console.log("No pending content found");
+          // TODO: Add share + uri to content table
           return;
         }
 
@@ -46,15 +51,16 @@ curve.on("*", async (event) => {
 
         await db.insert("content", {
           description: pending.description,
-          owner: pending.owner,
+          owner,
           share_id: shareId,
           url: pending.url,
         });
 
+        console.log("Deleting pending content");
+
         await db.delete("pending_content", `owner="${owner}"`);
       } catch (e) {
-        console.log("Error fetching pending content", e);
-        // TODO: Add share + uri to content table
+        console.error(e);
       }
 
       break;

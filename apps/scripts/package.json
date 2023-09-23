@@ -7,7 +7,7 @@
     "anvil": "cd contracts && anvil --block-time 1 --chain-id 9999",
     "build": "cd contracts && forge build",
     "db": "node db/index.js",
-    "deploy": "cd contracts && bash deployment/curved.local.sh",
+    "deploy": "cd contracts && dotenv -e ../.env -- bash deployment/curved.local.sh",
     "dev": "conc \"pnpm run anvil --silent\" \"pnpm run deploy\"",
     "mock-events": "node dev/mockEvents.js",
     "price-chart": "node data/priceCurve.js",
@@ -20,6 +20,8 @@
     "plotly": "^1.0.6"
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "concurrently": "^8.2.1",
+    "dotenv-cli": "^7.3.0"
   }
 }
+

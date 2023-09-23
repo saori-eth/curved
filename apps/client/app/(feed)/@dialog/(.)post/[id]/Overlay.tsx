@@ -12,7 +12,6 @@ export default function Overlay({ children }: Props) {
   return (
     <div
       onClick={() => {
-        console.log("overlay clicked");
         router.back();
       }}
       className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm"

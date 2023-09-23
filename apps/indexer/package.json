@@ -5,7 +5,8 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm run build:abi && tsc",
+    "build:abi": "cp ../scripts/contracts/out/Curved.sol/Curved.json ./src/abi/Curved.json",
     "dev": "nodemon --watch src --ext ts --exec \"pnpm build && pnpm start\"",
     "lint": "cd ../.. && eslint --fix \"apps/indexer/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore",
     "start": "dotenv -- node --experimental-specifier-resolution=node ./dist/index.js"
