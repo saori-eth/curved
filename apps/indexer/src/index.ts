@@ -35,7 +35,7 @@ curve.on("*", async (event) => {
       try {
         const pending: any = await db.fetchOne(
           "pending_content",
-          `owner="${owner}"`,
+          `owner="${owner}"`
         );
 
         if (!pending) {
@@ -46,7 +46,7 @@ curve.on("*", async (event) => {
 
         console.log(
           `Inserting ${owner} and ${shareId} into content table`,
-          pending,
+          pending
         );
 
         await db.insert("content", {

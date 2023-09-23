@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { fetchProfile } from "@/lib/fetchProfile";
-
 import Avatar from "./Avatar";
 
 interface Props {
@@ -10,13 +8,18 @@ interface Props {
   url: string;
   owner: string;
   description: string;
+  avatar?: string;
+  username?: string;
 }
 
-export async function PostCard({ url, owner, shareId, description }: Props) {
-  const profile = await fetchProfile(owner);
-
-  const price = "0.0156";
-
+export function PostCard({
+  url,
+  avatar,
+  username,
+  owner,
+  shareId,
+  description,
+}: Props) {
   return (
     <Link
       href={`/post/${shareId}`}
@@ -24,17 +27,13 @@ export async function PostCard({ url, owner, shareId, description }: Props) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <Avatar
-            src={profile?.avatar}
-            uniqueKey={profile?.username ?? owner}
-            size={32}
-          />
+          <Avatar src={avatar} uniqueKey={username ?? owner} size={32} />
           <span className="text-sm text-neutral-400">
-            {profile ? `@${profile.username}` : owner}
+            {username ? `@${username}` : owner}
           </span>
         </div>
 
-        <div className="text-sm text-neutral-400">{price} ETH</div>
+        <div className="text-sm text-neutral-400">#{shareId}</div>
       </div>
 
       <div className="relative aspect-square w-full rounded-lg bg-neutral-900">
@@ -44,7 +43,7 @@ export async function PostCard({ url, owner, shareId, description }: Props) {
             alt="Post image"
             fill
             draggable={false}
-            className="rounded-lg"
+            className="rounded-lg object-cover"
           />
         )}
       </div>
