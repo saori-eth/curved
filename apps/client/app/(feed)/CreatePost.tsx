@@ -15,8 +15,9 @@ import { CURVED_ABI } from "@/lib/abi/curved";
 import { cropImage } from "@/lib/cropImage";
 
 import { useAuth } from "../AuthProvider";
+import { createPending } from "./createPending";
+import { editPending } from "./editPending";
 import { getPublishedId } from "./getPublishedId";
-import { publish } from "./publish";
 
 export function CreatePost() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -91,10 +92,9 @@ export function CreatePost() {
 
           startTransition(() => {
             console.log("Redirecting");
-            router.refresh();
-            router.push(`/post/${shareId}`);
             setOpen(false);
             setWaitingForIndex(false);
+            router.push(`/post/${shareId}`);
           });
 
           return;
@@ -115,12 +115,12 @@ export function CreatePost() {
     e.preventDefault();
     if (disabled) return;
 
+    // Send transaction
     write();
 
-    // Update description
-    // TODO: Move to more efficient editPost call
+    // Set description
     try {
-      await publish({
+      await editPending({
         description: descriptionRef.current?.value ?? "",
       });
     } catch (e) {
@@ -148,21 +148,20 @@ export function CreatePost() {
 
       startTransition(async () => {
         // Create db post
-        const publishRes = await publish({
-          description: "",
-        });
-        if (!publishRes) {
-          console.error("Failed to publish");
+        const created = await createPending();
+
+        if (!created) {
+          console.error("Failed to create pending");
           return;
         }
 
-        const { contentUrl, uploadUrl } = publishRes;
-        setUrl(contentUrl);
+        console.log("Created pending");
+        setUrl(created.url);
 
         // Upload image
         const blob = new Blob([cropped], { type: cropped.type });
 
-        const res = await fetch(uploadUrl, {
+        const res = await fetch(created.uploadUrl, {
           body: blob,
           headers: {
             "Content-Type": cropped.type,
@@ -176,8 +175,7 @@ export function CreatePost() {
           return;
         }
 
-        // Update url
-        console.log("Uploaded image to", contentUrl);
+        console.log("Uploaded image to", created.url);
       });
     };
 
