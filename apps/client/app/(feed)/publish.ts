@@ -8,11 +8,10 @@ import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
 import { pendingContent } from "@/lib/db/schema";
-import { s3, S3_BUCKET, S3_ENDPOINT } from "@/lib/s3";
+import { s3, S3_BUCKET, S3_READ_ENDPOINT } from "@/lib/s3";
 
 const PublishSchema = z.object({
   description: z.string(),
-  url: z.string(),
 });
 
 export type PublishData = z.infer<typeof PublishSchema>;
@@ -26,27 +25,32 @@ export async function publish(_data: PublishData) {
   }
 
   try {
-    await db
-      .insert(pendingContent)
-      .values({
-        description: data.description,
-        owner: session.user.address,
-        publicId: nanoidLowercase(),
-        url: data.url,
-      })
-      .onDuplicateKeyUpdate({
-        set: {
-          description: data.description,
-          url: data.url,
-        },
-      });
-
+    // Check for existing pending content
     const post = await db.query.pendingContent.findFirst({
       columns: {
         publicId: true,
       },
       where: (row, { eq }) => eq(row.owner, session.user.address),
     });
+
+    // Read publicId or generate a new one
+    const publicId = post?.publicId ?? nanoidLowercase();
+    const url = `${S3_READ_ENDPOINT}/posts/${publicId}`;
+
+    // Create new or update pending content
+    await db
+      .insert(pendingContent)
+      .values({
+        description: data.description,
+        owner: session.user.address,
+        publicId,
+        url,
+      })
+      .onDuplicateKeyUpdate({
+        set: {
+          description: data.description,
+        },
+      });
 
     if (!post) {
       return;
@@ -55,16 +59,14 @@ export async function publish(_data: PublishData) {
     const command = new PutObjectCommand({
       ACL: "public-read",
       Bucket: S3_BUCKET,
-      Key: `${S3_BUCKET}/posts/${post.publicId}`,
+      Key: `posts/${post.publicId}`,
     });
 
     const uploadUrl = await getSignedUrl(s3, command, {
       expiresIn: 300,
     });
 
-    const contentUrl = `${S3_ENDPOINT}/content/posts/${post.publicId}`;
-
-    return { contentUrl, uploadUrl };
+    return { contentUrl: url, uploadUrl };
   } catch (e) {
     console.error(e);
   }

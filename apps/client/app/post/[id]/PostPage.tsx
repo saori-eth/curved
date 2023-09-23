@@ -19,7 +19,7 @@ export async function PostPage({ post }: Props) {
   return (
     <div className="grid h-full grid-cols-5 gap-8">
       <div className="col-span-2 space-y-4">
-        <div className="relative aspect-square rounded-lg">
+        <div className="relative aspect-square rounded-lg bg-neutral-900">
           <Image
             src={post.url}
             alt="Post image"

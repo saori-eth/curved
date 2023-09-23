@@ -65,6 +65,7 @@ export function CreatePost() {
     e.preventDefault();
     if (disabled) return;
     write();
+    console.log("submit", url);
   }
 
   function promptFile(e: React.MouseEvent<unknown>) {
@@ -87,7 +88,6 @@ export function CreatePost() {
           // Create db post
           const publishRes = await publish({
             description: descriptionRef.current?.value || "",
-            url,
           });
           if (!publishRes) {
             console.error("Failed to publish");
@@ -95,6 +95,7 @@ export function CreatePost() {
           }
 
           const { contentUrl, uploadUrl } = publishRes;
+          setUrl(contentUrl);
 
           // Upload image
           const blob = new Blob([file], { type: file.type });
@@ -115,7 +116,6 @@ export function CreatePost() {
 
           // Update url
           console.log("Uploaded image to", contentUrl);
-          setUrl(contentUrl);
         } catch (e) {
           console.error(e);
         }
@@ -153,11 +153,10 @@ export function CreatePost() {
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${
-                    disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
-                  }`}
+                    }`}
                   alt="Upload preview"
                 />
               ) : (
@@ -169,20 +168,18 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${
-                  disabled ? "opacity-50" : ""
-                }`}
+                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${disabled ? "opacity-50" : ""
+                  }`}
               />
 
               <div className="flex justify-end">
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-neutral-900 px-4 py-1 ${
-                    disabled
+                  className={`rounded-full bg-neutral-900 px-4 py-1 ${disabled
                       ? "opacity-50"
                       : "transition hover:bg-black active:opacity-90"
-                  }`}
+                    }`}
                 >
                   Submit
                 </button>
