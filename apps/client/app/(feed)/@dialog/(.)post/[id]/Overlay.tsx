@@ -14,16 +14,9 @@ export default function Overlay({ children }: Props) {
       onClick={() => {
         router.back();
       }}
-      className="fixed inset-0 z-10 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm"
     >
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        className="absolute inset-0 z-20 mx-2 my-auto flex h-2/3 items-center justify-center"
-      >
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
