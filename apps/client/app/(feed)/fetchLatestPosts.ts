@@ -5,7 +5,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { Post } from "@/lib/fetchPost";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 8;
 
 const FetchLatestSchema = z.object({
   page: z.number().int().min(0),
@@ -15,7 +15,7 @@ const FetchLatestSchema = z.object({
 type FetchLatestArgs = z.infer<typeof FetchLatestSchema>;
 
 export async function fetchLatestPosts(
-  _args: FetchLatestArgs
+  _args: FetchLatestArgs,
 ): Promise<Post[]> {
   try {
     const args = FetchLatestSchema.parse(_args);
