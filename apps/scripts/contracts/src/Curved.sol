@@ -1,11 +1,43 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
-import {Ownable} from "./Owner.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Curved is Ownable {
+contract Curved is Ownable, ERC20 {
+    // ====== Market Variables ======
     address public protocolFeeDestination;
     uint256 public protocolFeePercent; // 0.05 eth = 5%
     uint256 public currentId = 0;
+
+    // ====== Reward Variables ======
+
+    // Token to be staked
+    IERC20 public immutable rewardsToken;
+    // Reward start time
+    uint256 public startTime;
+    // Duration of rewards to be paid out (in seconds)
+    uint256 public duration = 313 weeks;
+    // Timestamp of when the rewards finish
+    uint256 public finishAt;
+    // Minimum of last updated time and reward finish time
+    uint256 public updatedAt;
+    // Sum of (reward rate * dt * 1e18 / total supply)
+    uint256 public rewardPerEthStored;
+    // User address => rewardPerEthStored
+    mapping(address => uint256) public userRewardPerEthPaid;
+    // User address => rewards to be claimed
+    mapping(address => uint256) public rewards;
+    // Net ETH from buy/sell transactions
+    uint256 public openInterest;
+    // User address => staked amount
+    mapping(address => uint256) public userEthContributed;
+
+    // ====== Token Variables ======
+
+    uint256 public maxSupply = 10_000_000_000 ether;
+
+    // ====== Events ======
 
     event ShareCreated(address indexed owner, uint256 indexed id);
     event Trade(
@@ -18,20 +50,38 @@ contract Curved is Ownable {
         uint256 supply
     );
 
+    modifier updateReward(address _account) {
+        rewardPerEthStored = rewardPerToken();
+        updatedAt = lastTimeRewardApplicable();
+
+        if (_account != address(0)) {
+            rewards[_account] = earned(_account);
+            userRewardPerEthPaid[_account] = rewardPerEthStored;
+        }
+
+        _;
+    }
+
     struct Share {
         address owner;
         mapping(address => uint256) balances;
         uint256 totalSupply;
         string uri;
-        uint256 crv;
     }
 
     mapping(address => uint256[]) public userOwnedShares;
     mapping(uint256 => Share) public shareInfo;
 
-    constructor(address _protocolFeeDestination, uint256 _protocolFeePercent) {
+    constructor(
+        address _protocolFeeDestination,
+        uint256 _protocolFeePercent
+    ) ERC20("Curved", "CURVED") {
         protocolFeeDestination = _protocolFeeDestination;
         protocolFeePercent = _protocolFeePercent;
+        startTime = block.timestamp;
+        finishAt = startTime + duration;
+        rewardsToken = IERC20(address(this));
+        _mint(msg.sender, 2_000_000_000 ether);
     }
 
     function setProtocolFeeDestination(
@@ -48,9 +98,8 @@ contract Curved is Ownable {
 
     function getPrice(
         uint256 supply,
-        uint256 amount,
-        uint256 curve
-    ) public view returns (uint256) {
+        uint256 amount
+    ) public pure returns (uint256) {
         uint256 sum1 = supply == 0
             ? 0
             : ((supply - 1) * (supply) * (2 * (supply - 1) + 1)) / 6;
@@ -60,16 +109,14 @@ contract Curved is Ownable {
                 (supply + amount) *
                 (2 * (supply - 1 + amount) + 1)) / 6;
         uint256 summation = sum2 - sum1;
-        return (summation * 1 ether) / curve;
+        return (summation * 1 ether) / 4000;
     }
 
-    function createShare(string calldata _uri, uint256 crv) external {
-        require(crv >= 4000 && crv <= 32000, 'crv too weird');
+    function createShare(string calldata _uri) external {
         shareInfo[currentId].owner = msg.sender;
         shareInfo[currentId].balances[msg.sender] = 1;
         shareInfo[currentId].totalSupply = 1;
         shareInfo[currentId].uri = _uri;
-        shareInfo[currentId].crv = crv;
         userOwnedShares[msg.sender].push(currentId);
         currentId++;
         emit ShareCreated(msg.sender, currentId - 1);
@@ -83,7 +130,9 @@ contract Curved is Ownable {
             supply > 0 || share.owner == msg.sender,
             "Only the shares subject can buy the first share"
         );
-        uint256 price = getPrice(supply, amount, share.crv);
+        uint256 price = getPrice(supply, amount);
+        userEthContributed[msg.sender] = userEthContributed[msg.sender] + price;
+        openInterest = openInterest + price;
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         require(msg.value >= price + protocolFee, "Insufficient payment");
         share.balances[msg.sender] = share.balances[msg.sender] + amount;
@@ -105,7 +154,15 @@ contract Curved is Ownable {
             share.totalSupply - amount > 0,
             "Cannot sell all shares, must leave at least one"
         );
-        uint256 owed = getPrice(supply - amount, amount, share.crv);
+        uint256 owed = getPrice(supply - amount, amount);
+        if (owed >= userEthContributed[msg.sender]) {
+            userEthContributed[msg.sender] = 0;
+        } else {
+            userEthContributed[msg.sender] =
+                userEthContributed[msg.sender] -
+                owed;
+        }
+        openInterest = openInterest - owed;
         uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         share.balances[msg.sender] = share.balances[msg.sender] - amount;
         share.totalSupply = supply - amount;
@@ -125,7 +182,76 @@ contract Curved is Ownable {
         shareInfo[id].uri = _uri;
     }
 
-    // ====== Getters ======
+    // ====== Rewards ======
+
+    function currentRewardPool(
+        uint256 currentTime
+    ) public view returns (uint256) {
+        uint256 timeElapsed = currentTime - startTime;
+        uint256 yearsElapsed = timeElapsed / 52 weeks;
+
+        if (yearsElapsed == 0) {
+            return 4_000_000_000 ether; // 50% of 8 billion
+        } else if (yearsElapsed == 1) {
+            return 1_600_000_000 ether; // 20% of 8 billion
+        } else if (yearsElapsed == 2) {
+            return 1_000_000_000 ether; // 12.5% of 8 billion
+        } else if (yearsElapsed == 3) {
+            return 600_000_000 ether; // 7.5% of 8 billion
+        } else if (yearsElapsed == 4) {
+            return 420_000_000 ether; // 5.25% of 8 billion
+        } else if (yearsElapsed == 5) {
+            return 380_000_000 ether; // 4.75% of 8 billion
+        } else {
+            return 0; // No more tokens to distribute
+        }
+    }
+
+    function getRate(uint256 currentTime) public view returns (uint256) {
+        return currentRewardPool(currentTime) / duration; // reward per second
+    }
+
+    function tokensRemaining() public view returns (uint256) {
+        return maxSupply - totalSupply();
+    }
+
+    function lastTimeRewardApplicable() public view returns (uint) {
+        return _min(finishAt, block.timestamp);
+    }
+
+    function rewardPerToken() public view returns (uint) {
+        if (address(this).balance == 0) {
+            return rewardPerEthStored;
+        }
+
+        return
+            rewardPerEthStored +
+            (getRate(block.timestamp) *
+                (lastTimeRewardApplicable() - updatedAt) *
+                1e18) /
+            address(this).balance;
+    }
+
+    function earned(address _account) public view returns (uint) {
+        return
+            ((userEthContributed[_account] *
+                (rewardPerToken() - userRewardPerEthPaid[_account])) / 1e18) +
+            rewards[_account];
+    }
+
+    function getReward() external updateReward(msg.sender) {
+        uint reward = rewards[msg.sender];
+        if (reward > 0) {
+            rewards[msg.sender] = 0;
+            _mint(msg.sender, reward);
+        }
+    }
+
+    function _min(uint x, uint y) private pure returns (uint) {
+        return x <= y ? x : y;
+    }
+
+    // ====== Market Getters ======
 
     function getShareInfo(
         uint256 id
@@ -144,7 +270,7 @@ contract Curved is Ownable {
         uint256 amount
     ) public view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        return getPrice(shareInfo[id].totalSupply, amount, shareInfo[id].crv);
+        return getPrice(shareInfo[id].totalSupply, amount);
     }
 
     function getSellPrice(
@@ -152,7 +278,7 @@ contract Curved is Ownable {
         uint256 amount
     ) public view returns (uint256) {
         require(id < currentId, "Invalid share id");
-        return getPrice(shareInfo[id].totalSupply - amount, amount, shareInfo[id].crv);
+        return getPrice(shareInfo[id].totalSupply - amount, amount);
     }
 
     function getBuyPriceAfterFee(
