@@ -6,6 +6,7 @@ import { RiImageAddFill } from "react-icons/ri";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
+import { cropImage } from "@/lib/cropImage";
 
 import { useAuth } from "../AuthProvider";
 import { publish } from "./publish";
@@ -65,7 +66,16 @@ export function CreatePost() {
     e.preventDefault();
     if (disabled) return;
     write();
-    console.log("submit", url);
+
+    // Update description
+    // TODO: Move to more efficient editPost call
+    try {
+      await publish({
+        description: descriptionRef.current?.value ?? "",
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function promptFile(e: React.MouseEvent<unknown>) {
@@ -79,7 +89,9 @@ export function CreatePost() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
-      setFile(file);
+      const cropped = await cropImage(URL.createObjectURL(file));
+
+      setFile(cropped);
       setUrl("");
       setOpen(true);
 
@@ -87,7 +99,7 @@ export function CreatePost() {
         try {
           // Create db post
           const publishRes = await publish({
-            description: descriptionRef.current?.value || "",
+            description: "",
           });
           if (!publishRes) {
             console.error("Failed to publish");
@@ -98,12 +110,12 @@ export function CreatePost() {
           setUrl(contentUrl);
 
           // Upload image
-          const blob = new Blob([file], { type: file.type });
+          const blob = new Blob([cropped], { type: cropped.type });
 
           const res = await fetch(uploadUrl, {
             body: blob,
             headers: {
-              "Content-Type": file.type,
+              "Content-Type": cropped.type,
               "x-amz-acl": "public-read",
             },
             method: "PUT",

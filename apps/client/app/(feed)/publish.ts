@@ -66,6 +66,8 @@ export async function publish(_data: PublishData) {
       expiresIn: 300,
     });
 
+    console.log("Published", { description: data.description, url });
+
     return { contentUrl: url, uploadUrl };
   } catch (e) {
     console.error(e);
