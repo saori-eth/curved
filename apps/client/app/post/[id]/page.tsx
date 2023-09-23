@@ -4,6 +4,8 @@ import { fetchPost } from "@/lib/fetchPost";
 
 import { PostPage } from "./PostPage";
 
+export const revalidate = 30;
+
 interface Props {
   params: { id: string };
 }

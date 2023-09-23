@@ -21,6 +21,7 @@ export async function publish(_data: PublishData) {
 
   const session = await getSession();
   if (!session) {
+    console.error("No session");
     return;
   }
 
@@ -52,14 +53,10 @@ export async function publish(_data: PublishData) {
         },
       });
 
-    if (!post) {
-      return;
-    }
-
     const command = new PutObjectCommand({
       ACL: "public-read",
       Bucket: S3_BUCKET,
-      Key: `posts/${post.publicId}`,
+      Key: `posts/${publicId}`,
     });
 
     const uploadUrl = await getSignedUrl(s3, command, {

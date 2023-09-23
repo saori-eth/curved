@@ -5,6 +5,8 @@ import { fetchPost } from "@/lib/fetchPost";
 
 import { Dialog } from "./Dialog";
 
+export const revalidate = 30;
+
 interface Props {
   params: { id: string };
 }

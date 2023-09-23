@@ -1,14 +1,21 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { RiImageAddFill } from "react-icons/ri";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useAccount,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
 import { cropImage } from "@/lib/cropImage";
 
 import { useAuth } from "../AuthProvider";
+import { getPublishedId } from "./getPublishedId";
 import { publish } from "./publish";
 
 export function CreatePost() {
@@ -17,9 +24,11 @@ export function CreatePost() {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState("");
+  const [waitingForIndex, setWaitingForIndex] = useState(false);
 
   const { address } = useAccount();
   const { status } = useAuth();
+  const router = useRouter();
 
   const {
     config,
@@ -37,27 +46,75 @@ export function CreatePost() {
 
   const {
     write,
-    isSuccess: isSuccessWrite,
     isLoading: isLoadingWrite,
+    data,
     error: errorWrite,
   } = useContractWrite(config);
 
-  const [isPublishing, startTransition] = useTransition();
+  const { isSuccess: isTxMined, isLoading: isWaitingOnTx } =
+    useWaitForTransaction({
+      hash: data?.hash,
+    });
 
-  const isLoading = isLoadingPrepare || isLoadingWrite || isPublishing;
+  const [isTransitioning, startTransition] = useTransition();
+
+  const isLoading =
+    isLoadingPrepare ||
+    isLoadingWrite ||
+    isTransitioning ||
+    isWaitingOnTx ||
+    waitingForIndex;
   const error = errorPrepare || errorWrite;
   const disabled =
-    status !== "authenticated" || isLoading || isErrorPrepare || !write;
+    status !== "authenticated" ||
+    !address ||
+    isLoading ||
+    isErrorPrepare ||
+    !write;
 
   useEffect(() => {
-    if (!isSuccessWrite) return;
-    // Transaction was sent
-    setOpen(false);
-  }, [isSuccessWrite]);
+    if (!isTxMined) return;
+    console.log("Transaction mined");
+
+    setWaitingForIndex(true);
+
+    let tries = 0;
+
+    const interval = setInterval(async () => {
+      tries++;
+
+      try {
+        const shareId = await getPublishedId();
+
+        if (shareId) {
+          clearInterval(interval);
+
+          startTransition(() => {
+            console.log("Redirecting");
+            router.refresh();
+            router.push(`/post/${shareId}`);
+            setOpen(false);
+            setWaitingForIndex(false);
+          });
+
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (tries > 20) {
+        console.error("Failed to get shareId");
+        clearInterval(interval);
+        setWaitingForIndex(false);
+      }
+    }, 2000);
+  }, [isTxMined, router]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (disabled) return;
+
     write();
 
     // Update description
@@ -78,6 +135,7 @@ export function CreatePost() {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
+
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
@@ -89,43 +147,40 @@ export function CreatePost() {
       setOpen(true);
 
       startTransition(async () => {
-        try {
-          // Create db post
-          const publishRes = await publish({
-            description: "",
-          });
-          if (!publishRes) {
-            console.error("Failed to publish");
-            return;
-          }
-
-          const { contentUrl, uploadUrl } = publishRes;
-          setUrl(contentUrl);
-
-          // Upload image
-          const blob = new Blob([cropped], { type: cropped.type });
-
-          const res = await fetch(uploadUrl, {
-            body: blob,
-            headers: {
-              "Content-Type": cropped.type,
-              "x-amz-acl": "public-read",
-            },
-            method: "PUT",
-          });
-
-          if (!res.ok) {
-            console.error("Failed to upload image");
-            return;
-          }
-
-          // Update url
-          console.log("Uploaded image to", contentUrl);
-        } catch (e) {
-          console.error(e);
+        // Create db post
+        const publishRes = await publish({
+          description: "",
+        });
+        if (!publishRes) {
+          console.error("Failed to publish");
+          return;
         }
+
+        const { contentUrl, uploadUrl } = publishRes;
+        setUrl(contentUrl);
+
+        // Upload image
+        const blob = new Blob([cropped], { type: cropped.type });
+
+        const res = await fetch(uploadUrl, {
+          body: blob,
+          headers: {
+            "Content-Type": cropped.type,
+            "x-amz-acl": "public-read",
+          },
+          method: "PUT",
+        });
+
+        if (!res.ok) {
+          console.error("Failed to upload image");
+          return;
+        }
+
+        // Update url
+        console.log("Uploaded image to", contentUrl);
       });
     };
+
     input.click();
   }
 
@@ -135,9 +190,8 @@ export function CreatePost() {
     <Dialog.Root
       open={open}
       onOpenChange={(o) => {
-        if (!disabled) {
-          setOpen(o);
-        }
+        if (open && disabled) return;
+        setOpen(o);
       }}
     >
       <Dialog.Trigger
@@ -158,11 +212,10 @@ export function CreatePost() {
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${
-                    disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
-                  }`}
+                    }`}
                   alt="Upload preview"
                 />
               ) : (
@@ -174,20 +227,18 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${
-                  disabled ? "opacity-50" : ""
-                }`}
+                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${disabled ? "opacity-50" : ""
+                  }`}
               />
 
               <div className="flex justify-end">
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-neutral-900 px-4 py-1 ${
-                    disabled
+                  className={`rounded-full bg-neutral-900 px-4 py-1 ${disabled
                       ? "opacity-50"
                       : "transition hover:bg-black active:opacity-90"
-                  }`}
+                    }`}
                 >
                   Submit
                 </button>

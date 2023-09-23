@@ -7,12 +7,12 @@ import { useFeed } from "./FeedContext";
 import { fetchLatestPosts } from "./fetchLatestPosts";
 
 export function LoadMore() {
-  const { start, page, setPage, setPosts } = useFeed();
+  const { start, page, setPage, setPosts, posts } = useFeed();
   const { ref, inView } = useInView({});
   const [_, startTransition] = useTransition();
 
   const [fetchingPage, setFetchingPage] = useState(page);
-  const [reachedBottom, setReachedBottom] = useState(false);
+  const [reachedBottom, setReachedBottom] = useState(posts.length === 0);
 
   useEffect(() => {
     if (!inView || reachedBottom) return;

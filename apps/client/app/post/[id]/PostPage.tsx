@@ -24,6 +24,8 @@ export async function PostPage({ post }: Props) {
             src={post.url}
             alt="Post image"
             fill
+            sizes="410px"
+            quality={100}
             draggable={false}
             className="rounded-lg"
           />

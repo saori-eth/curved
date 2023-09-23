@@ -42,6 +42,7 @@ export function PostCard({
             src={url}
             alt="Post image"
             fill
+            sizes="394px"
             draggable={false}
             className="rounded-lg object-cover"
           />
