@@ -20,10 +20,8 @@ export async function POST(request: NextRequest) {
   }
 
   const result = await validateEthereumAuth(request, parsedInput.data);
-  console.log("Validation result: ", result); // Logs validation result
 
   if (!result) {
-    console.log("Invalid signature"); // Logs if signature is invalid
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -37,26 +35,20 @@ export async function POST(request: NextRequest) {
     );
 
     user = await auth.getUser(key.userId);
-    console.log("Existing user: ", user); // Logs existing user data
   } catch (error) {
-    console.log("Error in fetching existing user: ", error); // Logs error during fetching existing user
-
     user = await createUser({
       address: result.data.address,
       providerId: parsedInput.data.method,
       providerUserId: result.data.address,
     });
-    console.log("New user created: ", user); // Logs newly created user data
   }
 
   const authRequest = auth.handleRequest({ cookies, request });
-  console.log("Auth request: ", authRequest); // Logs auth request
 
   const session = await auth.createSession({
     attributes: {},
     userId: user.userId,
   });
-  console.log("Session created: ", session); // Logs session data
 
   authRequest.setSession(session);
 

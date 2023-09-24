@@ -11,7 +11,8 @@
     "dev": "conc \"pnpm run anvil --silent\" \"pnpm run deploy\"",
     "mock-events": "node dev/mockEvents.js",
     "price-chart": "node data/priceCurve.js",
-    "test": "cd contracts && forge test -vvv"
+    "test": "cd contracts && forge test -vvv",
+    "init-rewards": "node dev/initRewards.js"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
