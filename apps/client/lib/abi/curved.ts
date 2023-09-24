@@ -264,25 +264,6 @@ export const CURVED_ABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "currentTime",
-        type: "uint256",
-      },
-    ],
-    name: "currentRewardPool",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "decimals",
     outputs: [
@@ -1065,4 +1046,4 @@ export const CURVED_ABI = [
     stateMutability: "view",
     type: "function",
   },
-] as const;
+];
