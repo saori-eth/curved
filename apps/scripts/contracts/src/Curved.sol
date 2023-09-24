@@ -184,32 +184,30 @@ contract Curved is Ownable, ERC20 {
 
     // ====== Rewards ======
 
-    function currentRewardPool(
-        uint256 currentTime
-    ) public view returns (uint256) {
+    function getRate(uint256 currentTime) public view returns (uint256) {
         uint256 timeElapsed = currentTime - startTime;
         uint256 yearsElapsed = timeElapsed / 52 weeks;
+        uint256 rewardPool;
 
         if (yearsElapsed == 0) {
-            return 4_000_000_000 ether; // 50% of 8 billion
+            rewardPool = 4_000_000_000 ether; // 50% of 8 billion
         } else if (yearsElapsed == 1) {
-            return 1_600_000_000 ether; // 20% of 8 billion
+            rewardPool = 1_600_000_000 ether; // 20% of 8 billion
         } else if (yearsElapsed == 2) {
-            return 1_000_000_000 ether; // 12.5% of 8 billion
+            rewardPool = 1_000_000_000 ether; // 12.5% of 8 billion
         } else if (yearsElapsed == 3) {
-            return 600_000_000 ether; // 7.5% of 8 billion
+            rewardPool = 600_000_000 ether; // 7.5% of 8 billion
         } else if (yearsElapsed == 4) {
-            return 420_000_000 ether; // 5.25% of 8 billion
+            rewardPool = 420_000_000 ether; // 5.25% of 8 billion
         } else if (yearsElapsed == 5) {
-            return 380_000_000 ether; // 4.75% of 8 billion
+            rewardPool = 380_000_000 ether; // 4.75% of 8 billion
         } else {
-            return 0; // No more tokens to distribute
+            rewardPool = 0; // No more tokens to distribute
         }
+
+        return rewardPool / 52 weeks;
     }
 
-    function getRate(uint256 currentTime) public view returns (uint256) {
-        return currentRewardPool(currentTime) / duration; // reward per second
-    }
 
     function tokensRemaining() public view returns (uint256) {
         return maxSupply - totalSupply();
