@@ -40,7 +40,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
-      <body className="bg-neutral-800 text-white">
+      <body className="bg-slate-800 text-white">
         <ClientWrapper>
           <Header />
           {children}

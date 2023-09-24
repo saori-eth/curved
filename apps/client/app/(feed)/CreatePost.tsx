@@ -200,7 +200,7 @@ export function CreatePost() {
     >
       <Dialog.Trigger
         onClick={promptFile}
-        className="flex items-center space-x-3 rounded-2xl bg-neutral-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-neutral-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4"
+        className="flex items-center space-x-3 rounded-2xl bg-slate-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-slate-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4"
       >
         <RiImageAddFill className="text-2xl" />
         <span className="hidden text-xl font-bold sm:block">Upload</span>
@@ -208,7 +208,7 @@ export function CreatePost() {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-neutral-800 px-8 pb-8 pt-4 shadow-lg">
+          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-slate-800 px-8 pb-8 pt-4 shadow-lg">
             <h1 className="pb-4 text-center text-xl font-bold">Create Post</h1>
 
             <form onSubmit={submit} className="space-y-4">
@@ -223,7 +223,7 @@ export function CreatePost() {
                   alt="Upload preview"
                 />
               ) : (
-                <div className="h-64 w-full rounded-lg bg-neutral-700" />
+                <div className="h-64 w-full rounded-lg bg-slate-700" />
               )}
 
               <textarea
@@ -231,7 +231,7 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-neutral-900 px-3 py-1 ${disabled ? "opacity-50" : ""
+                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${disabled ? "opacity-50" : ""
                   }`}
               />
 
@@ -239,7 +239,7 @@ export function CreatePost() {
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-neutral-900 px-4 py-1 ${disabled
+                  className={`rounded-full bg-slate-900 px-4 py-1 ${disabled
                       ? "opacity-50"
                       : "transition hover:bg-black active:opacity-90"
                     }`}

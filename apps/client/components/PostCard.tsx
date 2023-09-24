@@ -23,20 +23,20 @@ export function PostCard({
   return (
     <Link
       href={`/post/${shareId}`}
-      className="group block w-full select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition hover:cursor-pointer hover:border-neutral-400 hover:bg-neutral-700 hover:shadow-lg"
+      className="group block w-full select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition hover:cursor-pointer hover:border-slate-400 hover:bg-slate-700 hover:shadow-lg"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Avatar src={avatar} uniqueKey={username ?? owner} size={32} />
-          <span className="text-sm text-neutral-400">
+          <span className="text-sm text-slate-400">
             {username ? `@${username}` : owner}
           </span>
         </div>
 
-        <div className="text-sm text-neutral-400">#{shareId}</div>
+        <div className="text-sm text-slate-400">#{shareId}</div>
       </div>
 
-      <div className="relative aspect-square w-full rounded-lg bg-neutral-900">
+      <div className="relative aspect-square w-full rounded-lg bg-slate-900">
         {url && (
           <Image
             src={url}

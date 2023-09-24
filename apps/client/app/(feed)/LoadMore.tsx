@@ -22,10 +22,12 @@ export function LoadMore() {
     setFetchingPage(nextPage);
 
     startTransition(async () => {
+      console.log("Fetching page", nextPage);
       const posts = await fetchLatestPosts({
         page: nextPage,
         start,
       });
+      console.log("Fetched page", posts.length);
 
       setPosts((prev) => [...prev, ...posts]);
       setPage(nextPage);
@@ -37,21 +39,21 @@ export function LoadMore() {
   }, [inView, fetchingPage, page, reachedBottom, setPage, setPosts, start]);
 
   if (reachedBottom) {
-    return <div className="text-center text-neutral-500">End of feed!</div>;
+    return <div className="text-center text-slate-500">End of feed!</div>;
   }
 
   return (
     <div
       ref={ref}
-      className="group block w-full select-none space-y-3 rounded-xl border border-neutral-500 bg-neutral-800 p-4 transition"
+      className="group block w-full select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 animate-pulse rounded-full bg-neutral-700" />
+          <div className="h-8 w-8 animate-pulse rounded-full bg-slate-700" />
         </div>
       </div>
 
-      <div className="relative aspect-square w-full animate-pulse rounded-lg bg-neutral-700"></div>
+      <div className="relative aspect-square w-full animate-pulse rounded-lg bg-slate-700"></div>
     </div>
   );
 }
