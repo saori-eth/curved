@@ -13,7 +13,7 @@ const contracts = {
   address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}` | undefined,
 };
 
-export const useMarket = (shareId: string) => {
+export const useMarket = (shareId: number) => {
   const { address } = useAccount();
 
   const {

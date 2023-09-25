@@ -5,7 +5,7 @@ import { formatEther } from "viem";
 import { useMarket } from "@/hooks/useMarket";
 
 interface Props {
-  shareId: string;
+  shareId: number;
 }
 
 export function TradeButtons({ shareId }: Props) {

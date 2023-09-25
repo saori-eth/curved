@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import Avatar from "@/components/Avatar";
 import { Post } from "@/lib/fetchPost";
-import { fetchProfileFromAddress } from "@/lib/fetchProfile";
 
 import { TradeButtons } from "./TradeButtons";
 
@@ -12,9 +11,6 @@ interface Props {
 }
 
 export function PostPage({ post }: Props) {
-  const shareId = post.shareId;
-  const user = fetchProfileFromAddress(post.owner.address);
-
   return (
     <div className="h-full space-y-4 overflow-y-auto md:grid md:grid-cols-5 md:gap-8 md:space-y-0">
       <div className="space-y-4 md:col-span-2">
@@ -78,7 +74,7 @@ export function PostPage({ post }: Props) {
           <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
         </ul>
 
-        <TradeButtons shareId={shareId.toString()} />
+        <TradeButtons shareId={post.shareId} />
       </div>
     </div>
   );
