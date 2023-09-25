@@ -22,6 +22,7 @@ export const useRewards = (address: string) => {
     abi: contracts.abi,
     functionName: "earned",
     args: [address as `0x${string}`],
+    watch: Boolean(address),
   });
 
   const { config } = usePrepareContractWrite({
