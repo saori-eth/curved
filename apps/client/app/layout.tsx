@@ -13,8 +13,8 @@ const font = Gemunu_Libre({
   subsets: ["latin"],
 });
 
-const title = "Curved";
-const description = "Welcome to Curved!";
+const title = "yuyu.social";
+const description = "Welcome to yuyu.social!";
 
 export const metadata: Metadata = {
   description,
