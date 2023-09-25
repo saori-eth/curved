@@ -32,7 +32,7 @@ export function SidebarItems() {
             }
           />
 
-          <li className="pt-4">
+          <li className="hidden pt-4 md:block">
             <CreatePost />
           </li>
 
