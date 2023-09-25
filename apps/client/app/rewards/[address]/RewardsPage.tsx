@@ -44,13 +44,12 @@ export function RewardsPage({ user }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-start py-2">
-      <h1 className="text-6xl font-bold">Rewards</h1>
-      <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-        <div className="mt-6 w-96 rounded-xl border p-6 text-left shadow-2xl">
-          <h3 className="text-2xl font-bold">Your Rewards</h3>
-          <p className="mt-4 text-xl">{earnedStatus}</p>
+      <div className="mt-6 flex flex-wrap items-center justify-around w-full">
+        <div className="mt-6 min-w-[200px] max-w-[400px] w-full sm:w-96 rounded-xl border p-6 text-left shadow-2xl">
+          <h3 className="text-xl sm:text-2xl font-bold">Your Rewards</h3>
+          <p className="mt-4 text-lg sm:text-xl">{earnedStatus}</p>
           <button
-            className="mt-4 rounded-lg bg-black px-4 py-2 text-xl font-bold text-white"
+            className="mt-4 rounded-lg bg-black px-4 py-2 text-lg sm:text-xl font-bold text-white"
             onClick={getReward ? getReward : undefined}
           >
             {claimStatus || "Claim"}
