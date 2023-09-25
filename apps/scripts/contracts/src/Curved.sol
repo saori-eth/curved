@@ -69,7 +69,6 @@ contract Curved is Ownable, ERC20 {
         string uri;
     }
 
-    mapping(address => uint256[]) public userOwnedShares;
     mapping(uint256 => Share) public shareInfo;
 
     constructor(
@@ -117,7 +116,6 @@ contract Curved is Ownable, ERC20 {
         shareInfo[currentId].balances[msg.sender] = 1;
         shareInfo[currentId].totalSupply = 1;
         shareInfo[currentId].uri = _uri;
-        userOwnedShares[msg.sender].push(currentId);
         currentId++;
         emit ShareCreated(msg.sender, currentId - 1);
     }
@@ -305,11 +303,5 @@ contract Curved is Ownable, ERC20 {
     ) external view returns (uint256) {
         require(id < currentId, "Invalid share id");
         return shareInfo[id].balances[user];
-    }
-
-    function getUserOwnedShares(
-        address user
-    ) external view returns (uint256[] memory) {
-        return userOwnedShares[user];
     }
 }
