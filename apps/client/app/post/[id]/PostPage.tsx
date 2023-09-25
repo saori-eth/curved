@@ -2,15 +2,12 @@ import Image from "next/image";
 
 import Avatar from "@/components/Avatar";
 import { Post } from "@/lib/fetchPost";
-import { fetchProfileFromAddress } from "@/lib/fetchProfile";
 
 interface Props {
   post: Post;
 }
 
-export async function PostPage({ post }: Props) {
-  const profile = await fetchProfileFromAddress(post.owner);
-
+export function PostPage({ post }: Props) {
   const buyPrice = "0.0156";
   const sellPrice = "0.0122";
 
@@ -33,12 +30,14 @@ export async function PostPage({ post }: Props) {
         <div className="flex items-center space-x-2">
           <Avatar
             size={32}
-            uniqueKey={profile?.username ?? post.owner}
-            src={profile?.avatar}
+            uniqueKey={post.owner.username || post.owner.address}
+            src={post.owner.avatar}
           />
 
           <span className="text-sm text-slate-400">
-            {profile ? `@${profile.username}` : post.owner}
+            {post.owner.username
+              ? `@${post.owner.username}`
+              : post.owner.address}
           </span>
         </div>
 

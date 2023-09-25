@@ -17,13 +17,13 @@ const title = "yuyu.social";
 const description = "Welcome to yuyu.social!";
 
 export const metadata: Metadata = {
+  applicationName: title,
   description,
   openGraph: {
     description,
     title,
     type: "website",
   },
-  themeColor: "#000000",
   title,
   twitter: {
     card: "summary",

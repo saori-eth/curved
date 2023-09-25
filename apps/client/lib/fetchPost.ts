@@ -5,8 +5,12 @@ import { db } from "./db";
 export type Post = {
   shareId: number;
   description: string;
-  owner: string;
   url: string;
+  owner: {
+    address: string;
+    username: string;
+    avatar: string;
+  };
 };
 
 export const fetchPost = cache(
@@ -31,6 +35,14 @@ export const fetchPost = cache(
           url: true,
         },
         where: (row, { eq }) => eq(row.shareId, shareId),
+        with: {
+          owner: {
+            columns: {
+              avatar: true,
+              username: true,
+            },
+          },
+        },
       });
 
       if (!data) {
@@ -39,7 +51,11 @@ export const fetchPost = cache(
 
       return {
         description: data.description ?? "",
-        owner: data.owner,
+        owner: {
+          address: data.owner,
+          avatar: data.owner.avatar ?? "",
+          username: data.owner.username ?? "",
+        },
         shareId,
         url: data.url,
       };

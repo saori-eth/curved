@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import Avatar from "@/components/Avatar";
@@ -10,6 +11,41 @@ export const revalidate = 10;
 interface Props {
   params: {
     user: string;
+  };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // Strip @ from username
+  const username = params.user.replace("%40", "");
+
+  const profile = await fetchProfileFromUsername(username);
+  if (!profile) return {};
+
+  const title = `@${profile.username}`;
+
+  return {
+    description: "",
+    openGraph: {
+      description: "",
+      images: [
+        {
+          url: profile.avatar ?? "",
+        },
+      ],
+      title,
+      type: "profile",
+    },
+    title,
+    twitter: {
+      card: "summary",
+      description: "",
+      images: [
+        {
+          url: profile.avatar ?? "",
+        },
+      ],
+      title,
+    },
   };
 }
 

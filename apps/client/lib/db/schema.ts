@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   bigint,
   char,
@@ -38,6 +39,13 @@ export const content = mysqlTable(
     shareIdIndex: uniqueIndex("shareId").on(table.shareId),
   }),
 );
+
+export const contentRelations = relations(content, ({ one }) => ({
+  owner: one(user, {
+    fields: [content.owner],
+    references: [user.address],
+  }),
+}));
 
 export const pendingContent = mysqlTable(
   "pending_content",
@@ -113,3 +121,7 @@ export const user = mysqlTable(
     usernameIndex: uniqueIndex("username").on(table.username),
   }),
 );
+
+export const userRelations = relations(user, ({ many }) => ({
+  posts: many(content),
+}));
