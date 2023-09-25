@@ -45,7 +45,7 @@ export function RewardsPage({ user }: Props) {
   return (
     <div className="flex flex-col items-center justify-start py-2">
       <div className="mt-6 flex flex-wrap items-center justify-around w-full">
-        <div className="mt-6 min-w-[200px] max-w-[400px] w-full sm:w-96 rounded-xl border p-6 text-left shadow-2xl">
+        <div className="mt-6 min-w-[200px] max-w-[400px] w-full sm:w-96 rounded-xl border p-6 text-left">
           <h3 className="text-xl sm:text-2xl font-bold">Your Rewards</h3>
           <p className="mt-4 text-lg sm:text-xl">{earnedStatus}</p>
           <button
