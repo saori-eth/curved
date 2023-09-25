@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { fetchProfile } from "@/lib/fetchProfile";
+import { fetchProfileFromAddress } from "@/lib/fetchProfile";
 
 import { RewardsPage } from "./RewardsPage";
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default async function Post({ params }: Props) {
-  const user = await fetchProfile(params.address.toLowerCase());
+  const user = await fetchProfileFromAddress(params.address.toLowerCase());
   if (!user) {
     notFound();
   }

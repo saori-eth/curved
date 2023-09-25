@@ -2,14 +2,14 @@ import Image from "next/image";
 
 import Avatar from "@/components/Avatar";
 import { Post } from "@/lib/fetchPost";
-import { fetchProfile } from "@/lib/fetchProfile";
+import { fetchProfileFromAddress } from "@/lib/fetchProfile";
 
 interface Props {
   post: Post;
 }
 
 export async function PostPage({ post }: Props) {
-  const profile = await fetchProfile(post.owner);
+  const profile = await fetchProfileFromAddress(post.owner);
 
   const buyPrice = "0.0156";
   const sellPrice = "0.0122";

@@ -8,7 +8,7 @@ export type Profile = {
   address: string;
 };
 
-export const fetchProfile = cache(
+export const fetchProfileFromAddress = cache(
   async (address: string): Promise<Profile | null> => {
     try {
       const data = await db.query.user.findFirst({
@@ -24,6 +24,30 @@ export const fetchProfile = cache(
         address,
         avatar: data.avatar,
         username: data.username,
+      };
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  },
+);
+
+export const fetchProfileFromUsername = cache(
+  async (username: string): Promise<Profile | null> => {
+    try {
+      const data = await db.query.user.findFirst({
+        columns: { address: true, avatar: true },
+        where: (row, { eq }) => eq(row.username, username),
+      });
+
+      if (!data) {
+        return null;
+      }
+
+      return {
+        address: data.address,
+        avatar: data.avatar,
+        username,
       };
     } catch (e) {
       console.log(e);
