@@ -140,17 +140,17 @@ export function CreatePost() {
 
       if (file.type.startsWith("image/gif")) {
         new Compressor(file, {
-          quality: 0.6,
+          error(err) {
+            console.log(err.message);
+          },
           maxWidth: 480,
+          quality: 0.6,
           success: function (compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
               }),
             );
-          },
-          error(err) {
-            console.log(err.message);
           },
         });
       } else {

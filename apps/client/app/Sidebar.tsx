@@ -10,7 +10,7 @@ const font = Quicksand({
 
 export function Sidebar() {
   return (
-    <nav className="md:py-4">
+    <nav className="bg-slate-800 p-2 md:p-0 md:py-4">
       <Link href="/" className="mb-4 ml-3 hidden w-fit md:block">
         <h2 className={`text-2xl font-bold ${font.className}`}>yuyu.social</h2>
       </Link>

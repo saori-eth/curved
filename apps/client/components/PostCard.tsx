@@ -26,9 +26,9 @@ export function PostCard({
       className="group block w-full select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition hover:cursor-pointer hover:border-slate-400 hover:bg-slate-700 hover:shadow-lg"
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex w-2/3 items-center space-x-2">
           <Avatar src={avatar} uniqueKey={username ?? owner} size={32} />
-          <span className="text-sm text-slate-400">
+          <span className="truncate text-sm text-slate-400">
             {username ? `@${username}` : owner}
           </span>
         </div>

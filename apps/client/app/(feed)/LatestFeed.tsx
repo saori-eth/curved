@@ -10,7 +10,7 @@ export async function LatestFeed() {
   });
 
   return (
-    <div className="no-scrollbar flex w-full justify-center overflow-y-auto">
+    <div className="flex h-screen w-full justify-center">
       <div className="w-full space-y-4 pb-4">
         <FeedProvider initialPosts={posts}>
           <PostFeed />

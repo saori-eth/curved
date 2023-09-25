@@ -41,12 +41,15 @@ export default function RootLayout({ children }: Props) {
     <html lang="en" className={font.className}>
       <body className="bg-slate-800 text-white">
         <ClientWrapper>
-          <div className="max-w-content mx-auto md:grid md:grid-cols-7 md:gap-8">
-            <div className="fixed inset-x-0 bottom-0 z-20 bg-slate-800/90 py-2 backdrop-blur md:relative md:inset-0 md:z-auto md:col-span-2 md:h-screen md:bg-inherit md:py-2 md:backdrop-blur-none">
-              <Sidebar />
+          <div className="max-w-content mx-auto md:grid md:grid-cols-7">
+            <div className="col-span-2 mx-2 lg:mx-0">
+              <div className="fixed inset-x-0 bottom-0 z-10 md:inset-x-auto md:inset-y-0 md:w-[200px] lg:w-[300px]">
+                <Sidebar />
+              </div>
             </div>
-            <div className="pb-16 md:col-span-3 md:pb-0">{children}</div>
-            <div className="md:col-span-2" />
+            <div className="mx-4 md:col-span-4 md:mx-0 md:pb-0 lg:col-span-3">
+              {children}
+            </div>
           </div>
         </ClientWrapper>
       </body>

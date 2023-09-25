@@ -26,7 +26,7 @@ export async function PostPage({ post }: Props) {
             fill
             sizes="410px"
             draggable={false}
-            className="rounded-lg"
+            className="rounded-lg object-cover"
           />
         </div>
 
