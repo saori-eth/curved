@@ -8,6 +8,7 @@
     "build": "cd contracts && forge build",
     "db": "node db/index.js",
     "deploy": "cd contracts && dotenv -e ../.env -- bash deployment/curved.local.sh",
+    "deploy:goerli": "cd contracts && dotenv -e ../.env -- bash deployment/curved.goerli.sh",
     "dev": "conc \"pnpm run anvil --silent\" \"pnpm run deploy\"",
     "init-rewards": "node dev/initRewards.js",
     "mock-events": "node dev/mockEvents.js",
