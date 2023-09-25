@@ -9,10 +9,10 @@ const wallet = new ethers.Wallet(LOCAL_PRIVATE_KEY, provider);
 const contract = new ethers.Contract(LOCAL_CURVED_ADDRESS, CURVED_ABI, wallet);
 
 const initRewards = async () => {
-  const tx = await contract.createShare("ipfs://uri");
-  await tx.wait();
-  const cost = await contract.getBuyPriceAfterFee(0, 1);
-  const tx2 = await contract.buyShare(0, 1, {
+  // const tx = await contract.createShare("ipfs://uri");
+  // await tx.wait();
+  const cost = await contract.getBuyPriceAfterFee(0, 15);
+  const tx2 = await contract.buyShare(0, 15, {
     value: cost,
   });
   await tx2.wait();
