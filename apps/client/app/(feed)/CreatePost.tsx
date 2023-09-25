@@ -3,7 +3,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { RiImageAddFill } from "react-icons/ri";
 import {
   useAccount,
   useContractWrite,
@@ -200,10 +199,10 @@ export function CreatePost() {
     >
       <Dialog.Trigger
         onClick={promptFile}
-        className="flex items-center space-x-3 rounded-2xl bg-slate-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-slate-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg sm:px-6 sm:py-4"
+        className="flex items-center space-x-2 rounded-2xl bg-slate-100 p-5 text-black shadow-dark drop-shadow transition hover:bg-slate-300 hover:shadow-lg active:opacity-90 active:drop-shadow-lg md:w-full md:px-6 md:py-4"
       >
-        <RiImageAddFill className="text-2xl" />
-        <span className="hidden text-xl font-bold sm:block">Upload</span>
+        <span className="text-xl">📷</span>
+        <span className="hidden text-xl font-bold md:block">Upload</span>
       </Dialog.Trigger>
 
       <Dialog.Portal>
@@ -216,10 +215,11 @@ export function CreatePost() {
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${
+                    disabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
-                    }`}
+                  }`}
                   alt="Upload preview"
                 />
               ) : (
@@ -231,18 +231,20 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${disabled ? "opacity-50" : ""
-                  }`}
+                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${
+                  disabled ? "opacity-50" : ""
+                }`}
               />
 
               <div className="flex justify-end">
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-slate-900 px-4 py-1 ${disabled
+                  className={`rounded-full bg-slate-900 px-4 py-1 ${
+                    disabled
                       ? "opacity-50"
                       : "transition hover:bg-black active:opacity-90"
-                    }`}
+                  }`}
                 >
                   Submit
                 </button>

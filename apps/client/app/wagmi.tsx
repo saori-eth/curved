@@ -62,7 +62,7 @@ const connectors = connectorsForWallets([
     wallets: [
       metaMaskWallet({ chains, projectId }),
       rainbowWallet({ chains, projectId }),
-      coinbaseWallet({ appName: "Curved", chains }),
+      coinbaseWallet({ appName: "yuyu.social", chains }),
       ...(needsInjectedWalletFallback ? [injectedWallet({ chains })] : []),
     ],
   },

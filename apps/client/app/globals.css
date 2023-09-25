@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.max-w-content {
+  @apply max-w-5xl;
+}
+
 :root {
   font-size: large;
 }

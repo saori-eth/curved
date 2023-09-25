@@ -18,8 +18,9 @@ export default function Avatar({
 }: Props) {
   return (
     <div
-      className={`rounded-full ${loading ? "animate-pulse bg-slate-300" : "bg-slate-200"
-        }`}
+      className={`rounded-full ${
+        loading ? "animate-pulse bg-slate-300" : "bg-slate-200"
+      }`}
       style={{ height: size, width: size }}
     >
       {loading ? null : src ? (

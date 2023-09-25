@@ -48,7 +48,7 @@ export async function cropImage(url: string, ratio = 1): Promise<File> {
         0,
         0,
         cropWidth,
-        cropHeight
+        cropHeight,
       );
 
       canvas.toBlob((blob) => {

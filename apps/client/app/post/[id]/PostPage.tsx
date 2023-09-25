@@ -17,8 +17,8 @@ export async function PostPage({ post }: Props) {
   const hasShares = true;
 
   return (
-    <div className="grid h-full grid-cols-5 gap-8">
-      <div className="col-span-2 space-y-4">
+    <div className="h-full space-y-4 overflow-y-auto md:grid md:grid-cols-5 md:gap-8 md:space-y-0">
+      <div className="space-y-4 md:col-span-2">
         <div className="relative aspect-square rounded-lg bg-slate-900">
           <Image
             src={post.url}

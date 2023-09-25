@@ -1,5 +1,6 @@
-import { viewTable } from "@/lib/db";
 import { NextRequest } from "next/server";
+
+import { viewTable } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.nextUrl);

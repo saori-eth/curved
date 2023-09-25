@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
-import { RewardsPage } from "./RewardsPage";
-
 import { fetchProfile } from "@/lib/fetchProfile";
+
+import { RewardsPage } from "./RewardsPage";
 
 export const revalidate = 30;
 
@@ -18,7 +18,7 @@ export default async function Post({ params }: Props) {
 
   return (
     <div className="flex w-full justify-center pt-20">
-      <div className="w-full max-w-5xl">
+      <div className="max-w-content w-full">
         <RewardsPage user={user} />
       </div>
     </div>

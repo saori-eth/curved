@@ -1,6 +1,6 @@
-import { resetTable } from "@/lib/db";
 import { NextRequest } from "next/server";
-import { reset } from "viem/_types/actions/test/reset";
+
+import { resetTable } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.nextUrl);

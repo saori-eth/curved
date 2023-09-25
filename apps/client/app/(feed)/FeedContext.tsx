@@ -21,8 +21,8 @@ export interface IFeedContext {
 export const FeedContext = createContext<IFeedContext>({
   page: 0,
   posts: [],
-  setPage: () => { },
-  setPosts: () => { },
+  setPage: () => {},
+  setPosts: () => {},
   start: 0,
 });
 

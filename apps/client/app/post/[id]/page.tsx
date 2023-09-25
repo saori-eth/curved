@@ -17,10 +17,8 @@ export default async function Post({ params }: Props) {
   }
 
   return (
-    <div className="flex w-full justify-center pt-20">
-      <div className="w-full max-w-5xl">
-        <PostPage post={post} />
-      </div>
+    <div className="m-4">
+      <PostPage post={post} />
     </div>
   );
 }
