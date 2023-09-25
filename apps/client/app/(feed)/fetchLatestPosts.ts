@@ -71,8 +71,8 @@ export async function fetchLatestPosts(
       description: row.description ?? "",
       owner: {
         address: row.owner,
-        avatar: row.owner.avatar ?? "",
-        username: row.owner.username ?? "",
+        avatar: row.owner.avatar,
+        username: row.owner.username,
       },
       shareId: row.shareId,
       url: row.url,

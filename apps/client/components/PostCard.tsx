@@ -8,8 +8,8 @@ interface Props {
   url: string;
   owner: string;
   description: string;
-  avatar?: string;
-  username?: string;
+  avatar?: string | null;
+  username?: string | null;
 }
 
 export function PostCard({

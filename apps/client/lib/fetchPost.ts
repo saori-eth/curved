@@ -8,8 +8,8 @@ export type Post = {
   url: string;
   owner: {
     address: string;
-    username: string;
-    avatar: string;
+    username: string | null;
+    avatar: string | null;
   };
 };
 
@@ -53,8 +53,8 @@ export const fetchPost = cache(
         description: data.description ?? "",
         owner: {
           address: data.owner,
-          avatar: data.owner.avatar ?? "",
-          username: data.owner.username ?? "",
+          avatar: data.owner.avatar,
+          username: data.owner.username,
         },
         shareId,
         url: data.url,
