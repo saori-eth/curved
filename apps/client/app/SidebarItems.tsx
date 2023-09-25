@@ -32,9 +32,9 @@ export function SidebarItems() {
             }
           />
 
-          <div className="hidden pt-4 md:block">
+          <li className="pt-4">
             <CreatePost />
-          </div>
+          </li>
 
           <div className="w-full md:absolute md:inset-x-0 md:bottom-4">
             <SidebarButton onClick={logout} title="Logout" icon="🚪" />
