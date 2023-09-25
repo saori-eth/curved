@@ -28,8 +28,8 @@ export type AuthContextValue = {
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => {},
-    logout: async () => {},
+    login: async () => { },
+    logout: async () => { },
     status: useAuthStore.getState().status,
     user: useAuthStore.getState().user,
   });

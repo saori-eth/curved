@@ -3,12 +3,9 @@ import Link from "next/link";
 
 import Avatar from "@/components/Avatar";
 import { Post } from "@/lib/fetchPost";
+import { fetchProfileFromAddress } from "@/lib/fetchProfile";
 
 import { TradeButtons } from "./TradeButtons";
-import {
-  fetchProfileFromAddress,
-  fetchProfileFromUsername,
-} from "@/lib/fetchProfile";
 
 interface Props {
   post: Post;
@@ -81,7 +78,7 @@ export function PostPage({ post }: Props) {
           <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
         </ul>
 
-        <TradeButtons user={user} shareId={shareId.toString()} />
+        <TradeButtons shareId={shareId.toString()} />
       </div>
     </div>
   );

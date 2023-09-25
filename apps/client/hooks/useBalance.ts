@@ -1,8 +1,10 @@
 "use client";
-import { CURVED_ABI } from "@/lib/abi/curved";
-import { useContractRead } from "wagmi";
-import { formatUnits } from "@/lib/utils";
+
 import { useEffect, useState } from "react";
+import { useContractRead } from "wagmi";
+
+import { CURVED_ABI } from "@/lib/abi/curved";
+import { formatUnits } from "@/lib/utils";
 
 export const useBalance = (address: string) => {
   const [formattedBalance, setFormattedBalance] = useState<string>();
@@ -11,24 +13,24 @@ export const useBalance = (address: string) => {
     isLoading: dataLoading,
     isError: dataError,
   } = useContractRead({
-    address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}`,
     abi: CURVED_ABI,
-    functionName: "balanceOf",
-    enabled: Boolean(address),
+    address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}`,
     args: [address as `0x${string}`],
+    enabled: Boolean(address),
+    functionName: "balanceOf",
     watch: true,
   });
 
   useEffect(() => {
     if (balance) {
-      setFormattedBalance(formatUnits(balance as bigint));
+      setFormattedBalance(formatUnits(balance));
     }
   }, [balance]);
 
   return {
     balance,
-    formattedBalance,
-    dataLoading,
     dataError,
+    dataLoading,
+    formattedBalance,
   };
 };

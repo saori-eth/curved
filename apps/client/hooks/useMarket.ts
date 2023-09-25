@@ -1,5 +1,4 @@
 "use client";
-import { CURVED_ABI } from "@/lib/abi/curved";
 import {
   useAccount,
   useContractReads,
@@ -7,74 +6,80 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 
+import { CURVED_ABI } from "@/lib/abi/curved";
+
 const contracts = {
-  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS,
   abi: CURVED_ABI,
+  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}` | undefined,
 };
 
 export const useMarket = (shareId: string) => {
   const { address } = useAccount();
-  const { data, isLoading, isError } = useContractReads({
+
+  const {
+    data,
+    isLoading: isReadLoading,
+    isError: isReadError,
+  } = useContractReads({
     contracts: [
       {
-        address: contracts.address as `0x${string}`,
         abi: contracts.abi,
-        functionName: "getBuyPriceAfterFee",
+        address: contracts.address as `0x${string}`,
         args: [BigInt(shareId), BigInt(1)],
+        functionName: "getBuyPriceAfterFee",
       },
       {
-        address: contracts.address as `0x${string}`,
         abi: contracts.abi,
-        functionName: "getSellPriceAfterFee",
+        address: contracts.address as `0x${string}`,
         args: [BigInt(shareId), BigInt(1)],
+        functionName: "getSellPriceAfterFee",
       },
     ],
   });
 
-  const buyPrice = data ? data[0].result : null;
-  const sellPrice = data ? data[1].result : null;
+  const buyPrice = data ? data[0].result : undefined;
+  const sellPrice = data ? data[1].result : undefined;
 
-  const { config: buyConfig } = usePrepareContractWrite({
-    address: contracts.address as `0x${string}`,
+  const {
+    config: buyConfig,
+    isLoading: isPrepareBuyLoading,
+    isError: isPrepareBuyError,
+  } = usePrepareContractWrite({
     abi: contracts.abi,
+    address: contracts.address,
+    args: [BigInt(shareId), BigInt(1)],
+    enabled: Boolean(address),
     functionName: "buyShare",
-    args: [BigInt(shareId), BigInt(1)],
-    enabled: Boolean(address),
-    value: buyPrice as bigint,
+    value: buyPrice,
   });
 
-  const { config: sellConfig } = usePrepareContractWrite({
-    address: contracts.address as `0x${string}`,
+  const {
+    config: sellConfig,
+    isLoading: isPrepareSellLoading,
+    isError: isPrepareSellError,
+  } = usePrepareContractWrite({
     abi: contracts.abi,
-    functionName: "sellShare",
+    address: contracts.address,
     args: [BigInt(shareId), BigInt(1)],
     enabled: Boolean(address),
+    functionName: "sellShare",
   });
 
-  const {
-    write: buy,
-    isLoading: isBuyLoading,
-    isError: isBuyError,
-  } = useContractWrite(buyConfig);
+  const { write: buy, isLoading: isBuyLoading } = useContractWrite(buyConfig);
 
-  const {
-    write: sell,
-    isLoading: isSellLoading,
-    isError: isSellError,
-  } = useContractWrite(sellConfig);
+  const { write: sell, isLoading: isSellLoading } =
+    useContractWrite(sellConfig);
 
   return {
-    read: {
-      buyPrice,
-      sellPrice,
-      dataLoading: isLoading,
-      dataError: isError,
-    },
-    write: {
-      buy,
-      sell,
-      methodLoading: isBuyLoading || isSellLoading,
-      methodError: isBuyError || isSellError,
-    },
+    buy,
+    buyPrice,
+    isBuyLoading: isBuyLoading || isPrepareBuyLoading,
+    isPrepareBuyError,
+    isPrepareSellError: isPrepareSellError,
+    isReadError,
+    isReadLoading,
+    isSellLoading: isSellLoading || isPrepareSellLoading,
+    sell,
+    sellPrice,
   };
 };

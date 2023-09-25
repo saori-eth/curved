@@ -1,15 +1,15 @@
 "use client";
-import { CURVED_ABI } from "@/lib/abi/curved";
 import {
-  useAccount,
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
 
+import { CURVED_ABI } from "@/lib/abi/curved";
+
 const contracts = {
-  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS,
   abi: CURVED_ABI,
+  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS,
 };
 
 export const useRewards = (address: string) => {
@@ -18,18 +18,18 @@ export const useRewards = (address: string) => {
     isLoading: dataLoading,
     isError: dataError,
   } = useContractRead({
-    address: contracts.address as `0x${string}`,
     abi: contracts.abi,
-    functionName: "earned",
+    address: contracts.address as `0x${string}`,
     args: [address as `0x${string}`],
+    functionName: "earned",
     watch: Boolean(address),
   });
 
   const { config } = usePrepareContractWrite({
-    address: contracts.address as `0x${string}`,
     abi: contracts.abi,
-    functionName: "getReward",
+    address: contracts.address as `0x${string}`,
     enabled: Boolean(address),
+    functionName: "getReward",
   });
 
   const {
@@ -41,14 +41,14 @@ export const useRewards = (address: string) => {
 
   return {
     read: {
-      earned,
-      dataLoading,
       dataError,
+      dataLoading,
+      earned,
     },
     write: {
       getReward,
-      methodLoading: isGetRewardLoading,
       methodError: isGetRewardError,
+      methodLoading: isGetRewardLoading,
       methodSuccess: isGetRewardSuccess,
     },
   };

@@ -1,65 +1,78 @@
 "use client";
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
-import { formatUnits } from "@/lib/utils";
-import { CURVED_ABI } from "@/lib/abi/curved";
+
+import { formatEther } from "viem";
+
 import { useMarket } from "@/hooks/useMarket";
-import { useAuth } from "../../AuthProvider";
-import { useEffect, useState } from "react";
 
 interface Props {
-  user: any;
   shareId: string;
 }
 
-export function TradeButtons({ user, shareId }: Props) {
-  const { address } = useAccount();
-  const { read, write } = useMarket(shareId);
-  const { dataError, dataLoading, buyPrice, sellPrice } = read;
-  const { methodError, methodLoading, buy, sell } = write;
+export function TradeButtons({ shareId }: Props) {
+  const {
+    buy,
+    sell,
+    buyPrice,
+    sellPrice,
+    isPrepareBuyError: isPrepateBuyError,
+    isPrepareSellError,
+    isReadError,
+    isBuyLoading,
+    isReadLoading,
+    isSellLoading,
+  } = useMarket(shareId);
 
   const hasShares = true;
+
+  const disableBuy = isBuyLoading || isReadLoading || isPrepateBuyError;
+  const disableSell = isSellLoading || isReadLoading || isPrepareSellError;
 
   return (
     <div className="flex w-full space-x-4">
       <div className="w-full space-y-1">
         <button
-          className="w-full rounded-md bg-green-700 py-2 transition hover:bg-green-600 active:opacity-90"
+          disabled={disableBuy}
           onClick={() => {
-            buy && buy();
+            if (!disableBuy && buy) {
+              buy();
+            }
           }}
+          className={`w-full rounded-md bg-green-700 py-2 transition ${disableBuy ? "opacity-50" : "hover:bg-green-600 active:scale-95"
+            }`}
         >
           Buy
         </button>
         <div className="text-center text-sm text-slate-400">
-          {dataLoading
-            ? "..."
-            : dataError
+          {isReadError || isPrepateBuyError
             ? "Error"
-            : formatUnits(buyPrice as bigint)}
+            : !buyPrice
+              ? "..."
+              : formatEther(buyPrice)}
         </div>
       </div>
 
       {hasShares && (
         <div className="w-full space-y-1">
           <button
-            className="w-full rounded-md bg-red-800 py-2 transition hover:bg-red-700 active:opacity-90"
+            disabled={disableSell}
             onClick={() => {
-              sell && sell();
+              if (!disableSell && sell) {
+                sell();
+              }
             }}
+            className={`w-full rounded-md bg-red-800 py-2 transition ${disableSell
+                ? "cursor-default opacity-50"
+                : "hover:bg-red-700 active:scale-95"
+              }`}
           >
             Sell
           </button>
           <div className="text-center text-sm text-slate-400">
-            {dataLoading
-              ? "..."
-              : dataError
+            {isReadError || isPrepareSellError
               ? "Error"
-              : formatUnits(sellPrice as bigint)}
+              : !sellPrice
+                ? "..."
+                : formatEther(sellPrice)}
           </div>
         </div>
       )}
