@@ -47,7 +47,7 @@ export default function RootLayout({ children }: Props) {
                 <Sidebar />
               </div>
             </div>
-            <div className="mx-4 md:col-span-4 md:mx-0 md:pb-0 lg:col-span-3">
+            <div className="mx-4 pb-16 md:col-span-4 md:mx-0 md:pb-0 lg:col-span-3">
               {children}
             </div>
           </div>

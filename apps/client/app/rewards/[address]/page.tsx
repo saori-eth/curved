@@ -18,7 +18,7 @@ export default async function Post({ params }: Props) {
 
   return (
     <div className="flex w-full justify-center pt-20">
-      <div className="max-w-content w-full">
+      <div className="w-full">
         <RewardsPage user={user} />
       </div>
     </div>

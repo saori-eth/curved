@@ -17,7 +17,7 @@ export default async function Post({ params }: Props) {
   }
 
   return (
-    <div className="m-4">
+    <div className="py-4">
       <PostPage post={post} />
     </div>
   );
