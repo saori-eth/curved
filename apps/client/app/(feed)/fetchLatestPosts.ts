@@ -53,6 +53,14 @@ export async function fetchLatestPosts(
       limit: PAGE_SIZE,
       offset: page * PAGE_SIZE + offset,
       orderBy: (row, { desc }) => [desc(row.shareId)],
+      with: {
+        owner: {
+          columns: {
+            avatar: true,
+            username: true,
+          },
+        },
+      },
     });
 
     if (!data) {
@@ -61,7 +69,11 @@ export async function fetchLatestPosts(
 
     return data.map((row) => ({
       description: row.description ?? "",
-      owner: row.owner,
+      owner: {
+        address: row.owner,
+        avatar: row.owner.avatar ?? "",
+        username: row.owner.username ?? "",
+      },
       shareId: row.shareId,
       url: row.url,
     }));
