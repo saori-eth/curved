@@ -1,6 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import Compressor from "compressorjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import {
@@ -11,7 +12,6 @@ import {
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
-import { cropImage } from "@/lib/cropImage";
 
 import { useAuth } from "../AuthProvider";
 import { editPending } from "./editPending";
@@ -138,9 +138,25 @@ export function CreatePost() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
-      const cropped = await cropImage(URL.createObjectURL(file));
+      if (file.type.startsWith("image/gif")) {
+        new Compressor(file, {
+          quality: 0.6,
+          maxWidth: 480,
+          success: function (compressedFile) {
+            setFile(
+              new File([compressedFile], "compressed.gif", {
+                type: "image/gif",
+              }),
+            );
+          },
+          error(err) {
+            console.log(err.message);
+          },
+        });
+      } else {
+        setFile(file);
+      }
 
-      setFile(cropped);
       setUrl("");
       setOpen(true);
 
@@ -164,12 +180,12 @@ export function CreatePost() {
         setUrl(created.url);
 
         // Upload image
-        const blob = new Blob([cropped], { type: cropped.type });
+        const blob = new Blob([file], { type: file.type });
 
         const res = await fetch(created.uploadUrl, {
           body: blob,
           headers: {
-            "Content-Type": cropped.type,
+            "Content-Type": file.type,
             "x-amz-acl": "public-read",
           },
           method: "PUT",

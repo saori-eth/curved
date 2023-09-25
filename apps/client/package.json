@@ -19,6 +19,7 @@
     "@rainbow-me/rainbowkit": "^1.0.11",
     "autoprefixer": "10.4.15",
     "boring-avatars": "^1.10.1",
+    "compressorjs": "^1.2.1",
     "drizzle-orm": "^0.28.6",
     "encoding": "^0.1.13",
     "lokijs": "^1.5.12",
