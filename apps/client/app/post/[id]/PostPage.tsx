@@ -25,7 +25,6 @@ export async function PostPage({ post }: Props) {
             alt="Post image"
             fill
             sizes="410px"
-            quality={90}
             draggable={false}
             className="rounded-lg"
           />
