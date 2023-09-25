@@ -1046,4 +1046,4 @@ export const CURVED_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
