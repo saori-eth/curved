@@ -9,6 +9,7 @@ import {
   useEffect,
   useTransition,
 } from "react";
+import { useAccount } from "wagmi";
 
 import { LoginResponse } from "@/app/api/auth/login/types";
 import { getAuthStatus } from "@/app/api/auth/status/helper";
@@ -27,8 +28,8 @@ export type AuthContextValue = {
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => {},
-    logout: async () => {},
+    login: async () => { },
+    logout: async () => { },
     status: useAuthStore.getState().status,
     user: useAuthStore.getState().user,
   });
@@ -49,6 +50,7 @@ export default function AuthProvider({ children }: Props) {
   const [loading, startTransition] = useTransition();
 
   const router = useRouter();
+  const { address } = useAccount();
 
   const login = useCallback(
     async (args: AuthData) => {
@@ -116,6 +118,14 @@ export default function AuthProvider({ children }: Props) {
         setUser(null);
       });
   }, [setStatus, setUser]);
+
+  // Logout on wallet change
+  useEffect(() => {
+    if (!address) return;
+    return () => {
+      logout();
+    };
+  }, [address, logout]);
 
   return (
     <AuthContext.Provider value={{ loading, login, logout, status, user }}>

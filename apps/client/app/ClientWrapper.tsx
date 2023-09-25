@@ -23,14 +23,14 @@ interface Props {
 
 export default function RainbowkitWrapper({ children }: Props) {
   return (
-    <AuthProvider>
-      <WagmiConfig config={config}>
+    <WagmiConfig config={config}>
+      <AuthProvider>
         <RainbowKitAuthProvider>
           <RainbowKitProvider theme={theme} chains={chains}>
             {children}
           </RainbowKitProvider>
         </RainbowKitAuthProvider>
-      </WagmiConfig>
-    </AuthProvider>
+      </AuthProvider>
+    </WagmiConfig>
   );
 }
