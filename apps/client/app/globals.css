@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .max-w-content {
-  @apply max-w-5xl;
+  @apply max-w-6xl;
 }
 
 :root {

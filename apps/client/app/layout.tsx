@@ -42,8 +42,8 @@ export default function RootLayout({ children }: Props) {
       <body className="bg-slate-800 text-white">
         <ClientWrapper>
           <div className="max-w-content mx-auto md:grid md:grid-cols-7">
-            <div className="col-span-2 mx-2 lg:mx-0">
-              <div className="fixed inset-x-0 bottom-0 z-10 md:inset-x-auto md:inset-y-0 md:w-[200px] lg:w-[300px]">
+            <div className="col-span-2 ml-2">
+              <div className="fixed inset-x-0 bottom-0 z-10 md:inset-x-auto md:inset-y-0 md:w-[200px] lg:w-[250px] xl:w-[300px]">
                 <Sidebar />
               </div>
             </div>

@@ -42,7 +42,7 @@ export function LoadMore() {
   }, [inView, fetchingPage, page, reachedBottom, setPage, setPosts, start]);
 
   if (reachedBottom) {
-    return <div className="text-center text-slate-500">End of feed!</div>;
+    return <div className="pb-4 text-center text-slate-500">End of feed!</div>;
   }
 
   return (
