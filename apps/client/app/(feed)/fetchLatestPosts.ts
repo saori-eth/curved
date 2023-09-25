@@ -5,7 +5,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { Post } from "@/lib/fetchPost";
 
-const PAGE_SIZE = 8;
+import { FEED_PAGE_SIZE } from "./constants";
 
 const FetchLatestSchema = z.object({
   page: z.number().int().min(0),
@@ -38,8 +38,8 @@ export async function fetchLatestPosts(
       // latestShare is page 0, calculate what page we will find start on
       if (latestShare.shareId > args.start) {
         const diff = latestShare.shareId - args.start;
-        page = Math.floor(diff / PAGE_SIZE);
-        offset = diff % PAGE_SIZE;
+        page = Math.floor(diff / FEED_PAGE_SIZE);
+        offset = diff % FEED_PAGE_SIZE;
       }
     }
 
@@ -50,8 +50,8 @@ export async function fetchLatestPosts(
         shareId: true,
         url: true,
       },
-      limit: PAGE_SIZE,
-      offset: page * PAGE_SIZE + offset,
+      limit: FEED_PAGE_SIZE,
+      offset: page * FEED_PAGE_SIZE + offset,
       orderBy: (row, { desc }) => [desc(row.shareId)],
       with: {
         owner: {

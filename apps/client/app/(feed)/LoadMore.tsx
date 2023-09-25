@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useInView } from "react-intersection-observer";
 
+import { FEED_PAGE_SIZE } from "./constants";
 import { useFeed } from "./FeedContext";
 import { fetchLatestPosts } from "./fetchLatestPosts";
 
@@ -12,7 +13,9 @@ export function LoadMore() {
   const [_, startTransition] = useTransition();
 
   const [fetchingPage, setFetchingPage] = useState(page);
-  const [reachedBottom, setReachedBottom] = useState(posts.length === 0);
+  const [reachedBottom, setReachedBottom] = useState(
+    posts.length < FEED_PAGE_SIZE,
+  );
 
   useEffect(() => {
     if (!inView || reachedBottom) return;
@@ -32,7 +35,7 @@ export function LoadMore() {
       setPosts((prev) => [...prev, ...posts]);
       setPage(nextPage);
 
-      if (posts.length === 0) {
+      if (posts.length < FEED_PAGE_SIZE) {
         setReachedBottom(true);
       }
     });
