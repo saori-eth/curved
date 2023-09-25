@@ -10,10 +10,9 @@ interface Props {
 export function RewardsPage({ user }: Props) {
   const [earnedStatus, setEarnedStatus] = useState("");
   const [claimStatus, setClaimStatus] = useState("");
-  const [claimable, setClaimable] = useState("");
   const { read, write } = useRewards(user.address);
   const { earned, dataLoading, dataError } = read;
-  const { getReward, methodLoading, methodError } = write;
+  const { getReward, methodLoading, methodError, methodSuccess } = write;
 
   useEffect(() => {
     if (dataLoading) {
@@ -32,16 +31,16 @@ export function RewardsPage({ user }: Props) {
       setClaimStatus("Error claiming rewards");
       setTimeout(() => {
         setClaimStatus("Claim");
-      }, 5000);
-    } else if (claimable) {
+      }, 3000);
+    } else if (methodSuccess) {
       setClaimStatus("Claimed!");
       setTimeout(() => {
         setClaimStatus("Claim");
-      }, 5000);
+      }, 3000);
     } else {
       setClaimStatus("Claim");
     }
-  }, [methodLoading, methodError, claimable]);
+  }, [methodLoading, methodError]);
 
   return (
     <div className="flex flex-col items-center justify-start py-2">

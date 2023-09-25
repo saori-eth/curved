@@ -35,6 +35,7 @@ export const useRewards = (address: string) => {
     write: getReward,
     isLoading: isGetRewardLoading,
     isError: isGetRewardError,
+    isSuccess: isGetRewardSuccess,
   } = useContractWrite(config);
 
   return {
@@ -47,6 +48,7 @@ export const useRewards = (address: string) => {
       getReward,
       methodLoading: isGetRewardLoading,
       methodError: isGetRewardError,
+      methodSuccess: isGetRewardSuccess,
     },
   };
 };
