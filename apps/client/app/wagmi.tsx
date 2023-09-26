@@ -9,7 +9,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { Chain, Config, configureChains, createConfig } from "wagmi";
-import { base } from "wagmi/chains";
+import { base, goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 // declare global {
@@ -44,8 +44,8 @@ export const {
 } = configureChains(
   [
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [localhost]
-      : [base]),
+      ? [localhost, goerli]
+      : [base, goerli]),
   ],
   [publicProvider()],
 );
