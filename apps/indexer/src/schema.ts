@@ -77,7 +77,7 @@ export const trades = mysqlTable(
     trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
   },
   (table) => ({
-    shareIdIndex: uniqueIndex("shareId").on(table.shareId),
+    id: uniqueIndex("id").on(table.id),
   }),
 );
 

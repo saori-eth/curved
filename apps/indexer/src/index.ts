@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import CurveABI from "./abi/Curved.json" assert { type: "json" };
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { content, pendingContent } from "./schema";
+import { content, pendingContent, trades } from "./schema";
 
 config();
 const { MODE, ALCHEMY_WS, LOCAL_WS, LOCAL_CURVED_ADDRESS } = process.env;
@@ -60,11 +60,39 @@ curve.on("*", async (event) => {
         console.log("Deleting pending content");
 
         await db.delete(pendingContent).where(eq(pendingContent.owner, owner));
+
+        const tradeEntry = {
+          shareId: shareId,
+          side: 0,
+          trader: owner.toLowerCase(),
+          owner: owner.toLowerCase(),
+          amount: 1,
+          price: 0,
+          supply: 1,
+        };
+
+        console.log("Inserting trade", tradeEntry);
+
+        await db.insert(trades).values(tradeEntry);
       } catch (e) {
         console.error(e);
       }
 
       break;
+    }
+    case "Trade": {
+      const entry = {
+        shareId: event.args[0].toNumber(),
+        side: event.args[1].toNumber(),
+        trader: event.args[2].toLowerCase(),
+        owner: event.args[3].toLowerCase(),
+        amount: event.args[4].toNumber(),
+        price: event.args[5].toString(),
+        supply: event.args[6].toNumber(),
+      };
+
+      console.log("Inserting trade", entry);
+      await db.insert(trades).values(entry);
     }
   }
 });

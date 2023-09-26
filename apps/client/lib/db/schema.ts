@@ -64,22 +64,17 @@ export const pendingContent = mysqlTable(
   }),
 );
 
-export const trades = mysqlTable(
-  "trades",
-  {
-    amount: bigint("amount", { mode: "number" }).notNull(),
-    id: serial("id").primaryKey(),
-    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    price: bigint("price", { mode: "number" }).notNull(),
-    shareId: bigint("share_id", { mode: "number" }).notNull(),
-    side: bigint("side", { mode: "number" }).notNull(),
-    supply: bigint("supply", { mode: "number" }).notNull(),
-    trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
-  },
-  (table) => ({
-    shareIdIndex: uniqueIndex("shareId").on(table.shareId),
-  }),
-);
+// TODO: add hash
+export const trades = mysqlTable("trades", {
+  amount: bigint("amount", { mode: "number" }).notNull(),
+  id: serial("id").primaryKey(),
+  owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+  price: bigint("price", { mode: "number" }).notNull(),
+  shareId: bigint("share_id", { mode: "number" }).notNull(),
+  side: bigint("side", { mode: "number" }).notNull(),
+  supply: bigint("supply", { mode: "number" }).notNull(),
+  trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
+});
 
 export const ethereumSession = mysqlTable(
   "auth_ethereum_session",
