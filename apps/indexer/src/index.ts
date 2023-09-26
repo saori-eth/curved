@@ -69,6 +69,7 @@ curve.on("*", async (event) => {
           amount: 1,
           price: 0,
           supply: 1,
+          hash: event.transactionHash,
         };
 
         console.log("Inserting trade", tradeEntry);
@@ -89,6 +90,7 @@ curve.on("*", async (event) => {
         amount: event.args[4].toNumber(),
         price: event.args[5].toString(),
         supply: event.args[6].toNumber(),
+        hash: event.transactionHash,
       };
 
       console.log("Inserting trade", entry);

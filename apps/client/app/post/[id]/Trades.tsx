@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import { formatUnits, formatAddress } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   shareId: number;
@@ -19,17 +21,25 @@ export const Trades = async ({ shareId }: Props) => {
     const trader = trade.trader;
     const price = BigInt(trade.price);
     const amount = trade.amount;
+    const hash = trade.hash;
     return (
-      <li className="w-full rounded-md bg-slate-900 px-4 py-1">
-        <div className="flex justify-between">
-          <div className="text-sm text-gray-400">{formatAddress(trader)}</div>
-          <div className="text-sm text-gray-400">{side}</div>
-        </div>
-        <div className="flex justify-between">
-          <div className="text-sm text-gray-400">{formatUnits(price, 4)}</div>
-          <div className="text-sm text-gray-400">{amount}</div>
-        </div>
-      </li>
+      <Link
+        href={`https://basescan.io/tx/${hash}`}
+        key={hash}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <li className="w-full rounded-md bg-slate-900 px-4 py-1 hover:bg-gray-700 cursor-pointer">
+          <div className="flex justify-between">
+            <div className="text-sm text-gray-400">{formatAddress(trader)}</div>
+            <div className="text-sm text-gray-400">{side}</div>
+          </div>
+          <div className="flex justify-between">
+            <div className="text-sm text-gray-400">{formatUnits(price, 4)}</div>
+            <div className="text-sm text-gray-400">{amount}</div>
+          </div>
+        </li>
+      </Link>
     );
   });
 
