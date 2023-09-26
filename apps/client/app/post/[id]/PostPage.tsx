@@ -5,6 +5,7 @@ import Avatar from "@/components/Avatar";
 import { Post } from "@/lib/fetchPost";
 
 import { TradeButtons } from "./TradeButtons";
+import { Trades } from "./Trades";
 
 interface Props {
   post: Post;
@@ -60,20 +61,7 @@ export function PostPage({ post }: Props) {
       </div>
 
       <div className="col-span-3 space-y-4">
-        <ul className="w-full space-y-1">
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-          <li className="w-full rounded-md bg-slate-900 px-4 py-1">Trade</li>
-        </ul>
-
+        <Trades shareId={post.shareId} />
         <TradeButtons shareId={post.shareId} />
       </div>
     </div>
