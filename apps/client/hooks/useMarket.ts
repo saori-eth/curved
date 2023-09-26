@@ -11,6 +11,7 @@ import { CURVED_ABI } from "@/lib/abi/curved";
 const contracts = {
   abi: CURVED_ABI,
   address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}` | undefined,
+  watch: true,
 };
 
 export const useMarket = (shareId: number) => {
@@ -35,6 +36,7 @@ export const useMarket = (shareId: number) => {
         functionName: "getSellPriceAfterFee",
       },
     ],
+    watch: true,
   });
 
   const buyPrice = data ? data[0].result : undefined;
