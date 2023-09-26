@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { formatUnits, formatAddress } from "@/lib/utils";
+import { formatUnits, formatAddress, ethSymbol } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -35,7 +35,9 @@ export const Trades = async ({ shareId }: Props) => {
             <div className="text-sm text-gray-400">{side}</div>
           </div>
           <div className="flex justify-between">
-            <div className="text-sm text-gray-400">{formatUnits(price, 4)}</div>
+            <div className="text-sm text-gray-400">
+              {formatUnits(price, 4)} {ethSymbol}
+            </div>
             <div className="text-sm text-gray-400">{amount}</div>
           </div>
         </li>
