@@ -14,7 +14,7 @@ export function TradeButtons({ shareId }: Props) {
     sell,
     buyPrice,
     sellPrice,
-    isPrepareBuyError: isPrepateBuyError,
+    isPrepareBuyError,
     isPrepareSellError,
     isReadError,
     isBuyLoading,
@@ -24,7 +24,7 @@ export function TradeButtons({ shareId }: Props) {
 
   const hasShares = true;
 
-  const disableBuy = isBuyLoading || isReadLoading || isPrepateBuyError;
+  const disableBuy = isBuyLoading || isReadLoading || isPrepareBuyError;
   const disableSell = isSellLoading || isReadLoading || isPrepareSellError;
 
   return (
@@ -37,17 +37,18 @@ export function TradeButtons({ shareId }: Props) {
               buy();
             }
           }}
-          className={`w-full rounded-md bg-green-700 py-2 transition ${disableBuy ? "opacity-50" : "hover:bg-green-600 active:scale-95"
-            }`}
+          className={`w-full rounded-md bg-green-700 py-2 transition ${
+            disableBuy ? "opacity-50" : "hover:bg-green-600 active:scale-95"
+          }`}
         >
           Buy
         </button>
         <div className="text-center text-sm text-slate-400">
-          {isReadError || isPrepateBuyError
+          {isReadError || isPrepareBuyError
             ? "Error"
             : !buyPrice
-              ? "..."
-              : formatEther(buyPrice)}
+            ? "..."
+            : formatEther(buyPrice)}
         </div>
       </div>
 
@@ -60,10 +61,11 @@ export function TradeButtons({ shareId }: Props) {
                 sell();
               }
             }}
-            className={`w-full rounded-md bg-red-800 py-2 transition ${disableSell
+            className={`w-full rounded-md bg-red-800 py-2 transition ${
+              disableSell
                 ? "cursor-default opacity-50"
                 : "hover:bg-red-700 active:scale-95"
-              }`}
+            }`}
           >
             Sell
           </button>
@@ -71,8 +73,8 @@ export function TradeButtons({ shareId }: Props) {
             {isReadError || isPrepareSellError
               ? "Error"
               : !sellPrice
-                ? "..."
-                : formatEther(sellPrice)}
+              ? "..."
+              : formatEther(sellPrice)}
           </div>
         </div>
       )}
