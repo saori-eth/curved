@@ -189,9 +189,15 @@ contract CurvedTest is Test {
             _curved.getReward();
             uint256 earnedDuration = block.timestamp -
                 _userPurchaseTimestamp[_users[i]];
-            uint256 userDeposit = _curved.userEthContributed(_users[i]);
-            uint256 expectedReward = (earnedDuration * currentRate * userDeposit) /
-                totalDeposit;
+            int256 userDeposit = _curved.userNetEthContributed(_users[i]);
+            uint256 expectedReward;
+            if (userDeposit < 0) {
+                expectedReward = 0;
+            } else {
+                expectedReward = (earnedDuration * currentRate * uint(userDeposit)) /
+                    totalDeposit;
+            }
+            
             uint256 userRewardBalance = _rewardToken.balanceOf(_users[i]);
             assertEq(userRewardBalance, expectedReward);
         }
@@ -209,13 +215,66 @@ contract CurvedTest is Test {
             _curved.getReward();
             uint256 earnedDuration = block.timestamp -
                 _userPurchaseTimestamp[_users[i]];
-            uint256 userDeposit = _curved.userEthContributed(_users[i]);
-            uint256 expectedReward = (earnedDuration * currentRate * userDeposit) /
-                totalDeposit;
+            int256 userDeposit = _curved.userNetEthContributed(_users[i]);
+            uint256 expectedReward;
+            if (userDeposit < 0) {
+                expectedReward = 0;
+            } else {
+                expectedReward = (earnedDuration * currentRate * uint(userDeposit)) /
+                    totalDeposit;
+            }
             uint256 userRewardBalance = _rewardToken.balanceOf(_users[i]);
             assertEq(userRewardBalance, expectedReward);
         }
     }
 
+    function testNegativeEthContributed() public createShare(1) {
+        vm.stopPrank();
+
+        // first purchase
+        uint256 initEthContributed = _curved.getBuyPrice(0, 1);
+        uint256 fullCost = _curved.getBuyPriceAfterFee(0, 1);
+        vm.startPrank(_users[1]);
+        _curved.buyShare{value: fullCost}(0, 1);
+        int256 userEthContributed = _curved.userNetEthContributed(_users[1]);
+        assertEq(userEthContributed, int256(initEthContributed));
+
+        // new user enables first user to tp
+        uint256 newUserCost = _curved.getBuyPriceAfterFee(0, 10);
+        vm.startPrank(_users[2]);
+        _curved.buyShare{value: newUserCost}(0, 10);
+
+        // skip a block and some time
+        vm.warp(block.timestamp + 1 weeks);
+        vm.roll(block.number + 1);
+
+        // first user sells
+        uint256 ethTaken = _curved.getSellPrice(0, 1);
+        vm.startPrank(_users[1]);
+        _curved.sellShare(0, 1);
+        int256 totalEthTaken = int256(ethTaken) - int256(initEthContributed);
+        userEthContributed = _curved.userNetEthContributed(_users[1]);
+        assertEq(userEthContributed, -totalEthTaken);
+    }
+
+    function testClaimOnSell() public createShare(1) purchaseShare(1) {
+        uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 51 weeks;
+        vm.warp(targetTime);
+        vm.roll(block.number + 1);
+        uint256 earnedBeforeSell = _curved.earned(_users[1]);
+        _curved.sellShare(0, 1);
+        uint256 earnedAfterSell = _curved.earned(_users[1]);
+        uint256 balanceAfterSell = _rewardToken.balanceOf(_users[1]);
+        assertEq(earnedBeforeSell, earnedAfterSell);
+        assertEq(balanceAfterSell, 0);
+        _curved.getReward();
+        uint256 balanceAfterClaim = _rewardToken.balanceOf(_users[1]);
+        uint256 earnedAfterClaim = _curved.earned(_users[1]);
+        assertEq(balanceAfterClaim, earnedBeforeSell);
+        assertEq(earnedAfterClaim, 0);
+        
+    }
+
     // TODO: test claim each individual year
+    // TODO: test claim on sell
 }

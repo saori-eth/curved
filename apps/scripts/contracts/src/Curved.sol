@@ -29,7 +29,7 @@ contract Curved is Ownable, ERC20 {
     // Net ETH from buy/sell transactions
     uint256 public openInterest;
     // User address => staked amount
-    mapping(address => uint256) public userEthContributed;
+    mapping(address => int256) public userNetEthContributed;
 
     // ====== Token Variables ======
 
@@ -119,7 +119,7 @@ contract Curved is Ownable, ERC20 {
         emit ShareCreated(msg.sender, currentId - 1);
     }
 
-    function buyShare(uint256 id, uint256 amount) external payable {
+    function buyShare(uint256 id, uint256 amount) external payable updateReward(msg.sender) {
         require(id < currentId, "Invalid share id");
         Share storage share = shareInfo[id];
         uint256 supply = share.totalSupply;
@@ -128,7 +128,7 @@ contract Curved is Ownable, ERC20 {
             "Only the shares subject can buy the first share"
         );
         uint256 price = getPrice(supply, amount);
-        userEthContributed[msg.sender] = userEthContributed[msg.sender] + price;
+        userNetEthContributed[msg.sender] = userNetEthContributed[msg.sender] + int(price);
         openInterest = openInterest + price;
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         require(msg.value >= price + protocolFee, "Insufficient payment");
@@ -139,7 +139,7 @@ contract Curved is Ownable, ERC20 {
         require(success1, "Unable to send funds");
     }
 
-    function sellShare(uint256 id, uint256 amount) external {
+    function sellShare(uint256 id, uint256 amount) external updateReward(msg.sender) {
         require(id < currentId, "Invalid share id");
         Share storage share = shareInfo[id];
         uint256 supply = share.totalSupply;
@@ -152,13 +152,7 @@ contract Curved is Ownable, ERC20 {
             "Cannot sell all shares, must leave at least one"
         );
         uint256 owed = getPrice(supply - amount, amount);
-        if (owed >= userEthContributed[msg.sender]) {
-            userEthContributed[msg.sender] = 0;
-        } else {
-            userEthContributed[msg.sender] =
-                userEthContributed[msg.sender] -
-                owed;
-        }
+        userNetEthContributed[msg.sender] = userNetEthContributed[msg.sender] - int(owed);
         openInterest = openInterest - owed;
         uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         share.balances[msg.sender] = share.balances[msg.sender] - amount;
@@ -230,13 +224,17 @@ contract Curved is Ownable, ERC20 {
     }
 
     function earned(address _account) public view returns (uint) {
-        return
-            ((userEthContributed[_account] *
-                (rewardPerToken() - userRewardPerEthPaid[_account])) / 1e18) +
-            rewards[_account];
+      if (userNetEthContributed[_account] < 0){
+        return 0;
+      }
+
+      return
+          ((uint(userNetEthContributed[_account]) *
+              (rewardPerToken() - userRewardPerEthPaid[_account])) / 1e18) +
+          rewards[_account];
     }
 
-    function getReward() external updateReward(msg.sender) {
+    function getReward() public updateReward(msg.sender) {
         uint reward = rewards[msg.sender];
         require(reward + totalSupply() <= maxSupply, "Max supply reached");
         if (reward > 0) {
