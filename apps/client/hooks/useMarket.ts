@@ -48,7 +48,7 @@ export const useMarket = (shareId: number) => {
     abi: contracts.abi,
     address: contracts.address,
     args: [BigInt(shareId), BigInt(1)],
-    enabled: Boolean(address),
+    enabled: Boolean(address) && Boolean(buyPrice),
     functionName: "buyShare",
     value: buyPrice,
   });
@@ -61,7 +61,7 @@ export const useMarket = (shareId: number) => {
     abi: contracts.abi,
     address: contracts.address,
     args: [BigInt(shareId), BigInt(1)],
-    enabled: Boolean(address),
+    enabled: Boolean(address) && Boolean(sellPrice),
     functionName: "sellShare",
   });
 
