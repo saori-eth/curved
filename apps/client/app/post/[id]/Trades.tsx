@@ -24,7 +24,7 @@ export const Trades = async ({ shareId }: Props) => {
     const hash = trade.hash;
     return (
       <Link
-        href={`https://basescan.io/tx/${hash}`}
+        href={`https://goerli.etherscan.io/tx/${hash}`}
         key={hash}
         rel="noopener noreferrer"
         target="_blank"
