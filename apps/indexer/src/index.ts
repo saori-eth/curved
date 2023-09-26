@@ -2,7 +2,9 @@ import { config } from "dotenv";
 import { ethers } from "ethers";
 
 import CurveABI from "./abi/Curved.json" assert { type: "json" };
-import { DB } from "./DB";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { content, pendingContent } from "./schema";
 
 config();
 const { MODE, ALCHEMY_WS, LOCAL_WS, LOCAL_CURVED_ADDRESS } = process.env;
@@ -20,7 +22,6 @@ if (!curveAddr) {
 
 const provider = new ethers.providers.WebSocketProvider(wsUrl);
 const curve = new ethers.Contract(curveAddr, CurveABI.abi, provider);
-const db = new DB();
 
 console.log("STARTING INDEXER", { curveAddr, wsUrl });
 
@@ -33,13 +34,12 @@ curve.on("*", async (event) => {
       const shareId = event.args[1].toNumber();
 
       try {
-        const pending: any = await db.fetchOne(
-          "pending_content",
-          `owner="${owner}"`,
-        );
+        const pending = await db.query.pendingContent.findFirst({
+          where: (row, { eq }) => eq(row.owner, owner),
+        });
 
         if (!pending) {
-          console.log("No pending content found");
+          console.log("No pending content found. Ignoring onchain event.");
           // TODO: Add share + uri to content table
           return;
         }
@@ -49,16 +49,17 @@ curve.on("*", async (event) => {
           pending,
         );
 
-        await db.insert("content", {
-          description: pending.description,
-          owner,
-          share_id: shareId,
+        await db.insert(content).values({
+          owner: owner as string,
+          shareId,
           url: pending.url,
+          description: pending.description,
         });
 
+        // TODO: Delete pending content
         console.log("Deleting pending content");
 
-        await db.delete("pending_content", `owner="${owner}"`);
+        await db.delete(pendingContent).where(eq(pendingContent.owner, owner));
       } catch (e) {
         console.error(e);
       }
@@ -66,35 +67,4 @@ curve.on("*", async (event) => {
       break;
     }
   }
-
-  // if (event.event === "ShareCreated") {
-  //   console.log("Share created");
-  //   const owner = event.args[0];
-  //   const shareId = event.args[1].toNumber();
-  //   const entry = {
-  //     amount: 1,
-  //     owner: owner.toLowerCase(),
-  //     price: "0",
-  //     shareId,
-  //     side: 0,
-  //     supply: 1,
-  //     trader: owner.toLowerCase(),
-  //   };
-  //   console.log(`Inserting ${owner} and ${shareId} into content table`);
-  //   db.insert("trades", entry);
-  // } else if (event.event === "Trade") {
-  //   console.log("Trade event");
-  //   const entry = {
-  //     amount: event.args[4].toNumber(),
-  //     owner: event.args[3].toLowerCase(),
-  //     price: event.args[5].toString(),
-  //     shareId: event.args[0].toNumber(),
-  //     side: event.args[1].toNumber(),
-  //     supply: event.args[6].toNumber(),
-  //     trader: event.args[2].toLowerCase(),
-  //   };
-  //   db.insert("trades", entry);
-  // } else {
-  //   console.log("Unhandled event: ", event);
-  // }
 });
