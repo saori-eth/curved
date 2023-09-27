@@ -13,7 +13,8 @@ export default function Post() {
   const { earned, dataLoading, dataError } = read;
   const { getReward, methodLoading, methodError, methodSuccess } = write;
 
-  const disabled = !getReward || methodLoading || dataLoading || dataError;
+  const disabled =
+    !user || !getReward || methodLoading || dataLoading || dataError;
 
   function claim() {
     if (disabled) return;
@@ -48,7 +49,11 @@ export default function Post() {
           Claim
         </button>
 
-        {methodError ? (
+        {!user ? (
+          <p className="text-center text-red-500">
+            You must be logged in to claim rewards.
+          </p>
+        ) : methodError ? (
           <p className="text-center text-red-500">Error claiming rewards.</p>
         ) : methodSuccess ? (
           <p className="text-center text-sky-400">

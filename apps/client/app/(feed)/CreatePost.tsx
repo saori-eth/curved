@@ -65,7 +65,7 @@ export function CreatePost() {
     isTransitioning ||
     isWaitingOnTx ||
     waitingForIndex;
-  const error = errorPrepare || errorWrite;
+  const isError = Boolean(errorPrepare || errorWrite);
   const disabled =
     status !== "authenticated" || isLoading || isErrorPrepare || !write;
 
@@ -257,7 +257,7 @@ export function CreatePost() {
                   }`}
               />
 
-              <div className="flex justify-end">
+              <div className="flex justify-center">
                 <button
                   disabled={disabled}
                   type="submit"
@@ -271,11 +271,11 @@ export function CreatePost() {
               </div>
             </form>
 
-            {error && (
-              <p className="overflow-hidden text-ellipsis text-xs text-red-500">
-                {error.message}
+            {isError ? (
+              <p className="pt-4 text-center text-sm text-red-500">
+                Error creating post.
               </p>
-            )}
+            ) : null}
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>
