@@ -4,10 +4,8 @@ export const revalidate = 5;
 
 export default function Feed() {
   return (
-    <div className="flex w-full justify-center">
-      <div className="relative w-full pb-24 md:pb-0">
-        <LatestFeed />
-      </div>
+    <div className="fixed inset-0 bottom-16 overflow-y-scroll p-4 md:relative md:inset-auto md:overflow-y-visible md:p-0">
+      <LatestFeed />
     </div>
   );
 }

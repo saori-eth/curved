@@ -14,7 +14,7 @@ export function SidebarItems() {
   const { openConnectModal } = useConnectModal();
 
   return (
-    <ul className="flex md:block md:space-y-1">
+    <ul className="flex space-x-1 md:block md:space-x-0 md:space-y-1">
       <SidebarLink href="/" title="Home" icon="🏠" />
 
       {status === "authenticated" ? (
