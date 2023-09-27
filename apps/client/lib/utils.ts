@@ -7,7 +7,7 @@ export const formatUnits = (value: bigint, decimals?: number) => {
 };
 
 export const formatAddress = (address: string) => {
-  return `${address.slice(0, 2)}...${address.slice(-4)}`;
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
 
-export const ethSymbol = "Ξ";
+export const ETH_SYMBOL = "Ξ";

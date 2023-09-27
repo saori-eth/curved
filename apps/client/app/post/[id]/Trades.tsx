@@ -1,7 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 
+import Avatar from "@/components/Avatar";
 import { db } from "@/lib/db";
-import { ethSymbol, formatAddress, formatUnits } from "@/lib/utils";
+import { fetchProfileFromAddress } from "@/lib/fetchProfile";
+import { ETH_SYMBOL, formatAddress, formatUnits } from "@/lib/utils";
+
+import etherscan from "./etherscan-logo-circle-light.svg";
 
 interface Props {
   shareId: number;
@@ -14,36 +19,63 @@ export const Trades = async ({ shareId }: Props) => {
     where: (row, { eq }) => eq(row.shareId, shareId),
   });
 
-  console.log("trades: ", trades);
-
-  const tradesList = trades.map((trade) => {
-    const side = trade.side === 0 ? "Buy" : "Sell";
+  const tradesList = trades.map(async (trade) => {
+    const side = trade.side === 0 ? "+" : "-";
+    const verb = trade.side === 0 ? "bought" : "sold";
     const trader = trade.trader;
     const price = BigInt(trade.price);
     const amount = trade.amount;
     const hash = trade.hash;
+
+    const profile = await fetchProfileFromAddress(trader);
+
     return (
-      <Link
-        href={`https://goerli.etherscan.io/tx/${hash}`}
-        key={hash}
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <li className="w-full cursor-pointer rounded-md bg-slate-900 px-4 py-1 hover:bg-gray-700">
-          <div className="flex justify-between">
-            <div className="text-sm text-gray-400">{formatAddress(trader)}</div>
-            <div className="text-sm text-gray-400">{side}</div>
+      <li key={hash} className="flex items-center space-x-2 text-sm">
+        <Avatar
+          uniqueKey={profile ? profile.username : trader}
+          size={24}
+          src={profile ? profile.avatar : undefined}
+          draggable={false}
+        />
+
+        <div className="space-x-1">
+          <span>
+            {profile ? (
+              <Link href={`/@${profile.username}`} className="font-bold">
+                {profile.username}
+              </Link>
+            ) : (
+              <p>{formatAddress(trader)}</p>
+            )}
+          </span>
+          <span className="text-slate-400">{verb}</span>
+          <span className="font-bold text-white">{amount}</span>
+          <span className="text-slate-400">shares</span>
+        </div>
+
+        <div className="flex w-full items-center justify-end space-x-2">
+          <div
+            className={`text-sm ${side === "+" ? "text-sky-500" : "text-amber-500"
+              }`}
+          >
+            {side}
+            {formatUnits(price, 4)} {ETH_SYMBOL}
           </div>
-          <div className="flex justify-between">
-            <div className="text-sm text-gray-400">
-              {formatUnits(price, 4)} {ethSymbol}
-            </div>
-            <div className="text-sm text-gray-400">{amount}</div>
-          </div>
-        </li>
-      </Link>
+
+          <Link
+            href={`https://etherscan.io/tx/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition hover:opacity-80 active:opacity-70"
+          >
+            <Image src={etherscan} width={16} height={16} alt="Etherscan" />
+          </Link>
+        </div>
+      </li>
     );
   });
+
+  await Promise.all(tradesList);
 
   return (
     <div className="space-y-2">

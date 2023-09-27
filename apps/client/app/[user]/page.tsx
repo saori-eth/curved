@@ -68,7 +68,7 @@ export default async function User({ params }: Props) {
   });
 
   return (
-    <div className="flex flex-col items-center space-y-4 pb-4">
+    <div className="flex flex-col items-center space-y-6 pb-4">
       <div className="space-y-2">
         <Avatar size={128} src={profile.avatar} uniqueKey={username} />
         <h1 className="text-xl font-bold">@{profile.username}</h1>

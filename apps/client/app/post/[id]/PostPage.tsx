@@ -38,9 +38,7 @@ export function PostPage({ post }: Props) {
                 src={post.owner.avatar}
               />
 
-              <span className="text-sm text-slate-400">
-                @{post.owner.username}
-              </span>
+              <span className="text-sm font-bold">{post.owner.username}</span>
             </Link>
           ) : (
             <div className="flex items-center space-x-2">
@@ -57,7 +55,7 @@ export function PostPage({ post }: Props) {
           )}
         </div>
 
-        <div>{post.description}</div>
+        <p className="text-slate-400">{post.description}</p>
       </div>
 
       <div className="col-span-3 space-y-4">

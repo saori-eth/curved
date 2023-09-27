@@ -22,10 +22,12 @@ export function TradeButtons({ shareId }: Props) {
     isSellLoading,
   } = useMarket(shareId);
 
-  const hasShares = true;
+  const hasShares = true; // TODO: Replace with real value
+  const canSell = hasShares && sellPrice;
 
-  const disableBuy = isBuyLoading || isReadLoading || isPrepareBuyError;
-  const disableSell = isSellLoading || isReadLoading || isPrepareSellError;
+  const disableBuy = !buy || isBuyLoading || isReadLoading || isPrepareBuyError;
+  const disableSell =
+    !sell || isSellLoading || isReadLoading || isPrepareSellError;
 
   return (
     <div className="flex w-full space-x-4">
@@ -37,9 +39,8 @@ export function TradeButtons({ shareId }: Props) {
               buy();
             }
           }}
-          className={`w-full rounded-md bg-green-700 py-2 transition ${
-            disableBuy ? "opacity-50" : "hover:bg-green-600 active:scale-95"
-          }`}
+          className={`w-full rounded-md bg-sky-600 py-2 font-bold transition ${disableBuy ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
+            }`}
         >
           Buy
         </button>
@@ -47,12 +48,12 @@ export function TradeButtons({ shareId }: Props) {
           {isReadError || isPrepareBuyError
             ? "Error"
             : !buyPrice
-            ? "..."
-            : formatEther(buyPrice)}
+              ? "..."
+              : formatEther(buyPrice)}
         </div>
       </div>
 
-      {hasShares && (
+      {canSell ? (
         <div className="w-full space-y-1">
           <button
             disabled={disableSell}
@@ -61,11 +62,10 @@ export function TradeButtons({ shareId }: Props) {
                 sell();
               }
             }}
-            className={`w-full rounded-md bg-red-800 py-2 transition ${
-              disableSell
+            className={`w-full rounded-md bg-amber-600 py-2 font-bold transition ${disableSell
                 ? "cursor-default opacity-50"
-                : "hover:bg-red-700 active:scale-95"
-            }`}
+                : "hover:bg-amber-500 active:scale-95"
+              }`}
           >
             Sell
           </button>
@@ -73,11 +73,11 @@ export function TradeButtons({ shareId }: Props) {
             {isReadError || isPrepareSellError
               ? "Error"
               : !sellPrice
-              ? "..."
-              : formatEther(sellPrice)}
+                ? "..."
+                : formatEther(sellPrice)}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

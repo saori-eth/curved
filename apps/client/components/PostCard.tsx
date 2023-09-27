@@ -28,8 +28,8 @@ export function PostCard({
       <div className="flex items-center justify-between">
         <div className="flex w-2/3 items-center space-x-2">
           <Avatar src={avatar} uniqueKey={username ?? owner} size={32} />
-          <span className="truncate text-sm text-slate-400">
-            {username ? `@${username}` : owner}
+          <span className="truncate text-sm font-bold">
+            {username ? username : owner}
           </span>
         </div>
 
@@ -49,7 +49,7 @@ export function PostCard({
         )}
       </div>
 
-      <h3 className="text-ellipsis text-sm">{description}</h3>
+      <h3 className="text-ellipsis text-sm text-slate-400">{description}</h3>
     </Link>
   );
 }
