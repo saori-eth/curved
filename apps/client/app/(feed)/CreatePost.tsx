@@ -152,7 +152,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function (compressedFile) {
+          success: function(compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -238,11 +238,10 @@ export function CreatePost() {
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${
-                    disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
-                  }`}
+                    }`}
                   alt="Upload preview"
                 />
               ) : (
@@ -254,20 +253,18 @@ export function CreatePost() {
                 disabled={disabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${
-                  disabled ? "opacity-50" : ""
-                }`}
+                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${disabled ? "opacity-50" : ""
+                  }`}
               />
 
               <div className="flex justify-end">
                 <button
                   disabled={disabled}
                   type="submit"
-                  className={`rounded-full bg-slate-900 px-4 py-1 ${
-                    disabled
+                  className={`rounded-full bg-slate-900 px-4 py-1 ${disabled
                       ? "opacity-50"
-                      : "transition hover:bg-black active:opacity-90"
-                  }`}
+                      : "transition hover:bg-slate-950 active:opacity-90"
+                    }`}
                 >
                   Submit
                 </button>

@@ -19,11 +19,7 @@ export function SidebarItems() {
 
       {status === "authenticated" ? (
         <>
-          <SidebarLink
-            href={`/rewards/${user?.address}`}
-            title="Rewards"
-            icon="🎁"
-          />
+          <SidebarLink href="/rewards" title="Rewards" icon="🎁" />
           <SidebarLink
             href={`/@${user?.username}`}
             title="Profile"

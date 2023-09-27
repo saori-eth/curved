@@ -39,7 +39,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
-      <body className="bg-slate-800 text-white">
+      <body className="overflow-y-scroll bg-slate-800 text-white">
         <ClientWrapper>
           <div className="max-w-content mx-auto md:grid md:grid-cols-7">
             <div className="col-span-2 ml-2">
@@ -47,7 +47,7 @@ export default function RootLayout({ children }: Props) {
                 <Sidebar />
               </div>
             </div>
-            <div className="mx-4 pb-16 md:col-span-4 md:mx-0 md:pb-0 lg:col-span-3">
+            <div className="mx-4 py-16 md:col-span-4 md:mx-0 md:pb-0 lg:col-span-3">
               {children}
             </div>
           </div>
