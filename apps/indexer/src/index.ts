@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { ethers } from "ethers";
 
 import CurveABI from "./abi/Curved.json" assert { type: "json" };
-import { db } from "./db";
+import { db } from "./DB";
 import { content, pendingContent, trades } from "./schema";
 
 config();
