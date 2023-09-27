@@ -58,17 +58,32 @@ export function CreatePost() {
       hash: data?.hash,
     });
 
-  const [isTransitioning, startTransition] = useTransition();
+  const [isRedirecting, startRedirectTransition] = useTransition();
+  const [isUploading, startUploadTransition] = useTransition();
 
-  const isLoading =
-    isLoadingPrepare ||
+  const isError = Boolean(errorPrepare || errorWrite);
+
+  const imageDisabled =
+    status !== "authenticated" ||
     isLoadingWrite ||
-    isTransitioning ||
+    isUploading ||
+    isRedirecting ||
     isWaitingOnTx ||
     waitingForIndex;
-  const isError = Boolean(errorPrepare || errorWrite);
-  const disabled =
-    status !== "authenticated" || isLoading || isErrorPrepare || !write;
+
+  const descriptionDisabled =
+    isLoadingWrite || isRedirecting || isWaitingOnTx || waitingForIndex;
+
+  const submitDisabled =
+    isLoadingPrepare ||
+    isLoadingWrite ||
+    isUploading ||
+    isRedirecting ||
+    isWaitingOnTx ||
+    waitingForIndex ||
+    !write ||
+    status !== "authenticated" ||
+    isErrorPrepare;
 
   useEffect(() => {
     if (!isTxMined) return;
@@ -87,7 +102,7 @@ export function CreatePost() {
         if (shareId) {
           clearInterval(interval);
 
-          startTransition(() => {
+          startRedirectTransition(() => {
             console.log("Redirecting");
             setOpen(false);
             setWaitingForIndex(false);
@@ -101,16 +116,20 @@ export function CreatePost() {
       }
 
       if (tries > 20) {
-        console.error("Failed to get shareId");
-        clearInterval(interval);
-        setWaitingForIndex(false);
+        startRedirectTransition(() => {
+          console.error("Failed to get shareId");
+          clearInterval(interval);
+          setOpen(false);
+          setWaitingForIndex(false);
+          router.push("/");
+        });
       }
     }, 2000);
   }, [isTxMined, router]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (disabled) return;
+    if (submitDisabled) return;
 
     // Send transaction
     write();
@@ -136,7 +155,7 @@ export function CreatePost() {
       }
     }
 
-    if (disabled) return;
+    if (imageDisabled) return;
 
     const input = document.createElement("input");
     input.type = "file";
@@ -168,7 +187,7 @@ export function CreatePost() {
       setUrl("");
       setOpen(true);
 
-      startTransition(async () => {
+      startUploadTransition(async () => {
         // Create db post
         const createdRes = await fetch("/api/pending", {
           method: "POST",
@@ -217,7 +236,18 @@ export function CreatePost() {
     <Dialog.Root
       open={open}
       onOpenChange={(o) => {
-        if (open && disabled) return;
+        if (open) {
+          if (
+            isUploading ||
+            isLoadingWrite ||
+            isRedirecting ||
+            isWaitingOnTx ||
+            waitingForIndex
+          ) {
+            return;
+          }
+        }
+
         setOpen(o);
       }}
     >
@@ -239,7 +269,7 @@ export function CreatePost() {
                 <img
                   src={URL.createObjectURL(file)}
                   onClick={promptFile}
-                  className={`aspect-square w-full rounded-lg object-cover transition ${disabled
+                  className={`aspect-square w-full rounded-lg object-cover transition ${imageDisabled
                       ? "opacity-50"
                       : "hover:cursor-pointer hover:opacity-80"
                     }`}
@@ -251,18 +281,18 @@ export function CreatePost() {
 
               <textarea
                 ref={descriptionRef}
-                disabled={disabled}
+                disabled={descriptionDisabled}
                 placeholder="Write a caption..."
                 rows={2}
-                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${disabled ? "opacity-50" : ""
+                className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${descriptionDisabled ? "opacity-50" : ""
                   }`}
               />
 
               <div className="flex justify-center">
                 <button
-                  disabled={disabled}
+                  disabled={submitDisabled}
                   type="submit"
-                  className={`rounded-full bg-slate-900 px-4 py-1 ${disabled
+                  className={`rounded-full bg-slate-900 px-4 py-1 ${submitDisabled
                       ? "opacity-50"
                       : "transition hover:bg-slate-950 active:opacity-90"
                     }`}
@@ -281,8 +311,8 @@ export function CreatePost() {
                 Waiting for transaction to be mined...
               </p>
             ) : isTxMined ? (
-              <p className="pt-4 text-center text-sm text-slate-500">
-                Success! Redirecting...
+              <p className="pt-4 text-center text-sm text-sky-400">
+                Success! Waiting for indexer...
               </p>
             ) : null}
           </Dialog.Content>

@@ -8,6 +8,11 @@ import { content, pendingContent, trades } from "./schema";
 
 config();
 
+console.log("Starting listener", {
+  CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
+  WS_URL: process.env.WS_URL,
+});
+
 const provider = new ethers.providers.WebSocketProvider(
   process.env.WS_URL ?? "",
 );
@@ -43,7 +48,7 @@ curve.on("*", async (event) => {
 
         await db.insert(content).values({
           description: pending.description,
-          owner: owner as string,
+          owner,
           shareId,
           url: pending.url,
         });
