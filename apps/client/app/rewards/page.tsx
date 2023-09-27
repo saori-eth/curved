@@ -11,7 +11,13 @@ export default function Post() {
   const { read, write } = useRewards(user?.address);
 
   const { earned, dataLoading, dataError } = read;
-  const { getReward, methodLoading, methodError, methodSuccess } = write;
+  const {
+    getReward,
+    isTransactionSuccess,
+    isWaitingForTransaction,
+    methodLoading,
+    methodError,
+  } = write;
 
   const disabled =
     !user || !getReward || methodLoading || dataLoading || dataError;
@@ -50,12 +56,16 @@ export default function Post() {
         </button>
 
         {!user ? (
-          <p className="text-center text-red-500">
+          <p className="text-center text-slate-500">
             You must be logged in to claim rewards.
           </p>
         ) : methodError ? (
           <p className="text-center text-red-500">Error claiming rewards.</p>
-        ) : methodSuccess ? (
+        ) : isWaitingForTransaction ? (
+          <p className="text-center text-slate-500">
+            Waiting for transaction...
+          </p>
+        ) : isTransactionSuccess ? (
           <p className="text-center text-sky-400">
             Successfully claimed rewards! 🎉
           </p>

@@ -3,6 +3,7 @@ import {
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
@@ -37,8 +38,16 @@ export const useRewards = (address: `0x${string}` | undefined) => {
     write: getReward,
     isLoading: isGetRewardLoading,
     isError: isGetRewardError,
-    isSuccess: isGetRewardSuccess,
+    data: claimData,
   } = useContractWrite(config);
+
+  const {
+    isLoading: isWaitForTransactionLoading,
+    isSuccess: isWaitForTransactionSuccess,
+  } = useWaitForTransaction({
+    enabled: Boolean(claimData?.hash),
+    hash: claimData?.hash,
+  });
 
   return {
     read: {
@@ -48,9 +57,10 @@ export const useRewards = (address: `0x${string}` | undefined) => {
     },
     write: {
       getReward,
+      isTransactionSuccess: isWaitForTransactionSuccess,
+      isWaitingForTransaction: isWaitForTransactionLoading,
       methodError: isGetRewardError,
       methodLoading: isGetRewardLoading,
-      methodSuccess: isGetRewardSuccess,
     },
   };
 };
