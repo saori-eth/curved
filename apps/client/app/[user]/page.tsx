@@ -22,16 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return {};
 
   const title = `@${profile.username}`;
+  const images = profile.avatar ? [{ url: profile.avatar }] : [];
 
   return {
     description: "",
     openGraph: {
       description: "",
-      images: [
-        {
-          url: profile.avatar ?? "",
-        },
-      ],
+      images,
       title,
       type: "profile",
     },
@@ -39,11 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary",
       description: "",
-      images: [
-        {
-          url: profile.avatar ?? "",
-        },
-      ],
+      images,
       title,
     },
   };
@@ -77,10 +70,10 @@ export default async function User({ params }: Props) {
       {posts.map(({ description, ...post }) => (
         <PostCard
           key={post.shareId}
+          {...post}
           owner={profile.address}
           description={description ?? ""}
-          {...post}
-          avatar={profile.avatar ?? ""}
+          avatar={profile.avatar}
           username={profile.username}
         />
       ))}

@@ -20,7 +20,7 @@ export const Trades = async ({ shareId }: Props) => {
   });
 
   const tradesList = trades.map(async (trade) => {
-    const side = trade.side === 0 ? "+" : "-";
+    const sign = trade.side === 0 ? "+" : "-";
     const verb = trade.side === 0 ? "bought" : "sold";
     const trader = trade.trader;
     const price = BigInt(trade.price);
@@ -55,10 +55,10 @@ export const Trades = async ({ shareId }: Props) => {
 
         <div className="flex w-full items-center justify-end space-x-2">
           <div
-            className={`text-sm ${side === "+" ? "text-sky-500" : "text-amber-500"
+            className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
               }`}
           >
-            {side}
+            {sign}
             {formatUnits(price, 4)} {ETH_SYMBOL}
           </div>
 
@@ -79,7 +79,7 @@ export const Trades = async ({ shareId }: Props) => {
 
   return (
     <div className="space-y-2">
-      <div className="text-lg font-bold">Trades</div>
+      <div className="text-lg font-bold text-slate-400">Trades</div>
       <ul className="space-y-2">{tradesList}</ul>
     </div>
   );

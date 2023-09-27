@@ -19,10 +19,10 @@ export function SidebarLink({ title, href, icon }: Props) {
       <Link
         href={href}
         draggable={false}
-        className={`flex h-full w-full select-none items-center justify-center space-x-3 rounded-xl px-4 py-2 text-xl font-bold transition active:scale-95 md:justify-start ${isActive ? "bg-slate-700 hover:bg-slate-600" : "hover:bg-slate-700 "
+        className={`flex h-full w-full select-none items-center justify-center rounded-xl px-4 py-2 text-xl font-bold transition active:scale-95 md:justify-start ${isActive ? "bg-slate-700 hover:bg-slate-600" : "hover:bg-slate-700 "
           }`}
       >
-        <span>{icon}</span>
+        <span className="md:w-8">{icon}</span>
         <span className="hidden md:block">{title}</span>
       </Link>
     </li>
