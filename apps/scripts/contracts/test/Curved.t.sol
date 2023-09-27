@@ -26,9 +26,8 @@ contract CurvedTest is Test {
     mapping(address => uint256) _userPurchaseTimestamp;
 
     modifier createShare(uint256 numOwners) {
-        vm.stopPrank();
         for (uint256 i = 0; i < numOwners; i++) {
-            vm.startPrank(_owners[i]);
+            vm.prank(_owners[i]);
             _curved.createShare("ipfs://test");
         }
         _;
@@ -36,7 +35,6 @@ contract CurvedTest is Test {
 
     modifier purchaseShare(uint256 amount) {
         // purchases user 0 as user 1
-        vm.stopPrank();
         vm.startPrank(_users[1]);
         uint256 targetId = _curved.currentId() - 1;
         uint256 cost = _curved.getBuyPriceAfterFee(targetId, amount);
@@ -46,7 +44,6 @@ contract CurvedTest is Test {
     }
 
     modifier purchaseFromMany(uint256 users, uint256 amountPerUser) {
-        vm.stopPrank();
         uint256 targetId = _curved.currentId() - 1;
         for (uint256 i = 0; i < users; i++) {
             uint256 cost = _curved.getBuyPriceAfterFee(targetId, amountPerUser);
@@ -67,6 +64,7 @@ contract CurvedTest is Test {
         _rewardToken = IERC20(_curvedAddress);
         uint256 _ownerRewardTokenBalance = _rewardToken.balanceOf(_owner);
         assertEq(_ownerRewardTokenBalance, 2_000_000_000 ether);
+        vm.stopPrank();
     }
 
     function testGetOwner() public {
@@ -75,7 +73,6 @@ contract CurvedTest is Test {
     }
 
     function testCreateShare() public {
-        vm.stopPrank();
         vm.startPrank(_users[0]);
         uint256 currentId = _curved.currentId();
         _curved.createShare("ipfs://test");
@@ -87,7 +84,6 @@ contract CurvedTest is Test {
     }
 
     function testPurchaseAnotherUsersShare() public createShare(1) {
-        vm.stopPrank();
         vm.startPrank(_users[1]);
         uint256 targetId = _curved.currentId() - 1;
         uint256 cost = _curved.getBuyPriceAfterFee(targetId, 1);
@@ -97,7 +93,6 @@ contract CurvedTest is Test {
     }
 
     function testPurchaseManyShares() public createShare(1) {
-        vm.stopPrank();
         vm.startPrank(_users[1]);
         uint256 targetId = _curved.currentId() - 1;
         uint256 cost = _curved.getBuyPriceAfterFee(targetId, 2);
@@ -164,16 +159,15 @@ contract CurvedTest is Test {
     }
 
     function testAccurateRewardAsManyInDiffPools() public createShare(2) {
-        vm.stopPrank();
         for (uint256 i = 0; i < 2; i++) {
             if (i == 1) {
-                vm.startPrank(_users[i]);
                 uint256 cost = _curved.getBuyPriceAfterFee(0, 1);
+                vm.prank(_users[i]);
                 _curved.buyShare{value: cost}(0, 1);
                 _userPurchaseTimestamp[_users[i]] = block.timestamp;
             } else {
-                vm.startPrank(_users[i]);
                 uint256 cost = _curved.getBuyPriceAfterFee(1, 1);
+                vm.prank(_users[i]);
                 _curved.buyShare{value: cost}(1, 1);
                 _userPurchaseTimestamp[_users[i]] = block.timestamp;
             }
@@ -229,7 +223,6 @@ contract CurvedTest is Test {
     }
 
     function testNegativeEthContributed() public createShare(1) {
-        vm.stopPrank();
 
         // first purchase
         uint256 initEthContributed = _curved.getBuyPrice(0, 1);
