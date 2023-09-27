@@ -1,7 +1,7 @@
-import { db } from "@/lib/db";
-import { formatUnits, formatAddress, ethSymbol } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
+
+import { db } from "@/lib/db";
+import { ethSymbol, formatAddress, formatUnits } from "@/lib/utils";
 
 interface Props {
   shareId: number;
@@ -10,8 +10,8 @@ interface Props {
 export const Trades = async ({ shareId }: Props) => {
   const trades = await db.query.trades.findMany({
     limit: 10,
-    where: (row, { eq }) => eq(row.shareId, shareId),
     orderBy: (row, { desc }) => desc(row.id),
+    where: (row, { eq }) => eq(row.shareId, shareId),
   });
 
   console.log("trades: ", trades);
@@ -29,7 +29,7 @@ export const Trades = async ({ shareId }: Props) => {
         rel="noopener noreferrer"
         target="_blank"
       >
-        <li className="w-full rounded-md bg-slate-900 px-4 py-1 hover:bg-gray-700 cursor-pointer">
+        <li className="w-full cursor-pointer rounded-md bg-slate-900 px-4 py-1 hover:bg-gray-700">
           <div className="flex justify-between">
             <div className="text-sm text-gray-400">{formatAddress(trader)}</div>
             <div className="text-sm text-gray-400">{side}</div>

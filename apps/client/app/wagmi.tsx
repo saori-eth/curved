@@ -9,7 +9,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { Chain, Config, configureChains, createConfig } from "wagmi";
-import { base, goerli } from "wagmi/chains";
+import { base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 // declare global {

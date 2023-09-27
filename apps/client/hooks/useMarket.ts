@@ -77,7 +77,7 @@ export const useMarket = (shareId: number) => {
     buyPrice,
     isBuyLoading: isBuyLoading || isPrepareBuyLoading,
     isPrepareBuyError,
-    isPrepareSellError: isPrepareSellError,
+    isPrepareSellError,
     isReadError,
     isReadLoading,
     isSellLoading: isSellLoading || isPrepareSellLoading,
