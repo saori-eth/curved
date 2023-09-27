@@ -4,6 +4,7 @@ import {
   useContractReads,
   useContractWrite,
   usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
@@ -35,12 +36,19 @@ export const useMarket = (shareId: number) => {
         args: [BigInt(shareId), BigInt(1)],
         functionName: "getSellPriceAfterFee",
       },
+      {
+        abi: contracts.abi,
+        address: contracts.address as `0x${string}`,
+        args: [BigInt(shareId), address as `0x${string}`],
+        functionName: "getShareBalance",
+      },
     ],
     watch: true,
   });
 
   const buyPrice = data ? data[0].result : undefined;
   const sellPrice = data ? data[1].result : undefined;
+  const shareBalance = data ? data[2].result : undefined;
 
   const {
     config: buyConfig,
@@ -67,14 +75,33 @@ export const useMarket = (shareId: number) => {
     functionName: "sellShare",
   });
 
-  const { write: buy, isLoading: isBuyLoading } = useContractWrite(buyConfig);
+  const {
+    write: buy,
+    isLoading: isBuyLoading,
+    data: buyResult,
+  } = useContractWrite(buyConfig);
+  const {
+    write: sell,
+    isLoading: isSellLoading,
+    data: sellResult,
+  } = useContractWrite(sellConfig);
 
-  const { write: sell, isLoading: isSellLoading } =
-    useContractWrite(sellConfig);
+  const { isSuccess: doneBuying, isLoading: waitingForBuy } =
+    useWaitForTransaction({
+      enabled: Boolean(buyResult),
+      hash: buyResult?.hash,
+    });
+  const { isSuccess: doneSelling, isLoading: waitingForSell } =
+    useWaitForTransaction({
+      enabled: Boolean(sellResult),
+      hash: sellResult?.hash,
+    });
 
   return {
     buy,
     buyPrice,
+    doneBuying,
+    doneSelling,
     isBuyLoading: isBuyLoading || isPrepareBuyLoading,
     isPrepareBuyError,
     isPrepareSellError,
@@ -83,5 +110,8 @@ export const useMarket = (shareId: number) => {
     isSellLoading: isSellLoading || isPrepareSellLoading,
     sell,
     sellPrice,
+    shareBalance,
+    waitingForBuy,
+    waitingForSell,
   };
 };

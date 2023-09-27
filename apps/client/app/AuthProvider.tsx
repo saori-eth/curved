@@ -9,7 +9,7 @@ import {
   useEffect,
   useTransition,
 } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 import { LoginResponse } from "@/app/api/auth/login/types";
 import { getAuthStatus } from "@/app/api/auth/status/helper";
@@ -28,8 +28,8 @@ export type AuthContextValue = {
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => {},
-    logout: async () => {},
+    login: async () => { },
+    logout: async () => { },
     status: useAuthStore.getState().status,
     user: useAuthStore.getState().user,
   });
@@ -51,6 +51,7 @@ export default function AuthProvider({ children }: Props) {
 
   const router = useRouter();
   const { address } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const login = useCallback(
     async (args: AuthData) => {
@@ -88,6 +89,10 @@ export default function AuthProvider({ children }: Props) {
     setStatus("loading");
 
     try {
+      // Disconnect wallet
+      disconnect();
+
+      // Logout of session
       const res = await fetch("/api/auth/logout", { method: "GET" });
       if (!res.ok) throw new Error("Logout failed");
 
@@ -100,7 +105,7 @@ export default function AuthProvider({ children }: Props) {
       setStatus("authenticated");
       throw err;
     }
-  }, [status, setStatus, setUser, router]);
+  }, [status, disconnect, setStatus, setUser, router]);
 
   // Get the initial authentication status
   useEffect(() => {
@@ -121,11 +126,10 @@ export default function AuthProvider({ children }: Props) {
 
   // Logout on wallet change
   useEffect(() => {
-    if (!address) return;
-    return () => {
+    if (user?.address !== address) {
       logout();
-    };
-  }, [address, logout]);
+    }
+  }, [user, address, logout]);
 
   return (
     <AuthContext.Provider value={{ loading, login, logout, status, user }}>

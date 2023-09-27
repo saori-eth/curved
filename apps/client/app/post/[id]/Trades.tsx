@@ -50,7 +50,7 @@ export const Trades = async ({ shareId }: Props) => {
           </span>
           <span className="text-slate-400">{verb}</span>
           <span className="font-bold text-white">{amount}</span>
-          <span className="text-slate-400">shares</span>
+          <span className="text-slate-400">share{amount > 1 ? "s" : ""}</span>
         </div>
 
         <div className="flex w-full items-center justify-end space-x-2">
