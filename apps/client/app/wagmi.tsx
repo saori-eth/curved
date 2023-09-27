@@ -44,8 +44,8 @@ export const {
 } = configureChains(
   [
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [localhost, goerli]
-      : [base, goerli]),
+      ? [localhost]
+      : [base]),
   ],
   [publicProvider()],
 );

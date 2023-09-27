@@ -7,10 +7,10 @@ import { db } from "./DB";
 import { content, pendingContent, trades } from "./schema";
 
 config();
-const { MODE, ALCHEMY_WS, GOERLI_WS, GOERLI_CURVED_ADDRESS } = process.env;
+const { MODE, ALCHEMY_WS, LOCAL_WS, LOCAL_CURVED_ADDRESS } = process.env;
 
-const wsUrl = MODE === "dev" ? GOERLI_WS : ALCHEMY_WS;
-const curveAddr = MODE === "dev" ? GOERLI_CURVED_ADDRESS : "";
+const wsUrl = MODE === "dev" ? LOCAL_WS : ALCHEMY_WS;
+const curveAddr = MODE === "dev" ? LOCAL_CURVED_ADDRESS : "";
 
 if (!wsUrl) {
   throw new Error("Websocket URL not found");
