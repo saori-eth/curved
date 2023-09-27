@@ -7,10 +7,11 @@ import {
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
+import { env } from "@/lib/env.mjs";
 
-const contracts = {
+const contract = {
   abi: CURVED_ABI,
-  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}`,
+  address: env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
 };
 
 export const useRewards = (address: `0x${string}` | undefined) => {
@@ -19,8 +20,7 @@ export const useRewards = (address: `0x${string}` | undefined) => {
     isLoading: dataLoading,
     isError: dataError,
   } = useContractRead({
-    abi: contracts.abi,
-    address: contracts.address,
+    ...contract,
     args: address ? [address] : undefined,
     enabled: Boolean(address),
     functionName: "earned",
@@ -28,8 +28,7 @@ export const useRewards = (address: `0x${string}` | undefined) => {
   });
 
   const { config } = usePrepareContractWrite({
-    abi: contracts.abi,
-    address: contracts.address,
+    ...contract,
     enabled: Boolean(address),
     functionName: "getReward",
   });

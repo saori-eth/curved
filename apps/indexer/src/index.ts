@@ -7,23 +7,15 @@ import { db } from "./DB";
 import { content, pendingContent, trades } from "./schema";
 
 config();
-const { MODE, ALCHEMY_WS, LOCAL_WS, LOCAL_CURVED_ADDRESS } = process.env;
 
-const wsUrl = MODE === "dev" ? LOCAL_WS : ALCHEMY_WS;
-const curveAddr = MODE === "dev" ? LOCAL_CURVED_ADDRESS : "";
-
-if (!wsUrl) {
-  throw new Error("Websocket URL not found");
-}
-
-if (!curveAddr) {
-  throw new Error("Curve address not found");
-}
-
-const provider = new ethers.providers.WebSocketProvider(wsUrl);
-const curve = new ethers.Contract(curveAddr, CurveABI.abi, provider);
-
-console.log("STARTING INDEXER", { curveAddr, wsUrl });
+const provider = new ethers.providers.WebSocketProvider(
+  process.env.WS_URL ?? "",
+);
+const curve = new ethers.Contract(
+  process.env.CONTRACT_ADDRESS ?? "",
+  CurveABI.abi,
+  provider,
+);
 
 curve.on("*", async (event) => {
   console.log("Event", event.event);

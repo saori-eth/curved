@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "db:push": "dotenv -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
+    "env": "dotenv -e ../../.env",
+    "dev": "pnpm run env -- next dev",
+    "build": "pnpm run env -- next build",
+    "start": "pnpm run env -- next start",
+    "db:push": "pnpm run env -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
     "db:studio": "drizzle-kit studio",
     "lint": "cd ../.. && eslint --fix \"apps/client/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore"
   },
@@ -17,6 +18,7 @@
     "@planetscale/database": "^1.11.0",
     "@radix-ui/react-dialog": "^1.0.4",
     "@rainbow-me/rainbowkit": "^1.0.11",
+    "@t3-oss/env-nextjs": "^0.6.1",
     "autoprefixer": "10.4.15",
     "boring-avatars": "^1.10.1",
     "compressorjs": "^1.2.1",

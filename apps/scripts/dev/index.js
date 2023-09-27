@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
-dotenv.config();
-const { LOCAL_CURVE_ADDRESS, LOCAL_PRIVATE_KEY } = process.env;
 import { ethers } from "ethers";
 import { FARM_ABI } from "../abi/farm.js";
 import assert from "assert";
 import { getReason } from "../utils.js";
+
+dotenv.config();
+const { LOCAL_CURVE_ADDRESS, LOCAL_PRIVATE_KEY } = process.env;
 
 console.log("LOCAL_CURVE_ADDRESS", LOCAL_CURVE_ADDRESS);
 console.log("LOCAL_PRIVATE_KEY", LOCAL_PRIVATE_KEY);

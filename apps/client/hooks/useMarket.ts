@@ -8,11 +8,11 @@ import {
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
+import { env } from "@/lib/env.mjs";
 
-const contracts = {
+const contract = {
   abi: CURVED_ABI,
-  address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}` | undefined,
-  watch: true,
+  address: env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
 };
 
 export const useMarket = (shareId: number) => {
@@ -25,20 +25,17 @@ export const useMarket = (shareId: number) => {
   } = useContractReads({
     contracts: [
       {
-        abi: contracts.abi,
-        address: contracts.address as `0x${string}`,
+        ...contract,
         args: [BigInt(shareId), BigInt(1)],
         functionName: "getBuyPriceAfterFee",
       },
       {
-        abi: contracts.abi,
-        address: contracts.address as `0x${string}`,
+        ...contract,
         args: [BigInt(shareId), BigInt(1)],
         functionName: "getSellPriceAfterFee",
       },
       {
-        abi: contracts.abi,
-        address: contracts.address as `0x${string}`,
+        ...contract,
         args: [BigInt(shareId), address as `0x${string}`],
         functionName: "getShareBalance",
       },
@@ -55,8 +52,7 @@ export const useMarket = (shareId: number) => {
     isLoading: isPrepareBuyLoading,
     isError: isPrepareBuyError,
   } = usePrepareContractWrite({
-    abi: contracts.abi,
-    address: contracts.address,
+    ...contract,
     args: [BigInt(shareId), BigInt(1)],
     enabled: Boolean(address) && Boolean(buyPrice),
     functionName: "buyShare",
@@ -68,8 +64,7 @@ export const useMarket = (shareId: number) => {
     isLoading: isPrepareSellLoading,
     isError: isPrepareSellError,
   } = usePrepareContractWrite({
-    abi: contracts.abi,
-    address: contracts.address,
+    ...contract,
     args: [BigInt(shareId), BigInt(1)],
     enabled: Boolean(address) && Boolean(sellPrice),
     functionName: "sellShare",

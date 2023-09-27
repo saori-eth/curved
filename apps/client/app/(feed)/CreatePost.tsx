@@ -13,6 +13,7 @@ import {
 } from "wagmi";
 
 import { CURVED_ABI } from "@/lib/abi/curved";
+import { env } from "@/lib/env.mjs";
 
 import { useAuth } from "../AuthProvider";
 import { editPending } from "./editPending";
@@ -39,7 +40,7 @@ export function CreatePost() {
   } = usePrepareContractWrite({
     abi: CURVED_ABI,
     account: address,
-    address: process.env.NEXT_PUBLIC_CURVED_ADDRESS as `0x${string}`,
+    address: env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     args: [url],
     enabled: Boolean(address),
     functionName: "createShare",
@@ -274,6 +275,14 @@ export function CreatePost() {
             {isError ? (
               <p className="pt-4 text-center text-sm text-red-500">
                 Error creating post.
+              </p>
+            ) : isWaitingOnTx ? (
+              <p className="pt-4 text-center text-sm text-slate-500">
+                Waiting for transaction to be mined...
+              </p>
+            ) : isTxMined ? (
+              <p className="pt-4 text-center text-sm text-slate-500">
+                Success! Redirecting...
               </p>
             ) : null}
           </Dialog.Content>

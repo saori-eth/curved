@@ -9,14 +9,10 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { Chain, Config, configureChains, createConfig } from "wagmi";
-import { base } from "wagmi/chains";
+import { base, goerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-// declare global {
-//   interface Window {
-//     ethereum: WindowProvider | undefined;
-//   }
-// }
+import { env } from "@/lib/env.mjs";
 
 const localhost = {
   id: 9_999,
@@ -28,8 +24,10 @@ const localhost = {
   },
   network: "localhost",
   rpcUrls: {
-    default: { http: ["http://127.0.0.1:8545"] },
-    public: { http: ["http://127.0.0.1:8545"] },
+    default: {
+      http: [env.NEXT_PUBLIC_RPC_URL],
+    },
+    public: { http: [env.NEXT_PUBLIC_RPC_URL] },
   },
 };
 
@@ -43,8 +41,8 @@ export const {
   publicClient: any;
 } = configureChains(
   [
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [localhost]
+    ...(env.NEXT_PUBLIC_NODE_ENV === "development"
+      ? [localhost, goerli]
       : [base]),
   ],
   [publicProvider()],

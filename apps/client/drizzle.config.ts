@@ -1,18 +1,11 @@
 import type { Config } from "drizzle-kit";
-const { MODE, DEV_DATABASE_URL, DATABASE_URL } = process.env;
-console.log(`
-  MODE: ${MODE}
-  DEV_DATABASE_URL: ${DEV_DATABASE_URL}
-  DATABASE_URL: ${DATABASE_URL}
-`);
 
-const dbUrl = DEV_DATABASE_URL;
-const secureUrl = dbUrl?.replace(
+import { env } from "./lib/env.mjs";
+
+const secureUrl = env.DATABASE_URL.replace(
   "?sslaccept=strict",
   `?ssl={"rejectUnauthorized":true}`,
 );
-
-console.log("secureUrl", secureUrl);
 
 export default {
   dbCredentials: {
