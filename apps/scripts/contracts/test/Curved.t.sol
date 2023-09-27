@@ -265,9 +265,47 @@ contract CurvedTest is Test {
         uint256 earnedAfterClaim = _curved.earned(_users[1]);
         assertEq(balanceAfterClaim, earnedBeforeSell);
         assertEq(earnedAfterClaim, 0);
-        
     }
 
     // TODO: test claim each individual year
     // TODO: test claim on sell
+
+    function testRewardsAfterProfit() public createShare(1) purchaseShare(1) {
+      vm.stopPrank();
+      uint256 cost = _curved.getBuyPriceAfterFee(0, 15);
+      vm.prank(_users[2]);
+      _curved.buyShare{value: cost}(0, 15);
+      uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
+      vm.warp(targetTime);
+      vm.roll(block.number + 1);
+      vm.prank(_users[1]);
+      _curved.sellShare(0, 1);
+      uint256 earnedAfterSell = _curved.earned(_users[1]);
+      // result: if they try to claim after taking profit, all rewards will be lost
+      assertEq(earnedAfterSell, 0);
+    }
+
+    function testRewardsBackInProfit() public createShare(1) purchaseShare(1) {
+      vm.stopPrank();
+      uint256 cost = _curved.getBuyPriceAfterFee(0, 15);
+      vm.prank(_users[2]);
+      _curved.buyShare{value: cost}(0, 15);
+      uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
+      vm.warp(targetTime);
+      vm.roll(block.number + 1);
+      uint256 earnedBeforeOGSale = _curved.earned(_users[1]);
+      vm.prank(_users[1]);
+      _curved.sellShare(0, 1);
+      vm.prank(_users[3]);
+      _curved.createShare("ipfs://test");
+      uint256 cost2 = _curved.getBuyPriceAfterFee(1, 15);
+      vm.prank(_users[1]);
+      _curved.buyShare{value: cost2}(1, 15);
+      vm.warp(block.timestamp + 1);
+      vm.roll(block.number + 1);
+      uint256 earnedAfterBuyingMore = _curved.earned(_users[1]);
+      assertLe(earnedAfterBuyingMore, earnedBeforeOGSale);
+      // result: it totally resets if they don't claim
+      // were potentially screwing people by not forcing them to claim while taking profit
+    }
 }
