@@ -47,6 +47,63 @@ export const contentRelations = relations(content, ({ one }) => ({
   }),
 }));
 
+export const user = mysqlTable(
+  AUTH_USER_TABLE_NAME,
+  {
+    address: char("address", { length: 42 }).notNull(),
+    avatar: varchar("avatar", { length: 225 }),
+    id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
+    username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
+  },
+  (table) => ({
+    addressIndex: uniqueIndex("address").on(table.address),
+    usernameIndex: uniqueIndex("username").on(table.username),
+  }),
+);
+
+export const repost = mysqlTable(
+  "repost",
+  {
+    id: serial("id").primaryKey(), // uinque id for the repost
+    referenceShareId: bigint("share_id", { mode: "number" }).notNull(), // references content.shareId
+    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(), // address of the user who reposted
+    quote: varchar("quote", { length: 140 }).notNull(), // twitter length
+    referenceRepost: bigint("reference_repost", { mode: "number" }), // references repost.id. null if its the original post
+  },
+  (table) => ({
+    addressIndex: index("address").on(table.address),
+  }),
+);
+
+export const userRelations = relations(user, ({ many }) => ({
+  posts: many(content),
+  reposts: many(repost),
+}));
+
+export const userFollowing = mysqlTable(
+  "user_following",
+  {
+    id: serial("id").primaryKey(),
+    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    following: varchar("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
+  },
+  (table) => ({
+    addressIndex: index("address").on(table.address),
+    followingIndex: index("following").on(table.following),
+  }),
+);
+
+export const userFollowingRelations = relations(userFollowing, ({ one }) => ({
+  followedUser: one(user, {
+    fields: [userFollowing.following],
+    references: [user.address],
+  }),
+  followingUser: one(user, {
+    fields: [userFollowing.address],
+    references: [user.address],
+  }),
+}));
+
 export const pendingContent = mysqlTable(
   "pending_content",
   {
@@ -102,21 +159,3 @@ export const session = mysqlTable(AUTH_SESSION_TABLE_NAME, {
   idleExpires: bigint("idle_expires", { mode: "number" }).notNull(),
   userId: varchar("user_id", { length: MAX_USERNAME_LENGTH }).notNull(),
 });
-
-export const user = mysqlTable(
-  AUTH_USER_TABLE_NAME,
-  {
-    address: char("address", { length: 42 }).notNull(),
-    avatar: varchar("avatar", { length: 225 }),
-    id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
-    username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
-  },
-  (table) => ({
-    addressIndex: uniqueIndex("address").on(table.address),
-    usernameIndex: uniqueIndex("username").on(table.username),
-  }),
-);
-
-export const userRelations = relations(user, ({ many }) => ({
-  posts: many(content),
-}));
