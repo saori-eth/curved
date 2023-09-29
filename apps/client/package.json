@@ -7,7 +7,8 @@
     "dev": "pnpm run env -- next dev",
     "build": "pnpm run env -- next build",
     "start": "pnpm run env -- next start",
-    "db:push": "pnpm run env -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DEV_DATABASE_URL",
+    "db:push": "pnpm run env -- pnpm run _db:push",
+    "_db:push": "pnpm run env -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DATABASE_URL",
     "db:studio": "drizzle-kit studio",
     "lint": "cd ../.. && eslint --fix \"apps/client/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore"
   },
