@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useState,
   useTransition,
 } from "react";
 import { useAccount, useDisconnect } from "wagmi";
@@ -14,8 +15,6 @@ import { useAccount, useDisconnect } from "wagmi";
 import { LoginResponse } from "@/app/api/auth/login/types";
 import { getAuthStatus } from "@/app/api/auth/status/helper";
 import { AuthData } from "@/lib/auth/types";
-
-import { useAuthStore } from "./authStore";
 
 export type AuthContextValue = {
   status: AuthenticationStatus;
@@ -28,10 +27,10 @@ export type AuthContextValue = {
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => {},
-    logout: async () => {},
-    status: useAuthStore.getState().status,
-    user: useAuthStore.getState().user,
+    login: async () => { },
+    logout: async () => { },
+    status: "loading",
+    user: null,
   });
 
 interface Props {
@@ -42,10 +41,8 @@ interface Props {
  * A context provider for authentication
  */
 export default function AuthProvider({ children }: Props) {
-  const status = useAuthStore((state) => state.status);
-  const setStatus = useAuthStore((state) => state.setStatus);
-  const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
+  const [status, setStatus] = useState<AuthenticationStatus>("loading");
+  const [user, setUser] = useState<User | null>(null);
 
   const [loading, startTransition] = useTransition();
 

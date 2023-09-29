@@ -6,7 +6,7 @@ import { Gemunu_Libre } from "next/font/google";
 
 import { Sidebar } from "./Sidebar";
 
-const ClientWrapper = dynamic(() => import("./ClientWrapper"), { ssr: false });
+const ClientWrapper = dynamic(() => import("./ClientWrapper"));
 
 const font = Gemunu_Libre({
   display: "swap",

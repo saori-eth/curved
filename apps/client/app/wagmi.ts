@@ -1,7 +1,7 @@
 "use client";
+
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
-  braveWallet,
   coinbaseWallet,
   injectedWallet,
   metaMaskWallet,
@@ -14,22 +14,22 @@ import { publicProvider } from "wagmi/providers/public";
 
 import { env } from "@/lib/env.mjs";
 
-const localhost = {
-  id: 9_999,
-  name: "Localhost",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  network: "localhost",
-  rpcUrls: {
-    default: {
-      http: [env.NEXT_PUBLIC_RPC_URL],
-    },
-    public: { http: [env.NEXT_PUBLIC_RPC_URL] },
-  },
-};
+// const localhost = {
+//   id: 9_999,
+//   name: "Localhost",
+//   nativeCurrency: {
+//     decimals: 18,
+//     name: "Ether",
+//     symbol: "ETH",
+//   },
+//   network: "localhost",
+//   rpcUrls: {
+//     default: {
+//       http: [env.NEXT_PUBLIC_RPC_URL],
+//     },
+//     public: { http: [env.NEXT_PUBLIC_RPC_URL] },
+//   },
+// };
 
 const projectId = "e8f82c27482f4422f45df38f1e3c9ddc";
 
@@ -57,14 +57,13 @@ const connectors = connectorsForWallets([
       metaMaskWallet({ chains, projectId }),
       rainbowWallet({ chains, projectId }),
       coinbaseWallet({ appName: "yuyu.social", chains }),
-      ...(needsInjectedWalletFallback ? [injectedWallet({ chains })] : []),
     ],
   },
   {
     groupName: "Other",
     wallets: [
-      braveWallet({ chains }),
       walletConnectWallet({ chains, projectId }),
+      ...(needsInjectedWalletFallback ? [injectedWallet({ chains })] : []),
     ],
   },
 ]);

@@ -51,6 +51,7 @@ export function PostCard({
           height={0}
           sizes="517px"
           draggable={false}
+          priority
           className="h-auto max-h-[1000px] w-full rounded-lg object-contain"
         />
       )}
