@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { toHex } from "@/lib/toHex";
+
 import Avatar from "./Avatar";
 
 interface Props {
@@ -22,7 +24,7 @@ export function PostCard({
 }: Props) {
   return (
     <Link
-      href={`/post/${shareId}`}
+      href={`/post/${toHex(shareId)}`}
       className="group block w-full select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition hover:cursor-pointer hover:border-slate-400 hover:bg-slate-700 hover:shadow-lg"
     >
       <div className="flex items-center justify-between">
