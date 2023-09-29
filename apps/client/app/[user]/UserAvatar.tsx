@@ -15,7 +15,6 @@ interface Props {
 
 export function UserAvatar({ username, avatar }: Props) {
   const { user } = useAuth();
-
   const [pending, startTransition] = useTransition();
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
 

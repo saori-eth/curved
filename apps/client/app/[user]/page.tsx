@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
 import { UserAvatar } from "./UserAvatar";
+import { Username } from "./Username";
 
 export const revalidate = 10;
 
@@ -63,9 +64,9 @@ export default async function User({ params }: Props) {
 
   return (
     <div className="flex flex-col items-center space-y-6 py-4 md:pt-0">
-      <div className="space-y-2">
+      <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
-        <h1 className="text-center text-xl font-bold">@{profile.username}</h1>
+        <Username username={profile.username} />
       </div>
 
       {posts.map(({ description, ...post }) => (
