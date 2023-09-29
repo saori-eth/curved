@@ -24,6 +24,7 @@ export function PostFeed() {
           username={post.owner.username}
           shareId={post.shareId}
           url={post.url}
+          createdAt={post.createdAt}
           description={post.description ?? ""}
         />
       ))}

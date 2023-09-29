@@ -46,6 +46,7 @@ export async function fetchLatestPosts(
 
     const data = await db.query.content.findMany({
       columns: {
+        createdAt: true,
         description: true,
         owner: true,
         shareId: true,
@@ -69,6 +70,7 @@ export async function fetchLatestPosts(
     }
 
     return data.map((row) => ({
+      createdAt: row.createdAt.toISOString(),
       description: row.description ?? "",
       owner: {
         address: row.owner,

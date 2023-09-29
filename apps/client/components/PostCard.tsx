@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { toHex } from "@/lib/toHex";
+import { toRelativeDate } from "@/lib/toRelativeDate";
 
 import Avatar from "./Avatar";
 
@@ -12,10 +13,12 @@ interface Props {
   description: string;
   avatar?: string | null;
   username?: string | null;
+  createdAt: string;
 }
 
 export function PostCard({
   url,
+  createdAt,
   avatar,
   username,
   owner,
@@ -35,7 +38,9 @@ export function PostCard({
           </span>
         </div>
 
-        <div className="text-sm text-slate-400">#{shareId}</div>
+        <div className="text-sm text-slate-400">
+          {toRelativeDate(createdAt)}
+        </div>
       </div>
 
       {url && (

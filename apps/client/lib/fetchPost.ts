@@ -5,6 +5,7 @@ import { getAvatarUrl } from "./getAvatarUrl";
 
 export type Post = {
   shareId: number;
+  createdAt: string;
   description: string;
   url: string;
   owner: {
@@ -31,6 +32,7 @@ export const fetchPost = cache(
     try {
       const data = await db.query.content.findFirst({
         columns: {
+          createdAt: true,
           description: true,
           owner: true,
           url: true,
@@ -51,6 +53,7 @@ export const fetchPost = cache(
       }
 
       return {
+        createdAt: data.createdAt.toISOString(),
         description: data.description ?? "",
         owner: {
           address: data.owner,

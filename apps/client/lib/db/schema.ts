@@ -26,12 +26,12 @@ import { NANOID_LENGTH } from "./nanoid";
 export const content = mysqlTable(
   "content",
   {
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
     id: serial("id").primaryKey(),
     owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({

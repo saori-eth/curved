@@ -53,6 +53,7 @@ export default async function User({ params }: Props) {
 
   const posts = await db.query.content.findMany({
     columns: {
+      createdAt: true,
       description: true,
       shareId: true,
       url: true,
@@ -77,6 +78,7 @@ export default async function User({ params }: Props) {
           description={description ?? ""}
           avatar={profile.avatar}
           username={profile.username}
+          createdAt={post.createdAt.toISOString()}
         />
       ))}
     </div>
