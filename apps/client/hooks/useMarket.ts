@@ -66,7 +66,7 @@ export const useMarket = (shareId: number) => {
   } = usePrepareContractWrite({
     ...contract,
     args: [BigInt(shareId), BigInt(1)],
-    enabled: Boolean(address) && Boolean(sellPrice),
+    enabled: Boolean(address) && Boolean(sellPrice) && Boolean(shareBalance),
     functionName: "sellShare",
   });
 

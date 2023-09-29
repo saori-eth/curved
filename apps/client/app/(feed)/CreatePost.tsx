@@ -23,6 +23,7 @@ export function CreatePost() {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState("");
   const [waitingForIndex, setWaitingForIndex] = useState(false);
@@ -230,6 +231,16 @@ export function CreatePost() {
     input.click();
   }
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setMounted(open);
+    }, 0);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [open]);
+
   if (status !== "authenticated") return null;
 
   return (
@@ -260,8 +271,14 @@ export function CreatePost() {
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <Dialog.Content className="mx-2 h-fit w-full max-w-md rounded-2xl bg-slate-800 px-8 pb-8 pt-4 shadow-lg">
+        <Dialog.Overlay
+          className={`fixed inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${mounted ? "" : "opacity-0"
+            }`}
+        >
+          <Dialog.Content
+            className={`mx-2 h-fit w-full max-w-md rounded-2xl bg-slate-800 px-8 pb-8 pt-4 shadow-lg transition ${mounted ? "" : "scale-75 opacity-0"
+              }`}
+          >
             <h1 className="pb-4 text-center text-xl font-bold">Create Post</h1>
 
             <form onSubmit={submit} className="space-y-4">
