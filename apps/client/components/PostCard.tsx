@@ -30,7 +30,7 @@ export function PostCard({
   const { price, isError } = usePostPrice(shareId);
 
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       <div className="flex select-none items-center justify-between">
         <div className="w-2/3">
           {username ? (

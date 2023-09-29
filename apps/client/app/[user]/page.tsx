@@ -73,12 +73,12 @@ export default async function User({ params }: Props) {
       {posts.map(({ description, ...post }) => (
         <PostCard
           key={post.shareId}
-          {...post}
+          url={post.url}
+          shareId={post.shareId}
           owner={profile.address}
           caption={description ?? ""}
           avatar={profile.avatar}
           username={profile.username}
-          createdAt={post.createdAt.toISOString()}
         />
       ))}
     </div>
