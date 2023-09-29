@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { BiCollection, BiRepost } from "react-icons/bi";
+import { BiRepost } from "react-icons/bi";
+
+import { usePostPrice } from "@/hooks/usePostPrice";
 
 import Avatar from "./Avatar";
 
@@ -11,18 +15,20 @@ interface Props {
   caption: string;
   avatar?: string | null;
   username?: string | null;
-  createdAt: string;
 }
 
 export function PostCard({
   url,
-  createdAt,
   avatar,
   username,
   owner,
   shareId,
   caption,
 }: Props) {
+  const numReposts = 5;
+
+  const { price, isError } = usePostPrice(shareId);
+
   return (
     <div className="space-y-2">
       <div className="flex select-none items-center justify-between">
@@ -43,7 +49,11 @@ export function PostCard({
           )}
         </div>
 
-        <div className="text-sm text-slate-400"></div>
+        {price ? (
+          <div className="text-sm text-slate-400">{price} ETH</div>
+        ) : isError ? (
+          <div className="text-sm text-slate-400">???</div>
+        ) : null}
       </div>
 
       {url && (
@@ -67,21 +77,16 @@ export function PostCard({
         <div className="flex items-center justify-end space-x-1">
           <button
             title="Repost"
-            className="flex aspect-square h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-700 hover:text-white active:opacity-80"
+            className="group flex items-center space-x-0.5 rounded-full px-1 transition hover:text-sky-300"
           >
-            <BiRepost className="text-xl" />
+            {numReposts ? <span className="text-sm">{numReposts}</span> : null}
+            <span className="flex h-8 w-8 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">
+              <BiRepost />
+            </span>
           </button>
 
-          <button
-            title="View Reposts"
-            className="flex aspect-square h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-700 hover:text-white active:opacity-80"
-          >
-            <BiCollection className="text-xl" />
-          </button>
-
-          <button className="h-7 space-x-1 rounded-full border border-slate-500 px-3 transition hover:border-slate-400 hover:bg-slate-700 active:opacity-80">
-            <span>8</span>
-            <span className="text-slate-400">Shares</span>
+          <button className="h-8 space-x-1 rounded-full border border-slate-500 px-4 transition hover:border-slate-400 hover:bg-slate-700 active:bg-slate-600">
+            Trade
           </button>
         </div>
       </div>
