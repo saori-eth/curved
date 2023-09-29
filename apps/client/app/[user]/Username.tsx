@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { MdCheck, MdEdit } from "react-icons/md";
 
 import { MAX_USERNAME_LENGTH } from "@/lib/db/constants";
@@ -23,14 +23,6 @@ export function Username({ username }: Props) {
   const [value, setValue] = useState(username);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    if (!saved) return;
-
-    // We need to re-login the user to update the username in auth state
-    window.location.reload();
-  }, [saved]);
 
   const isCurrentUser = user?.username === username;
 
@@ -49,7 +41,6 @@ export function Username({ username }: Props) {
     if (disabled) return;
 
     setError("");
-    setSaved(false);
 
     if (value === username) {
       // No change
@@ -64,9 +55,8 @@ export function Username({ username }: Props) {
         return;
       }
 
-      router.push(`/@${value}`);
+      window.location.pathname = `@${value}`;
       setEditing(false);
-      setSaved(true);
     });
   }
 
