@@ -25,7 +25,7 @@ export function PostFeed() {
           shareId={post.shareId}
           url={post.url}
           createdAt={post.createdAt}
-          description={post.description ?? ""}
+          caption={post.description ?? ""}
         />
       ))}
     </>

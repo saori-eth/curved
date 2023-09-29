@@ -75,7 +75,7 @@ export default async function User({ params }: Props) {
           key={post.shareId}
           {...post}
           owner={profile.address}
-          description={description ?? ""}
+          caption={description ?? ""}
           avatar={profile.avatar}
           username={profile.username}
           createdAt={post.createdAt.toISOString()}

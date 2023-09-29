@@ -40,6 +40,7 @@ export const useMarket = (shareId: number) => {
         functionName: "getShareBalance",
       },
     ],
+    enabled: Boolean(address),
     watch: true,
   });
 

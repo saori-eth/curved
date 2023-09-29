@@ -25,12 +25,10 @@ export function LoadMore() {
     setFetchingPage(nextPage);
 
     startTransition(async () => {
-      console.log("Fetching page", nextPage);
       const posts = await fetchLatestPosts({
         page: nextPage,
         start,
       });
-      console.log("Fetched page", posts.length);
 
       setPosts((prev) => [...prev, ...posts]);
       setPage(nextPage);
