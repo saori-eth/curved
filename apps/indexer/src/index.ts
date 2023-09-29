@@ -48,7 +48,7 @@ curve.on("*", async (event) => {
 
         await db.insert(content).values({
           description: pending.description,
-          owner,
+          owner: owner.toLowerCase(),
           shareId,
           url: pending.url,
         });

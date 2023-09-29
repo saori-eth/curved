@@ -11,8 +11,8 @@ const font = Quicksand({
 export function Sidebar() {
   return (
     <>
-      <div className="max-w-content fixed inset-x-0 mx-auto hidden h-14 items-center md:flex">
-        <Link href="/" className="ml-5 hidden w-fit md:block">
+      <div className="max-w-content absolute inset-x-0 mx-auto hidden h-14 items-center md:flex">
+        <Link href="/" className="hidden w-fit md:block">
           <h2 className={`text-2xl font-bold ${font.className}`}>
             yuyu.social
           </h2>

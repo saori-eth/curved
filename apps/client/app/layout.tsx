@@ -39,7 +39,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={font.className}>
-      <body className="overflow-y-scroll bg-slate-800 text-white">
+      <body className="scrollbar-fix overflow-x-hidden overflow-y-scroll bg-slate-800 text-white">
         <ClientWrapper>
           <div className="max-w-content mx-auto md:grid md:grid-cols-7">
             <div className="col-span-2 ml-2">

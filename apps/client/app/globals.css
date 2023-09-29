@@ -19,6 +19,10 @@
   scrollbar-width: none;
 }
 
+.scrollbar-fix {
+  margin-left: calc(100vw - 100%);
+}
+
 html,
 body {
   margin: 0;
