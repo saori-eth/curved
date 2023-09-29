@@ -55,8 +55,9 @@ export const Trades = async ({ shareId }: Props) => {
 
         <div className="flex w-full items-center justify-end space-x-2">
           <div
-            className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
-              }`}
+            className={`text-sm ${
+              sign === "+" ? "text-sky-500" : "text-amber-500"
+            }`}
           >
             {sign}
             {formatUnits(price, 4)} {ETH_SYMBOL}

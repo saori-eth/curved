@@ -2,18 +2,11 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "build/**",
-        "dist/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["build/**", "dist/**"]
     },
     "client#build": {
-      "outputs": [
-        ".next/**"
-      ],
+      "outputs": [".next/**"],
       "env": [
         "NEXT_PUBLIC_CONTRACT_ADDRESS",
         "NEXT_PUBLIC_RPC_URL",
@@ -25,21 +18,11 @@
       ]
     },
     "indexer#build": {
-      "env": [
-        "DATABASE_URL",
-        "WS_URL",
-        "CONTRACT_ADDRESS"
-      ]
+      "env": ["DATABASE_URL", "WS_URL", "CONTRACT_ADDRESS"]
     },
     "start": {
-      "dependsOn": [
-        "build",
-        "^start"
-      ],
-      "outputs": [
-        "build/**",
-        "dist/**"
-      ]
+      "dependsOn": ["build", "^start"],
+      "outputs": ["build/**", "dist/**"]
     },
     "lint": {},
     "dev": {

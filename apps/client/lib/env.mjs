@@ -2,7 +2,6 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
-
   /*
    * Environment variables available on the client (and server).
    *
@@ -14,13 +13,12 @@ export const env = createEnv({
     NEXT_PUBLIC_RPC_URL: z.string().url(),
   },
 
-
   /*
-     * Due to how Next.js bundles environment variables on Edge and Client,
-     * we need to manually destructure them to make sure all are included in bundle.
-     *
-     * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
-     */
+   * Due to how Next.js bundles environment variables on Edge and Client,
+   * we need to manually destructure them to make sure all are included in bundle.
+   *
+   * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
+   */
   runtimeEnv: {
     CLOUDFLARE_ACCESS_KEY_ID: process.env.CLOUDFLARE_ACCESS_KEY_ID,
     CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,

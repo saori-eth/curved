@@ -21,8 +21,9 @@ export default function Overlay({ children }: Props) {
       onClick={() => {
         router.back();
       }}
-      className={`fixed inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${mounted ? "" : "opacity-0"
-        }`}
+      className={`fixed inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${
+        mounted ? "" : "opacity-0"
+      }`}
     >
       {children}
     </div>

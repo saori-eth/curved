@@ -5,7 +5,11 @@ import { CURVED_ABI } from "../abi/CurvedAbi.js";
 
 const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 const wallet = new ethers.Wallet(process.env.LOCAL_PRIVATE_KEY, provider);
-const contract = new ethers.Contract(process.env.LOCAL_CURVED_ADDRESS, CURVED_ABI, wallet);
+const contract = new ethers.Contract(
+  process.env.LOCAL_CURVED_ADDRESS,
+  CURVED_ABI,
+  wallet,
+);
 
 const initRewards = async () => {
   // const tx = await contract.createShare("ipfs://uri");

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { MdCheck, MdEdit } from "react-icons/md";
 
@@ -17,7 +16,6 @@ export function Username({ username }: Props) {
   const ref = useRef<HTMLInputElement>(null);
 
   const { user } = useAuth();
-  const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const [value, setValue] = useState(username);
@@ -84,12 +82,13 @@ export function Username({ username }: Props) {
         minLength={3}
         maxLength={MAX_USERNAME_LENGTH}
         disabled={disabled}
-        className={`w-fit rounded text-center text-xl font-bold ${editing
+        className={`w-fit rounded text-center text-xl font-bold ${
+          editing
             ? "bg-slate-900"
             : pending
-              ? "bg-transparent opacity-50"
-              : "bg-transparent"
-          }`}
+            ? "bg-transparent opacity-50"
+            : "bg-transparent"
+        }`}
       />
 
       {error && (
