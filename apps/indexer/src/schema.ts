@@ -106,8 +106,8 @@ export const session = mysqlTable(AUTH_SESSION_TABLE_NAME, {
 export const user = mysqlTable(
   AUTH_USER_TABLE_NAME,
   {
-    address: char("address", { length: 42 }).notNull(),
-    avatar: varchar("avatar", { length: 225 }),
+    address: char("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    avatarId: char("avatarId", { length: NANOID_LENGTH }),
     id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
     username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
   },

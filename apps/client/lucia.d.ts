@@ -5,7 +5,7 @@ declare namespace Lucia {
   type DatabaseUserAttributes = {
     username: string;
     address: string;
-    avatar: string;
+    avatarId: string;
   };
   type DatabaseSessionAttributes = {};
 }

@@ -1,6 +1,7 @@
 import { cache } from "react";
 
 import { db } from "./db";
+import { getAvatarUrl } from "./getAvatarUrl";
 
 export type Profile = {
   username: string;
@@ -12,7 +13,7 @@ export const fetchProfileFromAddress = cache(
   async (address: string): Promise<Profile | null> => {
     try {
       const data = await db.query.user.findFirst({
-        columns: { avatar: true, username: true },
+        columns: { avatarId: true, username: true },
         where: (row, { eq }) => eq(row.address, address),
       });
 
@@ -22,7 +23,7 @@ export const fetchProfileFromAddress = cache(
 
       return {
         address,
-        avatar: data.avatar,
+        avatar: getAvatarUrl(data.avatarId),
         username: data.username,
       };
     } catch (e) {
@@ -36,7 +37,7 @@ export const fetchProfileFromUsername = cache(
   async (username: string): Promise<Profile | null> => {
     try {
       const data = await db.query.user.findFirst({
-        columns: { address: true, avatar: true },
+        columns: { address: true, avatarId: true },
         where: (row, { eq }) => eq(row.username, username),
       });
 
@@ -46,7 +47,7 @@ export const fetchProfileFromUsername = cache(
 
       return {
         address: data.address,
-        avatar: data.avatar,
+        avatar: getAvatarUrl(data.avatarId),
         username,
       };
     } catch (e) {

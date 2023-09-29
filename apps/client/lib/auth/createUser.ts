@@ -14,7 +14,7 @@ export async function createUser({
   const data = await auth.createUser({
     attributes: {
       address,
-      avatar: "",
+      avatarId: "",
       username: nanoidLowercase(10),
     },
     key: {

@@ -1,6 +1,7 @@
 import { cache } from "react";
 
 import { db } from "./db";
+import { getAvatarUrl } from "./getAvatarUrl";
 
 export type Post = {
   shareId: number;
@@ -38,7 +39,7 @@ export const fetchPost = cache(
         with: {
           owner: {
             columns: {
-              avatar: true,
+              avatarId: true,
               username: true,
             },
           },
@@ -53,7 +54,7 @@ export const fetchPost = cache(
         description: data.description ?? "",
         owner: {
           address: data.owner,
-          avatar: data.owner.avatar,
+          avatar: getAvatarUrl(data.owner.avatarId),
           username: data.owner.username,
         },
         shareId,

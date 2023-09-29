@@ -50,8 +50,8 @@ export const contentRelations = relations(content, ({ one }) => ({
 export const user = mysqlTable(
   AUTH_USER_TABLE_NAME,
   {
-    address: char("address", { length: 42 }).notNull(),
-    avatar: varchar("avatar", { length: 225 }),
+    address: char("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    avatarId: varchar("avatarId", { length: NANOID_LENGTH }),
     id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
     username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
   },
@@ -64,11 +64,18 @@ export const user = mysqlTable(
 export const repost = mysqlTable(
   "repost",
   {
-    id: serial("id").primaryKey(), // uinque id for the repost
-    referenceShareId: bigint("share_id", { mode: "number" }).notNull(), // references content.shareId
-    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(), // address of the user who reposted
-    quote: varchar("quote", { length: 140 }).notNull(), // twitter length
-    referenceRepost: bigint("reference_repost", { mode: "number" }), // references repost.id. null if its the original post
+    // references content.shareId
+    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
+
+    id: serial("id").primaryKey(),
+
+    // address of the user who reposted
+    quote: varchar("quote", { length: 140 }).notNull(),
+
+    // twitter length
+    referenceRepost: bigint("reference_repost", { mode: "number" }),
+    // uinque id for the repost
+    referenceShareId: bigint("share_id", { mode: "number" }).notNull(), // references repost.id. null if its the original post
   },
   (table) => ({
     addressIndex: index("address").on(table.address),
@@ -83,9 +90,9 @@ export const userRelations = relations(user, ({ many }) => ({
 export const userFollowing = mysqlTable(
   "user_following",
   {
-    id: serial("id").primaryKey(),
     address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
     following: varchar("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    id: serial("id").primaryKey(),
   },
   (table) => ({
     addressIndex: index("address").on(table.address),

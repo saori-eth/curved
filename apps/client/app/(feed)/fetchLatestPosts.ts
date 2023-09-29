@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { Post } from "@/lib/fetchPost";
+import { getAvatarUrl } from "@/lib/getAvatarUrl";
 
 import { FEED_PAGE_SIZE } from "./constants";
 
@@ -56,7 +57,7 @@ export async function fetchLatestPosts(
       with: {
         owner: {
           columns: {
-            avatar: true,
+            avatarId: true,
             username: true,
           },
         },
@@ -71,7 +72,7 @@ export async function fetchLatestPosts(
       description: row.description ?? "",
       owner: {
         address: row.owner,
-        avatar: row.owner.avatar,
+        avatar: getAvatarUrl(row.owner.avatarId),
         username: row.owner.username,
       },
       shareId: row.shareId,

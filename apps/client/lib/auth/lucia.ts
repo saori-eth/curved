@@ -11,6 +11,7 @@ import {
   AUTH_USER_TABLE_NAME,
 } from "../db/constants";
 import { env } from "../env.mjs";
+import { getAvatarUrl } from "../getAvatarUrl";
 import { SESSION_COOKIE_NAME } from "./constants";
 
 const adapter = planetscale(planetscaleConnection, {
@@ -28,7 +29,8 @@ export const auth = lucia({
   getUserAttributes: (data) => {
     return {
       address: data.address as `0x${string}`,
-      avatar: data.avatar,
+      avatar: getAvatarUrl(data.avatarId),
+      avatarId: data.avatarId,
       username: data.username,
     };
   },
