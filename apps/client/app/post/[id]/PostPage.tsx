@@ -15,16 +15,15 @@ export function PostPage({ post }: Props) {
   return (
     <div className="h-full space-y-4 overflow-y-auto md:grid md:grid-cols-5 md:gap-8 md:space-y-0">
       <div className="space-y-4 md:col-span-2">
-        <div className="relative aspect-square rounded-lg bg-slate-900">
-          <Image
-            src={post.url}
-            alt="Post image"
-            fill
-            sizes="410px"
-            draggable={false}
-            className="rounded-lg object-cover"
-          />
-        </div>
+        <Image
+          src={post.url}
+          alt="Post image"
+          width={0}
+          height={0}
+          sizes="468px"
+          draggable={false}
+          className="h-auto max-h-[500px] w-full rounded-lg object-contain"
+        />
 
         <div className="w-fit">
           {post.owner.username ? (
