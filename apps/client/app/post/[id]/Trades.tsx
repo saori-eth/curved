@@ -55,9 +55,8 @@ export const Trades = async ({ shareId }: Props) => {
 
         <div className="flex w-full items-center justify-end space-x-2">
           <div
-            className={`text-sm ${
-              sign === "+" ? "text-sky-500" : "text-amber-500"
-            }`}
+            className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
+              }`}
           >
             {sign}
             {formatUnits(price, 4)} {ETH_SYMBOL}
@@ -78,10 +77,5 @@ export const Trades = async ({ shareId }: Props) => {
 
   await Promise.all(tradesList);
 
-  return (
-    <div className="space-y-2">
-      <div className="text-lg font-bold text-slate-400">Trades</div>
-      <ul className="space-y-2">{tradesList}</ul>
-    </div>
-  );
+  return <ul className="space-y-2">{tradesList}</ul>;
 };

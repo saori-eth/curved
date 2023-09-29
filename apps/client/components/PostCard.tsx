@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BiRepost } from "react-icons/bi";
 
 import { usePostPrice } from "@/hooks/usePostPrice";
+import { toHex } from "@/lib/toHex";
 
 import Avatar from "./Avatar";
 
@@ -85,9 +86,12 @@ export function PostCard({
             </span>
           </button>
 
-          <button className="h-8 space-x-1 rounded-full border border-slate-500 px-4 transition hover:border-slate-400 hover:bg-slate-700 active:bg-slate-600">
+          <Link
+            href={`/post/${toHex(shareId)}`}
+            className="flex h-8 items-center space-x-1 rounded-full border border-slate-500 px-4 transition hover:border-slate-400 hover:bg-slate-700 active:bg-slate-600"
+          >
             Trade
-          </button>
+          </Link>
         </div>
       </div>
     </div>
