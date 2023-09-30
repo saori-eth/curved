@@ -1,26 +1,27 @@
 "use server";
 
+import { desc, inArray } from "drizzle-orm";
 import { z } from "zod";
 
+import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
+import { content } from "@/lib/db/schema";
 import { Post } from "@/lib/fetchPost";
 import { getAvatarUrl } from "@/lib/getAvatarUrl";
-import { getSession } from "@/lib/auth/getSession";
-import { inArray, desc } from "drizzle-orm";
-import { FEED_PAGE_SIZE } from "./constants";
-import { content } from "@/lib/db/schema";
+
+import { FEED_PAGE_SIZE } from "../constants";
 
 // TODO: add reposts
 
-const FetchLatestSchema = z.object({
+const FetchFollowingSchema = z.object({
   page: z.number().int().min(0),
   start: z.number().int().min(0).optional(),
 });
 
-type FetchLatestArgs = z.infer<typeof FetchLatestSchema>;
+type FetchFollowingArgs = z.infer<typeof FetchFollowingSchema>;
 
-export async function fetchLatestFollowingPosts(
-  _args: FetchLatestArgs,
+export async function fetchFollowingPosts(
+  _args: FetchFollowingArgs,
 ): Promise<Post[]> {
   const session = await getSession();
   if (!session) {
@@ -42,7 +43,7 @@ export async function fetchLatestFollowingPosts(
   );
 
   try {
-    const args = FetchLatestSchema.parse(_args);
+    const args = FetchFollowingSchema.parse(_args);
 
     let page = args.page;
     let offset = 0;
@@ -67,16 +68,11 @@ export async function fetchLatestFollowingPosts(
       }
     }
 
-    let data: any = await db
+    const data = await db
       .select()
       .from(content)
       .orderBy(desc(content.shareId))
       .where(inArray(content.owner, followingAddresses));
-    if (!data) {
-      return [];
-    }
-
-    // need also get owner username and avatar
 
     const ownerInfo = await db.query.user.findMany({
       columns: {
@@ -86,33 +82,25 @@ export async function fetchLatestFollowingPosts(
       },
       where: (row, { inArray }) => inArray(row.address, followingAddresses),
     });
-    if (!ownerInfo) {
-      return [];
-    }
 
-    for (const row of data) {
+    const withProfiles: Post[] = data.map((post) => {
       const owner = ownerInfo.find(
-        (info) => info.address.toLowerCase() === row.owner.toLowerCase(),
+        (info) => info.address.toLowerCase() === post.owner.toLowerCase(),
       );
-      console.log("owner", owner);
-      if (!owner) {
-        continue;
-      }
 
-      row.owner = {
-        address: owner.address,
-        avatar: getAvatarUrl(owner.avatarId),
-        username: owner.username,
+      return {
+        ...post,
+        createdAt: post.createdAt.toISOString(),
+        description: post.description ?? "",
+        owner: {
+          address: post.owner,
+          avatar: getAvatarUrl(owner?.avatarId),
+          username: owner?.username ?? null,
+        },
       };
-    }
+    });
 
-    return data.map((row: any) => ({
-      createdAt: row.createdAt.toISOString(),
-      description: row.description ?? "",
-      owner: row.owner,
-      shareId: row.shareId,
-      url: row.url,
-    }));
+    return withProfiles;
   } catch (e) {
     console.error(e);
     return [];

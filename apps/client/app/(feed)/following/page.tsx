@@ -1,11 +1,21 @@
-import { FollowingFeed } from "./FollowingFeed";
+import { FeedProvider } from "../FeedContext";
+import { LoadMore } from "../LoadMore";
+import { PostFeed } from "../PostFeed";
+import { fetchFollowingPosts } from "./fetchFollowingPosts";
 
-export const revalidate = 5; // TODO: do we need this since the page is client exclusive?
+export default async function Following() {
+  const posts = await fetchFollowingPosts({
+    page: 0,
+  });
 
-export default function Feed() {
   return (
-    <div className="fixed inset-0 bottom-16 overflow-y-scroll p-4 md:relative md:inset-auto md:overflow-y-visible md:p-0">
-      <FollowingFeed />
+    <div className="flex h-screen w-full justify-center">
+      <div className="w-full space-y-4 pb-4">
+        <FeedProvider initialPosts={posts}>
+          <PostFeed />
+          <LoadMore />
+        </FeedProvider>
+      </div>
     </div>
   );
 }
