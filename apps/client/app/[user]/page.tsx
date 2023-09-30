@@ -2,10 +2,12 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
+import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { Post } from "@/lib/fetchPost";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
+import { FollowButton } from "./FollowButton";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
 
@@ -51,6 +53,21 @@ export default async function User({ params }: Props) {
 
   const profile = await fetchProfileFromUsername(username);
   if (!profile) notFound();
+  const userAddress = profile.address.toLowerCase();
+
+  let isFollowing = false;
+  const session = await getSession();
+  let clientAddress = "";
+  if (session) {
+    clientAddress = session.user.address.toLowerCase();
+    const following = await db.query.userFollowing.findFirst({
+      where: (row, { and, eq }) =>
+        and(
+          and(eq(row.address, clientAddress), eq(row.following, userAddress)),
+        ),
+    });
+    isFollowing = !!following;
+  }
 
   const content = await db.query.content.findMany({
     columns: {
@@ -81,6 +98,14 @@ export default async function User({ params }: Props) {
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />
       </div>
+
+      {session && clientAddress !== userAddress && (
+        <FollowButton
+          isFollowing={isFollowing}
+          clientAddress={clientAddress}
+          userAddress={userAddress}
+        />
+      )}
 
       {posts.map((post) => (
         <PostCard key={post.shareId} post={post} />
