@@ -16,7 +16,7 @@ export function PostCard({ post }: Props) {
 
   return (
     <div className="w-full space-y-2">
-      <div className="px-2">
+      <div className="px-2 md:px-0">
         {post.owner.username ? (
           <Link
             href={`/@${post.owner.username}`}
@@ -58,9 +58,11 @@ export function PostCard({ post }: Props) {
         <div className="h-80 w-full" />
       )}
 
-      <h3 className="mx-2 text-sm text-slate-400">{post.description}</h3>
+      <h3 className="px-2 text-sm text-slate-400 md:px-0">
+        {post.description}
+      </h3>
 
-      <div className="mx-2 flex items-center justify-end space-x-1">
+      <div className="flex items-center justify-end space-x-1 px-2 md:px-0">
         <button
           title="Repost"
           className="group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300"
