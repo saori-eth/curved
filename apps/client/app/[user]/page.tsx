@@ -87,9 +87,11 @@ export default async function User({ params }: Props) {
         <FollowButton address={profile.address} username={profile.username} />
       </div>
 
-      {posts.map((post) => (
-        <PostCard key={post.shareId} post={post} />
-      ))}
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <PostCard key={post.shareId} post={post} />
+        ))}
+      </div>
     </div>
   );
 }

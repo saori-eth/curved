@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { repost } from "@/lib/db/schema";
@@ -35,9 +36,9 @@ export async function POST(request: NextRequest) {
   try {
     await db.insert(repost).values({
       author,
-      referenceShareId: shareId,
-      referenceRepost: repostId || null,
       quote: quote || null,
+      referenceRepost: repostId || null,
+      referenceShareId: shareId,
     });
   } catch (e) {
     console.log(e);

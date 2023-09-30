@@ -18,7 +18,7 @@ export function DialogContent({ children }: DialogContentProps) {
         }`}
       >
         <Dialog.Content
-          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 p-8 shadow-lg transition${
+          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 p-8 shadow-lg transition ${
             mounted ? "" : "scale-75 opacity-0"
           }`}
         >
