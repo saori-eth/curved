@@ -55,7 +55,7 @@ export function PostCard({ post, disableLink = false }: Props) {
         </div>
       </div>
 
-      {post.url && (
+      {post.url ? (
         <Image
           src={post.url}
           alt="Post image"
@@ -66,6 +66,8 @@ export function PostCard({ post, disableLink = false }: Props) {
           priority
           className="h-auto max-h-[1000px] w-full rounded-lg object-contain"
         />
+      ) : (
+        <div className="h-80 w-full" />
       )}
 
       <h3 className="pt-2 text-sm text-slate-400">{post.description}</h3>

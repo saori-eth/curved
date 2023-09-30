@@ -1,76 +1,99 @@
-"use client";
+import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
-interface FollowButtonProps {
-  isFollowing: boolean;
-  clientAddress: string;
-  userAddress: string;
+import { getSession } from "@/lib/auth/getSession";
+import { db } from "@/lib/db";
+import { userFollowing } from "@/lib/db/schema";
+
+interface Props {
+  address: string;
+  username: string;
 }
 
-export const FollowButton = async (props: FollowButtonProps) => {
-  const { isFollowing, clientAddress, userAddress } = props;
+export async function FollowButton({ address, username }: Props) {
+  const session = await getSession();
 
-  const followUser = async () => {
-    const success = await follow(userAddress);
-    if (success) {
-      window.location.reload();
-    }
-  };
+  if (session && session.user.address === address) {
+    return null;
+  }
 
-  const unfollowUser = async () => {
-    const success = await unfollow(userAddress);
-    if (success) {
-      window.location.reload();
+  let isFollowing = false;
+
+  if (session) {
+    const foundFollowing = await db.query.userFollowing.findFirst({
+      where: (row, { and, like, eq }) =>
+        and(
+          and(
+            like(row.address, session.user.address),
+            eq(row.following, address),
+          ),
+        ),
+    });
+
+    if (foundFollowing) {
+      isFollowing = true;
     }
-  };
+  }
+
+  async function toggleFollow() {
+    "use server";
+
+    const session = await getSession();
+    if (!session) return;
+
+    try {
+      if (isFollowing) {
+        await db
+          .delete(userFollowing)
+          .where(
+            and(
+              eq(userFollowing.address, session.user.address),
+              eq(userFollowing.following, address),
+            ),
+          );
+      } else {
+        await db.insert(userFollowing).values({
+          address: session.user.address,
+          following: address,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    redirect(`/@${username}`);
+  }
+
+  const disabled = !session;
 
   return (
-    <button
-      className={`${
-        isFollowing ? "bg-gray-300" : "bg-blue-500"
-      } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-      onClick={isFollowing ? unfollowUser : followUser}
-    >
-      {isFollowing ? "Unfollow" : "Follow"}
-    </button>
+    <form action={toggleFollow}>
+      <button
+        type="submit"
+        disabled={disabled}
+        className={`group w-24 rounded-full border py-1 ${isFollowing
+            ? "border-slate-400"
+            : "border-transparent bg-white text-slate-900"
+          } ${disabled
+            ? "opacity-50"
+            : isFollowing
+              ? "hover:border-red-400 hover:bg-red-950/30 hover:text-red-400 active:bg-red-950/60"
+              : "transition hover:text-slate-900 hover:opacity-90 active:scale-95"
+          }`}
+      >
+        {isFollowing ? (
+          disabled ? (
+            <span>Following</span>
+          ) : (
+            <>
+              <span className="group-hover:hidden">Following</span>
+              <span className="hidden group-hover:block">Unfollow</span>
+            </>
+          )
+        ) : (
+          <span>Follow</span>
+        )}
+      </button>
+    </form>
   );
-};
-
-const follow = async (userAddress: string) => {
-  try {
-    const res = await fetch(`/api/user/follow`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ addrToFollow: userAddress }),
-    });
-    if (res.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-};
-
-const unfollow = async (userAddress: string) => {
-  try {
-    const rest = await fetch(`/api/user/unfollow/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ addrToUnfollow: userAddress }),
-    });
-    if (rest.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-};
+}

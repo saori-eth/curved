@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
-import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { Post } from "@/lib/fetchPost";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
@@ -53,21 +52,6 @@ export default async function User({ params }: Props) {
 
   const profile = await fetchProfileFromUsername(username);
   if (!profile) notFound();
-  const userAddress = profile.address.toLowerCase();
-
-  let isFollowing = false;
-  const session = await getSession();
-  let clientAddress = "";
-  if (session) {
-    clientAddress = session.user.address.toLowerCase();
-    const following = await db.query.userFollowing.findFirst({
-      where: (row, { and, eq }) =>
-        and(
-          and(eq(row.address, clientAddress), eq(row.following, userAddress)),
-        ),
-    });
-    isFollowing = !!following;
-  }
 
   const content = await db.query.content.findMany({
     columns: {
@@ -76,7 +60,7 @@ export default async function User({ params }: Props) {
       shareId: true,
       url: true,
     },
-    limit: 40,
+    limit: 20,
     orderBy: (row, { desc }) => desc(row.shareId),
     where: (row, { eq }) => eq(row.owner, profile.address),
   });
@@ -93,19 +77,15 @@ export default async function User({ params }: Props) {
   }));
 
   return (
-    <div className="flex flex-col items-center space-y-6 py-4 md:pt-0">
+    <div className="flex flex-col items-center py-4 md:pt-0">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />
       </div>
 
-      {session && clientAddress !== userAddress && (
-        <FollowButton
-          isFollowing={isFollowing}
-          clientAddress={clientAddress}
-          userAddress={userAddress}
-        />
-      )}
+      <div className="my-2 flex h-8 items-center">
+        <FollowButton address={profile.address} username={profile.username} />
+      </div>
 
       {posts.map((post) => (
         <PostCard key={post.shareId} post={post} />
