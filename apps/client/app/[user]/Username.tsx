@@ -59,7 +59,7 @@ export function Username({ username }: Props) {
   }
 
   return (
-    <>
+    <div className="relative">
       <input
         ref={ref}
         value={`@${value}`}
@@ -82,13 +82,12 @@ export function Username({ username }: Props) {
         minLength={3}
         maxLength={MAX_USERNAME_LENGTH}
         disabled={disabled}
-        className={`w-fit rounded text-center text-xl font-bold ${
-          editing
+        className={`w-fit rounded text-center text-xl font-bold ${editing
             ? "bg-slate-900"
             : pending
-            ? "bg-transparent opacity-50"
-            : "bg-transparent"
-        }`}
+              ? "bg-transparent opacity-50"
+              : "bg-transparent"
+          }`}
       />
 
       {error && (
@@ -98,10 +97,10 @@ export function Username({ username }: Props) {
       <button
         onClick={editing ? handleSave : handleEdit}
         title={editing ? "Save changes" : "Edit username"}
-        className="absolute bottom-0 right-0 aspect-square rounded-full p-1 text-slate-300 transition hover:bg-slate-100 hover:text-slate-900 active:bg-slate-300"
+        className="absolute inset-y-0 right-0 flex aspect-square items-center justify-center rounded-full p-1 text-slate-400 transition hover:text-white active:opacity-80"
       >
         {editing ? <MdCheck /> : <MdEdit />}
       </button>
-    </>
+    </div>
   );
 }

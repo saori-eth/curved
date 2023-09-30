@@ -65,9 +65,8 @@ export function TradeButtons({ shareId }: Props) {
                 buy();
               }
             }}
-            className={`w-full rounded-md bg-sky-600 py-2 font-bold transition ${
-              disableBuy ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
-            }`}
+            className={`w-full rounded-md bg-sky-600 py-2 font-bold transition ${disableBuy ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
+              }`}
           >
             Buy
           </button>
@@ -76,8 +75,8 @@ export function TradeButtons({ shareId }: Props) {
             {isReadError || isPrepareBuyError
               ? "Error"
               : !buyPrice
-              ? "..."
-              : formatEther(buyPrice)}
+                ? "..."
+                : formatEther(buyPrice)}
           </p>
 
           {waitingForBuy ? (
@@ -100,11 +99,10 @@ export function TradeButtons({ shareId }: Props) {
                   sell();
                 }
               }}
-              className={`w-full rounded-md bg-amber-600 py-2 font-bold transition ${
-                disableSell
+              className={`w-full rounded-md bg-amber-600 py-2 font-bold transition ${disableSell
                   ? "cursor-default opacity-50"
                   : "hover:bg-amber-500 active:scale-95"
-              }`}
+                }`}
             >
               Sell
             </button>
@@ -113,8 +111,8 @@ export function TradeButtons({ shareId }: Props) {
               {isReadError || isPrepareSellError
                 ? "Error"
                 : !sellPrice
-                ? "..."
-                : formatEther(sellPrice)}
+                  ? "..."
+                  : formatEther(sellPrice)}
             </p>
 
             {waitingForSell ? (

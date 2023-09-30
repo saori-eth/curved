@@ -16,30 +16,32 @@ export function PostCard({ post }: Props) {
 
   return (
     <div className="w-full space-y-2">
-      {post.owner.username ? (
-        <Link
-          href={`/@${post.owner.username}`}
-          className="flex w-fit items-center space-x-2 pr-2 hover:underline"
-        >
-          <Avatar
-            src={post.owner.avatar}
-            uniqueKey={post.owner.username}
-            size={32}
-          />
-          <span className="text-sm font-bold">{post.owner.username}</span>
-        </Link>
-      ) : (
-        <div className="flex items-center space-x-2">
-          <Avatar
-            src={post.owner.avatar}
-            uniqueKey={post.owner.address}
-            size={32}
-          />
-          <span className="truncate text-sm font-bold">
-            {post.owner.address}
-          </span>
-        </div>
-      )}
+      <div className="px-2">
+        {post.owner.username ? (
+          <Link
+            href={`/@${post.owner.username}`}
+            className="flex w-fit items-center space-x-2 pr-2 hover:underline"
+          >
+            <Avatar
+              src={post.owner.avatar}
+              uniqueKey={post.owner.username}
+              size={32}
+            />
+            <span className="text-sm font-bold">{post.owner.username}</span>
+          </Link>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Avatar
+              src={post.owner.avatar}
+              uniqueKey={post.owner.address}
+              size={32}
+            />
+            <span className="truncate text-sm font-bold">
+              {post.owner.address}
+            </span>
+          </div>
+        )}
+      </div>
 
       {post.url ? (
         <Image
@@ -50,18 +52,18 @@ export function PostCard({ post }: Props) {
           sizes="517px"
           draggable={false}
           priority
-          className="h-auto max-h-[1000px] w-full rounded-lg object-contain"
+          className="h-auto max-h-[1000px] w-full object-contain md:rounded-lg"
         />
       ) : (
         <div className="h-80 w-full" />
       )}
 
-      <h3 className="text-sm text-slate-400">{post.description}</h3>
+      <h3 className="mx-2 text-sm text-slate-400">{post.description}</h3>
 
-      <div className="flex items-center justify-end space-x-1">
+      <div className="mx-2 flex items-center justify-end space-x-1">
         <button
           title="Repost"
-          className="group z-10 flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300"
+          className="group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300"
         >
           {numReposts ? <span className="text-sm">{numReposts}</span> : null}
           <span className="flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">

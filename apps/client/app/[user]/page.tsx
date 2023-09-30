@@ -77,17 +77,17 @@ export default async function User({ params }: Props) {
   }));
 
   return (
-    <div className="flex flex-col items-center py-4 md:pt-0">
+    <div className="flex flex-col items-center space-y-2 py-4 md:pt-0">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />
       </div>
 
-      <div className="my-2 flex h-8 items-center">
+      <div className="flex h-8 items-center">
         <FollowButton address={profile.address} username={profile.username} />
       </div>
 
-      <div className="space-y-6">
+      <div className="w-full space-y-6 pt-2">
         {posts.map((post) => (
           <PostCard key={post.shareId} post={post} />
         ))}
