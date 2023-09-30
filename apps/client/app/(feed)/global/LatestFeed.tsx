@@ -11,7 +11,7 @@ export async function LatestFeed() {
 
   return (
     <div className="flex h-screen w-full justify-center">
-      <div className="w-full space-y-4 pb-4">
+      <div className="w-full space-y-6 pb-4">
         <FeedProvider initialPosts={posts}>
           <PostFeed />
           <LoadMore />

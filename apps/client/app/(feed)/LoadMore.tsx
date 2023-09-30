@@ -25,12 +25,10 @@ export function LoadMore() {
     setFetchingPage(nextPage);
 
     startTransition(async () => {
-      console.log("Fetching page", nextPage);
       const posts = await fetchLatestPosts({
         page: nextPage,
         start,
       });
-      console.log("Fetched page", posts.length);
 
       setPosts((prev) => [...prev, ...posts]);
       setPage(nextPage);
@@ -50,7 +48,7 @@ export function LoadMore() {
   return (
     <div
       ref={ref}
-      className="group block w-full select-none space-y-3 rounded-xl border border-slate-500 bg-slate-800 p-4 transition"
+      className="group block w-full select-none space-y-2 rounded-xl bg-slate-800 transition"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">

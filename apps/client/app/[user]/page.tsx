@@ -1,14 +1,15 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getSession } from "@/lib/auth/getSession";
+
 import { PostCard } from "@/components/PostCard";
+import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
+import { Post } from "@/lib/fetchPost";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
+import { FollowButton } from "./FollowButton";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
-import { FollowButton } from "./FollowButton";
-import { is } from "drizzle-orm";
 
 export const revalidate = 10;
 
@@ -68,7 +69,7 @@ export default async function User({ params }: Props) {
     isFollowing = !!following;
   }
 
-  const posts = await db.query.content.findMany({
+  const content = await db.query.content.findMany({
     columns: {
       createdAt: true,
       description: true,
@@ -79,6 +80,17 @@ export default async function User({ params }: Props) {
     orderBy: (row, { desc }) => desc(row.shareId),
     where: (row, { eq }) => eq(row.owner, profile.address),
   });
+
+  const posts: Post[] = content.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    description: post.description ?? "",
+    owner: {
+      address: profile.address,
+      avatar: profile.avatar,
+      username: profile.username,
+    },
+  }));
 
   return (
     <div className="flex flex-col items-center space-y-6 py-4 md:pt-0">
@@ -95,16 +107,8 @@ export default async function User({ params }: Props) {
         />
       )}
 
-      {posts.map(({ description, ...post }) => (
-        <PostCard
-          key={post.shareId}
-          {...post}
-          owner={profile.address}
-          description={description ?? ""}
-          avatar={profile.avatar}
-          username={profile.username}
-          createdAt={post.createdAt.toISOString()}
-        />
+      {posts.map((post) => (
+        <PostCard key={post.shareId} post={post} />
       ))}
     </div>
   );

@@ -38,7 +38,7 @@ export function TradeButtons({ shareId }: Props) {
       // Delay to give indexer time to update
       timeout = setTimeout(() => {
         router.refresh();
-      }, 2000);
+      }, 5000);
     }
 
     return () => {

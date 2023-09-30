@@ -17,16 +17,7 @@ export function PostFeed() {
   return (
     <>
       {posts.map((post) => (
-        <PostCard
-          key={post.shareId}
-          owner={post.owner.address}
-          avatar={post.owner.avatar}
-          username={post.owner.username}
-          shareId={post.shareId}
-          url={post.url}
-          createdAt={post.createdAt}
-          description={post.description ?? ""}
-        />
+        <PostCard key={post.shareId} post={post} />
       ))}
     </>
   );
