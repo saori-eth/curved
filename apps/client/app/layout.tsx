@@ -45,7 +45,9 @@ export default function RootLayout({ children }: Props) {
             <div className="col-span-2">
               <Sidebar />
             </div>
-            <div className="z-20 py-16 md:col-span-4 md:pb-0">{children}</div>
+            <div className="z-20 pb-16 pt-2 md:col-span-4 md:pb-0">
+              {children}
+            </div>
           </div>
         </ClientWrapper>
       </body>
