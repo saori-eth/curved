@@ -9,7 +9,7 @@ export default async function Feed() {
   });
 
   return (
-    <div className="flex h-screen w-full justify-center">
+    <div className="flex justify-center">
       <div className="w-full space-y-6 pb-4">
         <FeedProvider initialPosts={posts}>
           <PostFeed />
