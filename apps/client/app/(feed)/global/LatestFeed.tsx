@@ -1,8 +1,8 @@
 import { fetchLatestPosts } from "@/app/(feed)/fetchLatestPosts";
 
-import { FeedProvider } from "./FeedContext";
-import { LoadMore } from "./LoadMore";
-import { PostFeed } from "./PostFeed";
+import { FeedProvider } from "../FeedContext";
+import { LoadMore } from "../LoadMore";
+import { PostFeed } from "../PostFeed";
 
 export async function LatestFeed() {
   const posts = await fetchLatestPosts({

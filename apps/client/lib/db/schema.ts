@@ -64,21 +64,15 @@ export const user = mysqlTable(
 export const repost = mysqlTable(
   "repost",
   {
-    // references content.shareId
-    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
-
+    author: varchar("author", { length: ETH_ADDRESS_LENGTH }).notNull(),
     id: serial("id").primaryKey(),
-
-    // address of the user who reposted
-    quote: varchar("quote", { length: 140 }).notNull(),
-
-    // twitter length
-    referenceRepost: bigint("reference_repost", { mode: "number" }),
-    // uinque id for the repost
-    referenceShareId: bigint("share_id", { mode: "number" }).notNull(), // references repost.id. null if its the original post
+    quote: varchar("quote", { length: 140 }),
+    referenceRepost: bigint("reference_repost", { mode: "number" }), // if it's a repost of a repost
+    referenceShareId: bigint("share_id", { mode: "number" }).notNull(), // all should have a shareId
+    createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => ({
-    addressIndex: index("address").on(table.address),
+    shareIdIndex: uniqueIndex("shareId").on(table.referenceShareId),
   }),
 );
 
