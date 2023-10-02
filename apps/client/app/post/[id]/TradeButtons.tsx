@@ -79,15 +79,17 @@ export function TradeButtons({ shareId }: Props) {
                 : formatEther(buyPrice)}
           </p>
 
-          {waitingForBuy ? (
-            <p className="text-center text-sm text-slate-400">
-              Waiting for transaction...
-            </p>
-          ) : doneBuying ? (
-            <p className="text-center text-sm text-sky-400">
-              Successfully bought share! 🎉
-            </p>
-          ) : null}
+          <div className="h-5">
+            {waitingForBuy ? (
+              <p className="text-center text-sm text-slate-400">
+                Waiting for transaction...
+              </p>
+            ) : doneBuying ? (
+              <p className="text-center text-sm text-sky-400">
+                Successfully bought share! 🎉
+              </p>
+            ) : null}
+          </div>
         </div>
 
         {canSell ? (
@@ -115,15 +117,17 @@ export function TradeButtons({ shareId }: Props) {
                   : formatEther(sellPrice)}
             </p>
 
-            {waitingForSell ? (
-              <p className="text-center text-sm text-slate-400">
-                Waiting for transaction...
-              </p>
-            ) : doneSelling ? (
-              <p className="text-center text-sm text-amber-400">
-                Successfully sold share! 🎉
-              </p>
-            ) : null}
+            <div className="h-5">
+              {waitingForSell ? (
+                <p className="text-center text-sm text-slate-400">
+                  Waiting for transaction...
+                </p>
+              ) : doneSelling ? (
+                <p className="text-center text-sm text-amber-400">
+                  Successfully sold share! 🎉
+                </p>
+              ) : null}
+            </div>
           </div>
         ) : null}
       </div>
