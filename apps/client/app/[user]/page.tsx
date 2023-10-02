@@ -77,7 +77,7 @@ export default async function User({ params }: Props) {
   }));
 
   return (
-    <div className="flex flex-col items-center space-y-2 py-4 md:pt-0">
+    <div className="flex flex-col items-center space-y-2 py-4 md:pt-14">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />

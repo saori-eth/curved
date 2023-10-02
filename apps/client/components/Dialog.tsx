@@ -13,14 +13,12 @@ export function DialogContent({ children }: DialogContentProps) {
   return (
     <Dialog.Portal>
       <Dialog.Overlay
-        className={`fixed inset-0 z-10 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${
-          mounted ? "" : "opacity-0"
-        }`}
+        className={`fixed inset-0 z-40 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${mounted ? "" : "opacity-0"
+          }`}
       >
         <Dialog.Content
-          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 p-8 shadow-lg transition ${
-            mounted ? "" : "scale-75 opacity-0"
-          }`}
+          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 p-8 shadow-lg transition ${mounted ? "" : "scale-75 opacity-0"
+            }`}
         >
           {children}
           <Mount setMounted={setMounted} />

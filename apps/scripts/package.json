@@ -9,7 +9,6 @@
     "build": "cd contracts && forge build",
     "db": "node db/index.js",
     "deploy": "pnpm run env -- pnpm run _deploy",
-    "dev": "conc \"pnpm run anvil --silent\" \"pnpm run deploy\"",
     "env": "dotenv -e ../../.env",
     "init-rewards": "node dev/initRewards.js",
     "mock-events": "node dev/mockEvents.js",
