@@ -47,3 +47,10 @@ export const resetTable = async (tableName: string) => {
   console.log("reset table", table);
   console.log("new content", table);
 };
+
+export const resetAllTables = async () => {
+  const tables = await viewTables();
+  for (const table of tables) {
+    await resetTable(table);
+  }
+};
