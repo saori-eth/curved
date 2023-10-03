@@ -1,10 +1,11 @@
+import { post } from "db";
+import { desc, eq } from "drizzle-orm";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
-import { db } from "@/lib/db";
-import { Post } from "@/lib/fetchPost";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
+import { formatPostQuery, postQuery } from "@/src/server/postQuery";
 
 import { FollowButton } from "./FollowButton";
 import { UserAvatar } from "./UserAvatar";
@@ -53,27 +54,12 @@ export default async function User({ params }: Props) {
   const profile = await fetchProfileFromUsername(username);
   if (!profile) notFound();
 
-  const dbPosts = await db.query.post.findMany({
-    columns: {
-      caption: true,
-      createdAt: true,
-      shareId: true,
-      url: true,
-    },
-    limit: 20,
-    orderBy: (row, { desc }) => desc(row.shareId),
-    where: (row, { eq }) => eq(row.owner, profile.address),
-  });
+  const data = await postQuery
+    .where(eq(post.owner, profile.address))
+    .orderBy(desc(post.createdAt))
+    .limit(20);
 
-  const posts: Post[] = dbPosts.map((post) => ({
-    ...post,
-    createdAt: post.createdAt.toISOString(),
-    owner: {
-      address: profile.address,
-      avatar: profile.avatar,
-      username: profile.username,
-    },
-  }));
+  const posts = formatPostQuery(data);
 
   return (
     <div className="flex flex-col items-center space-y-2 py-4 md:pt-14">
@@ -88,7 +74,10 @@ export default async function User({ params }: Props) {
 
       <div className="w-full space-y-6 pt-2">
         {posts.map((post) => (
-          <PostCard key={post.shareId} post={post} />
+          <PostCard
+            key={`${post.owner.address}-${post.createdAt}`}
+            post={post}
+          />
         ))}
       </div>
     </div>

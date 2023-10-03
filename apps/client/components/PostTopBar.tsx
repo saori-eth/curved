@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Post } from "@/lib/fetchPost";
+import { Post } from "@/src/types/post";
 
 import Avatar from "./Avatar";
 

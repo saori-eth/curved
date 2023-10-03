@@ -1,9 +1,10 @@
-import { MAX_CAPTION_LENGTH, repost } from "db";
+import { MAX_CAPTION_LENGTH, post, repost } from "db";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
+import { nanoidLowercase } from "@/lib/db/nanoid";
 
 /*
   try {
@@ -22,9 +23,8 @@ import { db } from "@/lib/db";
 */
 
 const RepostArgs = z.object({
-  caption: z.string().max(MAX_CAPTION_LENGTH),
-  repostId: z.number().optional(),
-  shareId: z.number(),
+  caption: z.string().max(MAX_CAPTION_LENGTH).optional(),
+  publicId: z.string(),
 });
 
 export async function POST(request: NextRequest) {
@@ -39,26 +39,23 @@ export async function POST(request: NextRequest) {
     return new Response("Bad Request", { status: 400 });
   }
 
-  const { shareId, caption, repostId } = parsed.data;
+  const { publicId, caption } = parsed.data;
 
   try {
-    if (repostId) {
-      // Verify that the repost exists
-      const existingRepost = await db.query.repost.findFirst({
-        where: (row, { eq, and }) =>
-          and(eq(row.id, repostId), eq(row.referenceShareId, shareId)),
+    await db.transaction(async (tx) => {
+      const newPostId = nanoidLowercase();
+
+      await tx.insert(post).values({
+        owner: session.user.address,
+        publicId: newPostId,
+        type: "repost",
       });
 
-      if (!existingRepost) {
-        return new Response("Bad Request", { status: 400 });
-      }
-    }
-
-    await db.insert(repost).values({
-      caption,
-      referenceRepostId: repostId,
-      referenceShareId: shareId,
-      userId: session.user.userId,
+      await tx.insert(repost).values({
+        caption,
+        postId: newPostId,
+        referencePostId: publicId,
+      });
     });
 
     return new Response("OK", { status: 200 });

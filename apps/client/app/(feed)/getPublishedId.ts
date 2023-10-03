@@ -20,16 +20,17 @@ export async function getPublishedId() {
 
       const post = await tx.query.post.findFirst({
         columns: {
-          shareId: true,
+          publicId: true,
         },
-        orderBy: (row, { desc }) => [desc(row.shareId)],
-        where: (row, { eq }) => eq(row.owner, session.user.address),
+        orderBy: (row, { desc }) => [desc(row.createdAt)],
+        where: (row, { eq, and }) =>
+          and(eq(row.owner, session.user.address), eq(row.type, "post")),
       });
       if (!post) {
         throw new Error("You have no posts");
       }
 
-      return post.shareId;
+      return post.publicId;
     });
 
     return shareId;

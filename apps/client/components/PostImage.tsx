@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Post } from "@/lib/fetchPost";
+import { Post, PostType } from "@/src/types/post";
 
 interface Props {
   post: Post;
@@ -8,10 +8,10 @@ interface Props {
 }
 
 export function PostImage({ post, sizes = "517px" }: Props) {
-  if (post.url) {
+  if (post.type === PostType.Post && post.data.url) {
     return (
       <Image
-        src={post.url}
+        src={post.data.url}
         alt="Post image"
         width={0}
         height={0}

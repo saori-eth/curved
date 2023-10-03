@@ -1,10 +1,11 @@
 "use server";
 
+import { post } from "db";
+import { desc, lte } from "drizzle-orm";
 import { z } from "zod";
 
-import { db } from "@/lib/db";
-import { Post } from "@/lib/fetchPost";
-import { getAvatarUrl } from "@/lib/getAvatarUrl";
+import { formatPostQuery, postQuery } from "@/src/server/postQuery";
+import { Post } from "@/src/types/post";
 
 import { FEED_PAGE_SIZE } from "./constants";
 
@@ -20,66 +21,16 @@ export async function fetchLatestPosts(
 ): Promise<Post[]> {
   try {
     const args = FetchLatestSchema.parse(_args);
+    const page = args.page;
+    const start = args.start ?? Date.now();
 
-    let page = args.page;
-    let offset = 0;
+    const data = await postQuery
+      .orderBy(desc(post.createdAt))
+      .where(lte(post.createdAt, new Date(start)))
+      .limit(FEED_PAGE_SIZE)
+      .offset(page * FEED_PAGE_SIZE);
 
-    if (args.start) {
-      const latestShare = await db.query.post.findFirst({
-        columns: {
-          shareId: true,
-        },
-        orderBy: (row, { desc }) => [desc(row.shareId)],
-      });
-
-      if (!latestShare) {
-        return [];
-      }
-
-      // latestShare is page 0, calculate what page we will find start on
-      if (latestShare.shareId > args.start) {
-        const diff = latestShare.shareId - args.start;
-        page = Math.floor(diff / FEED_PAGE_SIZE);
-        offset = diff % FEED_PAGE_SIZE;
-      }
-    }
-
-    const data = await db.query.post.findMany({
-      columns: {
-        caption: true,
-        createdAt: true,
-        owner: true,
-        shareId: true,
-        url: true,
-      },
-      limit: FEED_PAGE_SIZE,
-      offset: page * FEED_PAGE_SIZE + offset,
-      orderBy: (row, { desc }) => [desc(row.shareId)],
-      with: {
-        owner: {
-          columns: {
-            avatarId: true,
-            username: true,
-          },
-        },
-      },
-    });
-
-    if (!data) {
-      return [];
-    }
-
-    return data.map((row) => ({
-      caption: row.caption ?? "",
-      createdAt: row.createdAt.toISOString(),
-      owner: {
-        address: row.owner,
-        avatar: getAvatarUrl(row.owner.avatarId),
-        username: row.owner.username,
-      },
-      shareId: row.shareId,
-      url: row.url,
-    }));
+    return formatPostQuery(data);
   } catch (e) {
     console.error(e);
     return [];

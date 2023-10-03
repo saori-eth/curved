@@ -3,6 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Compressor from "compressorjs";
+import { MAX_CAPTION_LENGTH } from "db";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import {
@@ -17,7 +18,6 @@ import { PostTopBar } from "@/components/PostTopBar";
 import { SubmitButton } from "@/components/SubmitButton";
 import { CURVED_ABI } from "@/lib/abi/curved";
 import { env } from "@/lib/env.mjs";
-import { toHex } from "@/lib/toHex";
 
 import { useAuth } from "../AuthProvider";
 import { editPending } from "./editPending";
@@ -101,15 +101,15 @@ export function CreatePost() {
       tries++;
 
       try {
-        const shareId = await getPublishedId();
+        const publicId = await getPublishedId();
 
-        if (shareId) {
+        if (publicId) {
           clearInterval(interval);
 
           startRedirectTransition(() => {
             setOpen(false);
             setWaitingForIndex(false);
-            router.push(`/post/${toHex(shareId)}`);
+            router.push(`/post/${publicId}`);
           });
 
           return;
@@ -284,6 +284,7 @@ export function CreatePost() {
           <textarea
             ref={captionRef}
             disabled={captionDisabled}
+            maxLength={MAX_CAPTION_LENGTH}
             placeholder="Add a caption..."
             rows={2}
             className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${

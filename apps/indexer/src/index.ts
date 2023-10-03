@@ -1,10 +1,11 @@
-import { pendingPost, post, trade } from "db";
+import { nftPost, pendingPost, post, trade } from "db";
 import { config } from "dotenv";
 import { eq } from "drizzle-orm";
 import { ethers } from "ethers";
 
 import CurveABI from "./abi/Curved.json" assert { type: "json" };
 import { db } from "./DB";
+import { nanoidLowercase } from "./nanoid";
 
 config();
 
@@ -41,22 +42,31 @@ curve.on("*", async (event) => {
           return;
         }
 
-        console.log(
-          `Inserting ${owner} and ${shareId} into content table`,
-          pending,
-        );
+        await db.transaction(async (tx) => {
+          const publicId = nanoidLowercase();
 
-        await db.insert(post).values({
-          caption: pending.caption,
-          owner: owner.toLowerCase(),
-          shareId,
-          url: pending.url,
+          console.log(
+            "Inserting post",
+            { owner, publicId },
+            "and deleting pending post",
+            pending,
+          );
+
+          await tx.insert(post).values({
+            owner: owner.toLowerCase(),
+            publicId,
+            type: "post",
+          });
+
+          await tx.insert(nftPost).values({
+            caption: pending.caption,
+            postId: publicId,
+            shareId,
+            url: pending.url,
+          });
+
+          await tx.delete(pendingPost).where(eq(pendingPost.owner, owner));
         });
-
-        // TODO: Delete pending content
-        console.log("Deleting pending content");
-
-        await db.delete(pendingPost).where(eq(pendingPost.owner, owner));
 
         const tradeEntry = {
           amount: 1,

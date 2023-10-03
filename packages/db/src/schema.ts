@@ -3,6 +3,7 @@ import {
   bigint,
   char,
   index,
+  mysqlEnum,
   mysqlTable,
   serial,
   timestamp,
@@ -25,29 +26,48 @@ import {
 export const post = mysqlTable(
   "post",
   {
-    caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     id: serial("id").primaryKey(),
-    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    shareId: bigint("share_id", { mode: "number" }).notNull(),
+    owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
+    type: mysqlEnum("type", ["post", "repost"]).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()
       .notNull(),
-    url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({
     ownerIndex: index("owner").on(table.owner),
-    shareIdIndex: uniqueIndex("shareId").on(table.shareId),
   }),
 );
 
 export const postRelations = relations(post, ({ one }) => ({
-  owner: one(user, {
+  user: one(user, {
     fields: [post.owner],
     references: [user.address],
+  }),
+}));
+
+export const nftPost = mysqlTable(
+  "nft_post",
+  {
+    caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
+    id: serial("id").primaryKey(),
+    postId: char("post_id", { length: NANOID_LENGTH }).notNull(),
+    shareId: bigint("share_id", { mode: "number" }).notNull(),
+    url: varchar("url", { length: 255 }).notNull(),
+  },
+  (table) => ({
+    shareIdIndex: uniqueIndex("shareId").on(table.shareId),
+  }),
+);
+
+export const nftPostRelations = relations(nftPost, ({ one }) => ({
+  post: one(post, {
+    fields: [nftPost.postId],
+    references: [post.id],
   }),
 }));
 
@@ -59,7 +79,7 @@ export const pendingPost = mysqlTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     id: serial("id").primaryKey(),
-    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
     publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -76,31 +96,23 @@ export const repost = mysqlTable(
   "repost",
   {
     caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
     id: serial("id").primaryKey(),
-    referenceRepostId: bigint("reference_repost", { mode: "number" }),
-    referenceShareId: bigint("share_id", { mode: "number" }).notNull(),
-    updatedAt: timestamp("updated_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .onUpdateNow()
-      .notNull(),
-    userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
+    postId: char("post_id", { length: NANOID_LENGTH }).notNull(),
+    referencePostId: char("reference_post_id", { length: NANOID_LENGTH }),
   },
   (table) => ({
-    shareIdIndex: uniqueIndex("shareId").on(table.referenceShareId),
+    referencePostIdIndex: index("referencePostId").on(table.referencePostId),
   }),
 );
 
 export const repostRelations = relations(repost, ({ one }) => ({
-  referenceRepost: one(repost, {
-    fields: [repost.referenceRepostId],
-    references: [repost.id],
+  post: one(post, {
+    fields: [repost.postId],
+    references: [post.publicId],
   }),
-  user: one(user, {
-    fields: [repost.userId],
-    references: [user.id],
+  referencePost: one(post, {
+    fields: [repost.referencePostId],
+    references: [post.publicId],
   }),
 }));
 
@@ -108,18 +120,18 @@ export const trade = mysqlTable("trade", {
   amount: bigint("amount", { mode: "number" }).notNull(),
   hash: varchar("hash", { length: 66 }).notNull(),
   id: serial("id").primaryKey(),
-  owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+  owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
   price: bigint("price", { mode: "number" }).notNull(),
   shareId: bigint("share_id", { mode: "number" }).notNull(),
   side: bigint("side", { mode: "number" }).notNull(),
   supply: bigint("supply", { mode: "number" }).notNull(),
-  trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
+  trader: char("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
 });
 
 export const follow = mysqlTable(
   "follow",
   {
-    following: varchar("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    following: char("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
     id: serial("id").primaryKey(),
     userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
   },
@@ -155,7 +167,7 @@ export const user = mysqlTable(
 );
 
 export const userRelations = relations(user, ({ many }) => ({
-  posts: many(post),
+  posts: many(nftPost),
   reposts: many(repost),
 }));
 

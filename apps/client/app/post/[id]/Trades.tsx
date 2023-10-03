@@ -28,14 +28,17 @@ export async function Trades({ shareId }: Props) {
 
   const traders = trades.map((trade) => trade.trader);
 
-  const profiles = await db.query.user.findMany({
-    columns: {
-      address: true,
-      avatarId: true,
-      username: true,
-    },
-    where: (row, { inArray }) => inArray(row.address, traders),
-  });
+  const profiles =
+    traders.length > 1
+      ? await db.query.user.findMany({
+          columns: {
+            address: true,
+            avatarId: true,
+            username: true,
+          },
+          where: (row, { inArray }) => inArray(row.address, traders),
+        })
+      : [];
 
   const withProfiles = trades.map((trade) => {
     const profile = profiles.find(

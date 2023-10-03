@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 
-import { Post } from "@/lib/fetchPost";
+import { Post } from "@/src/types/post";
 
 export interface IFeedContext {
   posts: Post[];
@@ -33,7 +33,7 @@ interface Props {
 
 export function FeedProvider({ initialPosts = [], children }: Props) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [start] = useState(initialPosts[0]?.shareId ?? 0);
+  const [start] = useState(Date.now());
   const [page, setPage] = useState(0);
 
   return (

@@ -1,8 +1,10 @@
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostImage } from "@/components/PostImage";
 import { PostTopBar } from "@/components/PostTopBar";
 import { fetchPost } from "@/lib/fetchPost";
+import { PostType } from "@/src/types/post";
 
 import { TradeButtons } from "./TradeButtons";
 import { Trades } from "./Trades";
@@ -15,22 +17,65 @@ interface Props {
   };
 }
 
-export default async function Post({ params }: Props) {
-  const shareId = parseInt(params.id);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const post = await fetchPost(params.id);
+  if (!post) return {};
 
-  const post = await fetchPost(shareId);
+  const user = post.owner.username
+    ? `@${post.owner.username}`
+    : post.owner.address;
+  const description = `Post by ${user}`;
+
+  let title = "";
+  let images = undefined;
+
+  switch (post.type) {
+    case PostType.Post: {
+      title = post.data.caption || `Post #${post.id}`;
+      images = [{ url: post.data.url }];
+      break;
+    }
+
+    case PostType.Repost: {
+      title = `Repost #${post.id}`;
+      images = undefined;
+      break;
+    }
+  }
+
+  return {
+    description,
+    openGraph: {
+      description,
+      images,
+      title,
+    },
+    title,
+    twitter: {
+      card: "summary",
+      description,
+      images,
+      title,
+    },
+  };
+}
+
+export default async function Post({ params }: Props) {
+  const post = await fetchPost(params.id);
   if (!post) notFound();
 
   return (
     <div className="space-y-2 px-2 md:px-0 md:pt-14">
       <PostTopBar owner={post.owner} />
       <PostImage post={post} />
-      <h3 className="text-sm text-slate-400">{post.caption}</h3>
+      <h3 className="text-sm text-slate-400">{post.data.caption}</h3>
 
-      <div className="space-y-2 py-4">
-        <TradeButtons shareId={shareId} />
-        <Trades shareId={shareId} />
-      </div>
+      {post.type === PostType.Post ? (
+        <div className="space-y-2 py-4">
+          <TradeButtons shareId={post.data.shareId} />
+          <Trades shareId={post.data.shareId} />
+        </div>
+      ) : null}
     </div>
   );
 }
