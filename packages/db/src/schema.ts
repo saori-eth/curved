@@ -176,7 +176,6 @@ export const userBalances = mysqlTable(
     shareId: bigint("share_id", { mode: "number" }).notNull(),
   },
   (table) => ({
-    addressIndex: index("address").on(table.address),
     addressShareIdIndex: uniqueIndex("addressShareId").on(
       table.address,
       table.shareId,
