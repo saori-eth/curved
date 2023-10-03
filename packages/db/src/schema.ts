@@ -122,7 +122,7 @@ export const trade = mysqlTable("trade", {
   hash: varchar("hash", { length: 66 }).notNull(),
   id: serial("id").primaryKey(),
   owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-  price: bigint("price", { mode: "number" }).notNull(),
+  price: bigint("price", { mode: "bigint" }).notNull(),
   shareId: bigint("share_id", { mode: "number" }).notNull(),
   side: bigint("side", { mode: "number" }).notNull(),
   supply: bigint("supply", { mode: "number" }).notNull(),
@@ -183,6 +183,32 @@ export const userBalances = mysqlTable(
     sharedIdIndex: index("shareId").on(table.shareId),
   }),
 );
+
+export const shareData = mysqlTable(
+  "share_data",
+  {
+    id: serial("id").primaryKey(),
+    shareId: bigint("share_id", { mode: "number" }).notNull(),
+    volume: bigint("volume", { mode: "bigint" }).notNull(),
+  },
+  (table) => ({
+    shareIdIndex: uniqueIndex("shareId").on(table.shareId),
+  }),
+);
+
+export const sharesDataRelations = relations(shareData, ({ one }) => ({
+  share: one(nftPost, {
+    fields: [shareData.shareId],
+    references: [nftPost.shareId],
+  }),
+}));
+
+export const userBalancesRelations = relations(userBalances, ({ one }) => ({
+  user: one(user, {
+    fields: [userBalances.address],
+    references: [user.address],
+  }),
+}));
 
 export const sharesRelations = relations(userBalances, ({ one }) => ({
   nftPost: one(nftPost, {

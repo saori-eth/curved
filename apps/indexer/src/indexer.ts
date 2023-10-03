@@ -63,6 +63,7 @@ export class Indexer {
         }
         case "Trade": {
           this.handleTrade(event); // enter trade in db
+          this.shareWorker.postMessage(workerEvent);
           break;
         }
       }
@@ -130,7 +131,7 @@ export class Indexer {
         amount: 1,
         hash: event.transactionHash,
         owner: owner.toLowerCase(),
-        price: 0,
+        price: BigInt(0),
         shareId: shareId,
         side: 0,
         supply: 1,
