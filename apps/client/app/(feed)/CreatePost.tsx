@@ -13,6 +13,8 @@ import {
 } from "wagmi";
 
 import { DialogContent } from "@/components/Dialog";
+import { PostTopBar } from "@/components/PostTopBar";
+import { SubmitButton } from "@/components/SubmitButton";
 import { CURVED_ABI } from "@/lib/abi/curved";
 import { env } from "@/lib/env.mjs";
 import { toHex } from "@/lib/toHex";
@@ -22,7 +24,7 @@ import { editPending } from "./editPending";
 import { getPublishedId } from "./getPublishedId";
 
 export function CreatePost() {
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const captionRef = useRef<HTMLTextAreaElement>(null);
 
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -30,7 +32,7 @@ export function CreatePost() {
   const [waitingForIndex, setWaitingForIndex] = useState(false);
 
   const { address } = useAccount();
-  const { status } = useAuth();
+  const { user, status } = useAuth();
   const { openConnectModal } = useConnectModal();
   const router = useRouter();
 
@@ -73,7 +75,7 @@ export function CreatePost() {
     isWaitingOnTx ||
     waitingForIndex;
 
-  const descriptionDisabled =
+  const captionDisabled =
     isLoadingWrite || isRedirecting || isWaitingOnTx || waitingForIndex;
 
   const submitDisabled =
@@ -138,7 +140,7 @@ export function CreatePost() {
     // Set description
     try {
       await editPending({
-        description: descriptionRef.current?.value ?? "",
+        caption: captionRef.current?.value ?? "",
       });
     } catch (e) {
       console.error(e);
@@ -173,7 +175,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function(compressedFile) {
+          success: function (compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -231,7 +233,7 @@ export function CreatePost() {
     input.click();
   }
 
-  if (status !== "authenticated") return null;
+  if (!user || status !== "authenticated") return null;
 
   return (
     <Dialog.Root
@@ -260,20 +262,19 @@ export function CreatePost() {
         <span className="hidden text-xl font-bold md:block">Upload</span>
       </Dialog.Trigger>
 
-      <DialogContent>
-        <h1 className="-mt-4 pb-4 text-center text-xl font-bold">
-          Create Post
-        </h1>
+      <DialogContent title="Create Post">
+        <form onSubmit={submit} className="space-y-2">
+          <PostTopBar owner={user} disableLink />
 
-        <form onSubmit={submit} className="space-y-4">
           {file ? (
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[700px] w-full rounded-lg object-contain transition ${imageDisabled
+              className={`max-h-[700px] w-full rounded-lg object-contain transition ${
+                imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
-                }`}
+              }`}
               alt="Upload preview"
             />
           ) : (
@@ -281,25 +282,17 @@ export function CreatePost() {
           )}
 
           <textarea
-            ref={descriptionRef}
-            disabled={descriptionDisabled}
-            placeholder="Write a caption..."
+            ref={captionRef}
+            disabled={captionDisabled}
+            placeholder="Add a caption..."
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 ${descriptionDisabled ? "opacity-50" : ""
-              }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
+              captionDisabled ? "opacity-50" : ""
+            }`}
           />
 
           <div className="flex justify-center">
-            <button
-              disabled={submitDisabled}
-              type="submit"
-              className={`rounded-full bg-slate-900 px-4 py-1 ${submitDisabled
-                  ? "opacity-50"
-                  : "transition hover:bg-slate-950 active:opacity-90"
-                }`}
-            >
-              Submit
-            </button>
+            <SubmitButton disabled={submitDisabled}>Post</SubmitButton>
           </div>
         </form>
 

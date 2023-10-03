@@ -5,10 +5,10 @@ import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { pendingContent } from "@/lib/db/schema";
+import { pendingPost } from "@/lib/db/schema";
 
 const EditPendingSchema = z.object({
-  description: z.string(),
+  caption: z.string(),
 });
 
 type EditPendingArgs = z.infer<typeof EditPendingSchema>;
@@ -23,9 +23,9 @@ export async function editPending(_args: EditPendingArgs) {
   }
 
   await db
-    .update(pendingContent)
+    .update(pendingPost)
     .set({
-      description: args.description,
+      caption: args.caption,
     })
-    .where(eq(pendingContent.owner, session.user.address));
+    .where(eq(pendingPost.userId, session.user.userId));
 }

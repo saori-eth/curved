@@ -1,77 +1,29 @@
-import Image from "next/image";
 import Link from "next/link";
-import { BiRepost } from "react-icons/bi";
 
 import { Post } from "@/lib/fetchPost";
 import { toHex } from "@/lib/toHex";
 
-import Avatar from "./Avatar";
+import { PostImage } from "./PostImage";
+import { PostTopBar } from "./PostTopBar";
+import { RepostButton } from "./RepostButton";
 
 interface Props {
   post: Post;
 }
 
 export function PostCard({ post }: Props) {
-  const numReposts = 5;
-
   return (
     <div className="w-full space-y-2">
       <div className="px-2 md:px-0">
-        {post.owner.username ? (
-          <Link
-            href={`/@${post.owner.username}`}
-            className="flex w-fit items-center space-x-2 pr-2 hover:underline"
-          >
-            <Avatar
-              src={post.owner.avatar}
-              uniqueKey={post.owner.username}
-              size={32}
-            />
-            <span className="text-sm font-bold">{post.owner.username}</span>
-          </Link>
-        ) : (
-          <div className="flex items-center space-x-2">
-            <Avatar
-              src={post.owner.avatar}
-              uniqueKey={post.owner.address}
-              size={32}
-            />
-            <span className="truncate text-sm font-bold">
-              {post.owner.address}
-            </span>
-          </div>
-        )}
+        <PostTopBar owner={post.owner} />
       </div>
 
-      {post.url ? (
-        <Image
-          src={post.url}
-          alt="Post image"
-          width={0}
-          height={0}
-          sizes="517px"
-          draggable={false}
-          priority
-          className="h-auto max-h-[1000px] w-full object-contain md:rounded-lg"
-        />
-      ) : (
-        <div className="h-80 w-full" />
-      )}
+      <PostImage post={post} />
 
-      <h3 className="px-2 text-sm text-slate-400 md:px-0">
-        {post.description}
-      </h3>
+      <h3 className="px-2 text-sm text-slate-400 md:px-0">{post.caption}</h3>
 
       <div className="flex items-center justify-end space-x-1 px-2 md:px-0">
-        <button
-          title="Repost"
-          className="group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300"
-        >
-          {numReposts ? <span className="text-sm">{numReposts}</span> : null}
-          <span className="flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">
-            <BiRepost />
-          </span>
-        </button>
+        <RepostButton post={post} />
 
         <Link
           href={`/post/${toHex(post.shareId)}`}

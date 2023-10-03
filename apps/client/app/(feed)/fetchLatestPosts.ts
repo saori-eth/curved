@@ -25,7 +25,7 @@ export async function fetchLatestPosts(
     let offset = 0;
 
     if (args.start) {
-      const latestShare = await db.query.content.findFirst({
+      const latestShare = await db.query.post.findFirst({
         columns: {
           shareId: true,
         },
@@ -44,10 +44,10 @@ export async function fetchLatestPosts(
       }
     }
 
-    const data = await db.query.content.findMany({
+    const data = await db.query.post.findMany({
       columns: {
+        caption: true,
         createdAt: true,
-        description: true,
         owner: true,
         shareId: true,
         url: true,
@@ -70,8 +70,8 @@ export async function fetchLatestPosts(
     }
 
     return data.map((row) => ({
+      caption: row.caption ?? "",
       createdAt: row.createdAt.toISOString(),
-      description: row.description ?? "",
       owner: {
         address: row.owner,
         avatar: getAvatarUrl(row.owner.avatarId),

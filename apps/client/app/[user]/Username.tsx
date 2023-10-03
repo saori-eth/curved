@@ -82,12 +82,13 @@ export function Username({ username }: Props) {
         minLength={3}
         maxLength={MAX_USERNAME_LENGTH}
         disabled={disabled}
-        className={`w-fit rounded text-center text-xl font-bold ${editing
+        className={`w-fit rounded text-center text-xl font-bold ${
+          editing
             ? "bg-slate-900"
             : pending
-              ? "bg-transparent opacity-50"
-              : "bg-transparent"
-          }`}
+            ? "bg-transparent opacity-50"
+            : "bg-transparent"
+        }`}
       />
 
       {error && (

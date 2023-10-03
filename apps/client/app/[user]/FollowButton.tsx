@@ -1,9 +1,9 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { userFollowing } from "@/lib/db/schema";
+import { follow } from "@/lib/db/schema";
 
 interface Props {
   address: string;
@@ -20,12 +20,12 @@ export async function FollowButton({ address, username }: Props) {
   let isFollowing = false;
 
   if (session) {
-    const foundFollowing = await db.query.userFollowing.findFirst({
+    const foundFollowing = await db.query.follow.findFirst({
       where: (row, { and, like, eq }) =>
         and(
           and(
-            like(row.address, session.user.address),
-            eq(row.following, address),
+            eq(row.userId, session.user.userId),
+            like(row.following, address),
           ),
         ),
     });
@@ -44,17 +44,17 @@ export async function FollowButton({ address, username }: Props) {
     try {
       if (isFollowing) {
         await db
-          .delete(userFollowing)
+          .delete(follow)
           .where(
             and(
-              eq(userFollowing.address, session.user.address),
-              eq(userFollowing.following, address),
+              eq(follow.userId, session.user.userId),
+              like(follow.following, address),
             ),
           );
       } else {
-        await db.insert(userFollowing).values({
-          address: session.user.address,
+        await db.insert(follow).values({
           following: address,
+          userId: session.user.userId,
         });
       }
     } catch (e) {

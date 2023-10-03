@@ -12,4 +12,4 @@ export const MIN_USERNAME_LENGTH = 3;
 export const MAX_USERNAME_LENGTH = 15;
 export const USER_ID_LENGTH = 15;
 
-export const MAX_DESCRIPTION_LENGTH = 512;
+export const MAX_CAPTION_LENGTH = 512;

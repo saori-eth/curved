@@ -4,22 +4,31 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface DialogContentProps {
+  title?: string;
   children: React.ReactNode;
 }
 
-export function DialogContent({ children }: DialogContentProps) {
+export function DialogContent({ title, children }: DialogContentProps) {
   const [mounted, setMounted] = useState(false);
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay
-        className={`fixed inset-0 z-40 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${mounted ? "" : "opacity-0"
-          }`}
+        className={`fixed inset-0 z-40 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${
+          mounted ? "" : "opacity-0"
+        }`}
       >
         <Dialog.Content
-          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 p-8 shadow-lg transition ${mounted ? "" : "scale-75 opacity-0"
-            }`}
+          className={`mx-2 h-fit w-full max-w-xl rounded-2xl bg-slate-800 px-8 py-6 shadow-lg transition ${
+            mounted ? "" : "scale-75 opacity-0"
+          }`}
         >
+          {title ? (
+            <h1 className="-mt-2 pb-4 text-center text-xl font-bold">
+              {title}
+            </h1>
+          ) : null}
+
           {children}
           <Mount setMounted={setMounted} />
         </Dialog.Content>

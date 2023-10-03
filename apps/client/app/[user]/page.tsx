@@ -53,10 +53,10 @@ export default async function User({ params }: Props) {
   const profile = await fetchProfileFromUsername(username);
   if (!profile) notFound();
 
-  const content = await db.query.content.findMany({
+  const dbPosts = await db.query.post.findMany({
     columns: {
+      caption: true,
       createdAt: true,
-      description: true,
       shareId: true,
       url: true,
     },
@@ -65,10 +65,9 @@ export default async function User({ params }: Props) {
     where: (row, { eq }) => eq(row.owner, profile.address),
   });
 
-  const posts: Post[] = content.map((post) => ({
+  const posts: Post[] = dbPosts.map((post) => ({
     ...post,
     createdAt: post.createdAt.toISOString(),
-    description: post.description ?? "",
     owner: {
       address: profile.address,
       avatar: profile.avatar,

@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { content } from "@/lib/db/schema";
+import { post } from "@/lib/db/schema";
 import { Post } from "@/lib/fetchPost";
 import { getAvatarUrl } from "@/lib/getAvatarUrl";
 
@@ -29,9 +29,8 @@ export async function fetchFollowingPosts(
     return [];
   }
 
-  const clientAddress = session.user.address;
-  const following = await db.query.userFollowing.findMany({
-    where: (row, { eq }) => eq(row.address, clientAddress),
+  const following = await db.query.follow.findMany({
+    where: (row, { eq }) => eq(row.userId, session.user.userId),
   });
 
   if (!following) {
@@ -49,7 +48,7 @@ export async function fetchFollowingPosts(
     let offset = 0;
 
     if (args.start) {
-      const latestShare = await db.query.content.findFirst({
+      const latestShare = await db.query.post.findFirst({
         columns: {
           shareId: true,
         },
@@ -70,9 +69,9 @@ export async function fetchFollowingPosts(
 
     const data = await db
       .select()
-      .from(content)
-      .orderBy(desc(content.shareId))
-      .where(inArray(content.owner, followingAddresses));
+      .from(post)
+      .orderBy(desc(post.shareId))
+      .where(inArray(post.owner, followingAddresses));
 
     const ownerInfo = await db.query.user.findMany({
       columns: {
@@ -91,7 +90,6 @@ export async function fetchFollowingPosts(
       return {
         ...post,
         createdAt: post.createdAt.toISOString(),
-        description: post.description ?? "",
         owner: {
           address: post.owner,
           avatar: getAvatarUrl(owner?.avatarId),

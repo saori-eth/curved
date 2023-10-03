@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
-import { pendingContent } from "@/lib/db/schema";
+import { pendingPost } from "@/lib/db/schema";
 import { s3, S3_BUCKET, S3_READ_ENDPOINT } from "@/lib/s3";
 
 export async function POST() {
@@ -16,11 +16,11 @@ export async function POST() {
 
   try {
     // Check for existing pending content
-    const post = await db.query.pendingContent.findFirst({
+    const post = await db.query.pendingPost.findFirst({
       columns: {
         publicId: true,
       },
-      where: (row, { eq }) => eq(row.owner, session.user.address),
+      where: (row, { eq }) => eq(row.userId, session.user.userId),
     });
 
     // Read publicId or generate a new one
@@ -28,10 +28,10 @@ export async function POST() {
     const url = `${S3_READ_ENDPOINT}/posts/${publicId}`;
 
     if (!post) {
-      await db.insert(pendingContent).values({
-        owner: session.user.address,
+      await db.insert(pendingPost).values({
         publicId,
         url,
+        userId: session.user.userId,
       });
     }
 

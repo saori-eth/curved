@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   bigint,
   char,
@@ -17,21 +17,26 @@ import {
   ETH_ADDRESS_LENGTH,
   ETH_AUTH_ID_LENGTH,
   ETH_AUTH_NONCE_LENGTH,
-  MAX_DESCRIPTION_LENGTH,
+  MAX_CAPTION_LENGTH,
   MAX_USERNAME_LENGTH,
   USER_ID_LENGTH,
 } from "./constants";
 import { NANOID_LENGTH } from "./nanoid";
 
-export const content = mysqlTable(
-  "content",
+export const post = mysqlTable(
+  "post",
   {
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
+    caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     id: serial("id").primaryKey(),
     owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .onUpdateNow()
+      .notNull(),
     url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({
@@ -40,10 +45,106 @@ export const content = mysqlTable(
   }),
 );
 
-export const contentRelations = relations(content, ({ one }) => ({
+export const postRelations = relations(post, ({ one }) => ({
   owner: one(user, {
-    fields: [content.owner],
+    fields: [post.owner],
     references: [user.address],
+  }),
+}));
+
+export const pendingPost = mysqlTable(
+  "pending_post",
+  {
+    caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    id: serial("id").primaryKey(),
+    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .onUpdateNow()
+      .notNull(),
+    url: varchar("url", { length: 255 }).notNull(),
+    userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
+  },
+  (table) => ({
+    userIdIndex: index("userId").on(table.userId),
+  }),
+);
+
+export const pendingPostRelations = relations(pendingPost, ({ one }) => ({
+  user: one(user, {
+    fields: [pendingPost.userId],
+    references: [user.id],
+  }),
+}));
+
+export const repost = mysqlTable(
+  "repost",
+  {
+    caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    id: serial("id").primaryKey(),
+    referenceRepostId: bigint("reference_repost", { mode: "number" }),
+    referenceShareId: bigint("share_id", { mode: "number" }).notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .onUpdateNow()
+      .notNull(),
+    userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
+  },
+  (table) => ({
+    shareIdIndex: uniqueIndex("shareId").on(table.referenceShareId),
+  }),
+);
+
+export const repostRelations = relations(repost, ({ one }) => ({
+  referenceRepost: one(repost, {
+    fields: [repost.referenceRepostId],
+    references: [repost.id],
+  }),
+  user: one(user, {
+    fields: [repost.userId],
+    references: [user.id],
+  }),
+}));
+
+export const trade = mysqlTable("trade", {
+  amount: bigint("amount", { mode: "number" }).notNull(),
+  hash: varchar("hash", { length: 66 }).notNull(),
+  id: serial("id").primaryKey(),
+  owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
+  price: bigint("price", { mode: "number" }).notNull(),
+  shareId: bigint("share_id", { mode: "number" }).notNull(),
+  side: bigint("side", { mode: "number" }).notNull(),
+  supply: bigint("supply", { mode: "number" }).notNull(),
+  trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
+});
+
+export const follow = mysqlTable(
+  "follow",
+  {
+    following: varchar("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
+    id: serial("id").primaryKey(),
+    userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
+  },
+  (table) => ({
+    followingIndex: index("following").on(table.following),
+    userIdIndex: index("userId").on(table.userId),
+  }),
+);
+
+export const followRelations = relations(follow, ({ one }) => ({
+  following: one(user, {
+    fields: [follow.following],
+    references: [user.address],
+  }),
+  user: one(user, {
+    fields: [follow.userId],
+    references: [user.id],
   }),
 }));
 
@@ -61,92 +162,24 @@ export const user = mysqlTable(
   }),
 );
 
-export const repost = mysqlTable(
-  "repost",
-  {
-    author: varchar("author", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    // all should have a shareId
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-
-    id: serial("id").primaryKey(),
-
-    quote: varchar("quote", { length: 140 }),
-
-    referenceRepost: bigint("reference_repost", { mode: "number" }),
-    // if it's a repost of a repost
-    referenceShareId: bigint("share_id", { mode: "number" }).notNull(),
-  },
-  (table) => ({
-    shareIdIndex: uniqueIndex("shareId").on(table.referenceShareId),
-  }),
-);
-
 export const userRelations = relations(user, ({ many }) => ({
-  posts: many(content),
+  posts: many(post),
   reposts: many(repost),
 }));
-
-export const userFollowing = mysqlTable(
-  "user_following",
-  {
-    address: varchar("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    following: varchar("following", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    id: serial("id").primaryKey(),
-  },
-  (table) => ({
-    addressIndex: index("address").on(table.address),
-    followingIndex: index("following").on(table.following),
-  }),
-);
-
-export const userFollowingRelations = relations(userFollowing, ({ one }) => ({
-  followedUser: one(user, {
-    fields: [userFollowing.following],
-    references: [user.address],
-  }),
-  followingUser: one(user, {
-    fields: [userFollowing.address],
-    references: [user.address],
-  }),
-}));
-
-export const pendingContent = mysqlTable(
-  "pending_content",
-  {
-    createdAt: timestamp("created_at").defaultNow(),
-    description: varchar("description", { length: MAX_DESCRIPTION_LENGTH }),
-    id: serial("id").primaryKey(),
-    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-    url: varchar("url", { length: 255 }).notNull(),
-  },
-  (table) => ({
-    ownerIndex: uniqueIndex("owner").on(table.owner),
-    ownerUrlIndex: index("ownerUrl").on(table.owner, table.url),
-  }),
-);
-
-export const trades = mysqlTable("trades", {
-  amount: bigint("amount", { mode: "number" }).notNull(),
-  hash: varchar("hash", { length: 66 }).notNull(),
-  id: serial("id").primaryKey(),
-  owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-  price: bigint("price", { mode: "number" }).notNull(),
-  shareId: bigint("share_id", { mode: "number" }).notNull(),
-  side: bigint("side", { mode: "number" }).notNull(),
-  supply: bigint("supply", { mode: "number" }).notNull(),
-  trader: varchar("trader", { length: ETH_ADDRESS_LENGTH }).notNull(),
-});
 
 export const ethereumSession = mysqlTable(
   "auth_ethereum_session",
   {
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     id: serial("id").primaryKey(),
     nonce: char("nonce", { length: ETH_AUTH_NONCE_LENGTH }).notNull(),
     publicId: char("public_id", { length: ETH_AUTH_ID_LENGTH }).notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .onUpdateNow()
+      .notNull(),
   },
   (table) => ({
     publicIdIndex: uniqueIndex("publicId").on(table.publicId),
