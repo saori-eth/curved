@@ -204,13 +204,6 @@ export const sharesDataRelations = relations(shareData, ({ one }) => ({
 }));
 
 export const userBalancesRelations = relations(userBalances, ({ one }) => ({
-  user: one(user, {
-    fields: [userBalances.address],
-    references: [user.address],
-  }),
-}));
-
-export const sharesRelations = relations(userBalances, ({ one }) => ({
   nftPost: one(nftPost, {
     fields: [userBalances.shareId],
     references: [nftPost.shareId],
