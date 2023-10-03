@@ -53,7 +53,7 @@ export class Indexer {
         }),
       };
 
-      this.userWorker.postMessage(workerEvent); // TODO: once this works, move inside ShareCreated event to check for pending content
+      this.userWorker.postMessage(workerEvent);
 
       switch (event.event) {
         case "ShareCreated": {
