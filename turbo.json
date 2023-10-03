@@ -17,6 +17,9 @@
         "CLOUDFLARE_SECRET_ACCESS_KEY"
       ]
     },
+    "db#build": {
+      "env": ["DATABASE_URL"]
+    },
     "indexer#build": {
       "env": ["DATABASE_URL", "WS_URL", "CONTRACT_ADDRESS"]
     },

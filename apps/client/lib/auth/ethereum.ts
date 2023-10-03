@@ -1,9 +1,9 @@
+import { ethereumSession } from "db";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { SiweMessage } from "siwe";
 
 import { db } from "../db";
-import { ethereumSession } from "../db/schema";
 import { AuthData } from "./types";
 
 export const ETH_SESSION_COOKIE = "eth_nonce_session";

@@ -1,15 +1,15 @@
 import "lucia/polyfill/node";
 
 import { planetscale } from "@lucia-auth/adapter-mysql";
-import { lucia } from "lucia";
-import { nextjs } from "lucia/middleware";
-
-import { planetscaleConnection } from "../db/";
 import {
   AUTH_KEY_TABLE_NAME,
   AUTH_SESSION_TABLE_NAME,
   AUTH_USER_TABLE_NAME,
-} from "../db/constants";
+} from "db";
+import { lucia } from "lucia";
+import { nextjs } from "lucia/middleware";
+
+import { planetscaleConnection } from "../db/";
 import { env } from "../env.mjs";
 import { getAvatarUrl } from "../getAvatarUrl";
 import { SESSION_COOKIE_NAME } from "./constants";

@@ -7,9 +7,6 @@
     "dev": "pnpm run env -- next dev",
     "build": "pnpm run env -- next build",
     "start": "pnpm run env -- next start",
-    "db:push": "pnpm run env -- pnpm run _db:push",
-    "_db:push": "pnpm run env -- drizzle-kit push:mysql --driver=mysql2 --schema=./lib/db/schema.ts --connectionString=$DATABASE_URL",
-    "db:studio": "drizzle-kit studio",
     "lint": "cd ../.. && eslint --fix \"apps/client/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore"
   },
   "dependencies": {
@@ -30,6 +27,7 @@
     "nanoid": "^5.0.1",
     "next": "^13.5.3",
     "postcss": "8.4.29",
+    "db": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
@@ -43,7 +41,6 @@
   "devDependencies": {
     "@types/react": "18.2.22",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.19.13",
     "eslint": "^8.49.0",
     "eslint-config-custom": "workspace:*",
     "eslint-config-next": "^13.5.1",

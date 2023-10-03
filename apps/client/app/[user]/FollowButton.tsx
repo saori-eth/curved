@@ -1,9 +1,9 @@
+import { follow } from "db";
 import { and, eq, like } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { follow } from "@/lib/db/schema";
 
 interface Props {
   address: string;

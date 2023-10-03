@@ -1,11 +1,11 @@
 "use server";
 
+import { post } from "db";
 import { desc, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { post } from "@/lib/db/schema";
 import { Post } from "@/lib/fetchPost";
 import { getAvatarUrl } from "@/lib/getAvatarUrl";
 

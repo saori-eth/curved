@@ -1,12 +1,11 @@
 "use server";
 
+import { MAX_USERNAME_LENGTH, user } from "db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { MAX_USERNAME_LENGTH } from "@/lib/db/constants";
-import { user } from "@/lib/db/schema";
 
 const EditUsernameSchema = z.object({
   value: z

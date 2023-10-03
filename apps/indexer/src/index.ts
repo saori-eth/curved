@@ -1,10 +1,10 @@
+import { pendingPost, post, trade } from "db";
 import { config } from "dotenv";
 import { eq } from "drizzle-orm";
 import { ethers } from "ethers";
 
 import CurveABI from "./abi/Curved.json" assert { type: "json" };
 import { db } from "./DB";
-import { content, pendingContent, trades } from "./schema";
 
 config();
 
@@ -31,7 +31,7 @@ curve.on("*", async (event) => {
       const shareId = event.args[1].toNumber();
 
       try {
-        const pending = await db.query.pendingContent.findFirst({
+        const pending = await db.query.pendingPost.findFirst({
           where: (row, { eq }) => eq(row.owner, owner),
         });
 
@@ -46,8 +46,8 @@ curve.on("*", async (event) => {
           pending,
         );
 
-        await db.insert(content).values({
-          description: pending.description,
+        await db.insert(post).values({
+          caption: pending.caption,
           owner: owner.toLowerCase(),
           shareId,
           url: pending.url,
@@ -56,7 +56,7 @@ curve.on("*", async (event) => {
         // TODO: Delete pending content
         console.log("Deleting pending content");
 
-        await db.delete(pendingContent).where(eq(pendingContent.owner, owner));
+        await db.delete(pendingPost).where(eq(pendingPost.owner, owner));
 
         const tradeEntry = {
           amount: 1,
@@ -71,7 +71,7 @@ curve.on("*", async (event) => {
 
         console.log("Inserting trade", tradeEntry);
 
-        await db.insert(trades).values(tradeEntry);
+        await db.insert(trade).values(tradeEntry);
       } catch (e) {
         console.error(e);
       }
@@ -91,7 +91,7 @@ curve.on("*", async (event) => {
       };
 
       console.log("Inserting trade", entry);
-      await db.insert(trades).values(entry);
+      await db.insert(trade).values(entry);
     }
   }
 });

@@ -15,13 +15,12 @@ import {
   AUTH_SESSION_TABLE_NAME,
   AUTH_USER_TABLE_NAME,
   ETH_ADDRESS_LENGTH,
-  ETH_AUTH_ID_LENGTH,
   ETH_AUTH_NONCE_LENGTH,
   MAX_CAPTION_LENGTH,
   MAX_USERNAME_LENGTH,
+  NANOID_LENGTH,
   USER_ID_LENGTH,
 } from "./constants";
-import { NANOID_LENGTH } from "./nanoid";
 
 export const post = mysqlTable(
   "post",
@@ -60,25 +59,18 @@ export const pendingPost = mysqlTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     id: serial("id").primaryKey(),
+    owner: varchar("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
     publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()
       .notNull(),
     url: varchar("url", { length: 255 }).notNull(),
-    userId: varchar("user_id", { length: USER_ID_LENGTH }).notNull(),
   },
   (table) => ({
-    userIdIndex: index("userId").on(table.userId),
+    ownerIndex: index("owner").on(table.owner),
   }),
 );
-
-export const pendingPostRelations = relations(pendingPost, ({ one }) => ({
-  user: one(user, {
-    fields: [pendingPost.userId],
-    references: [user.id],
-  }),
-}));
 
 export const repost = mysqlTable(
   "repost",
@@ -175,7 +167,7 @@ export const ethereumSession = mysqlTable(
       .notNull(),
     id: serial("id").primaryKey(),
     nonce: char("nonce", { length: ETH_AUTH_NONCE_LENGTH }).notNull(),
-    publicId: char("public_id", { length: ETH_AUTH_ID_LENGTH }).notNull(),
+    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()

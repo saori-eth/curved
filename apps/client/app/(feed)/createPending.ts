@@ -2,11 +2,11 @@
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { pendingPost } from "db";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
-import { pendingPost } from "@/lib/db/schema";
 import { s3, S3_BUCKET, S3_READ_ENDPOINT } from "@/lib/s3";
 
 /**
@@ -26,7 +26,7 @@ export async function createPending() {
       columns: {
         publicId: true,
       },
-      where: (row, { eq }) => eq(row.userId, session.user.userId),
+      where: (row, { eq }) => eq(row.owner, session.user.address),
     });
 
     // Read publicId or generate a new one
@@ -35,9 +35,9 @@ export async function createPending() {
 
     if (!post) {
       await db.insert(pendingPost).values({
+        owner: session.user.address,
         publicId,
         url,
-        userId: session.user.userId,
       });
     }
 

@@ -1,10 +1,9 @@
+import { MAX_CAPTION_LENGTH, repost } from "db";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { MAX_CAPTION_LENGTH } from "@/lib/db/constants";
-import { repost } from "@/lib/db/schema";
 
 /*
   try {

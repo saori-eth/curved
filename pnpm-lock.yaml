@@ -53,6 +53,9 @@ importers:
       compressorjs:
         specifier: ^1.2.1
         version: 1.2.1
+      db:
+        specifier: workspace:*
+        version: link:../../packages/db
       drizzle-orm:
         specifier: ^0.28.6
         version: 0.28.6(@planetscale/database@1.11.0)(mysql2@3.6.1)
@@ -108,9 +111,6 @@ importers:
       dotenv-cli:
         specifier: ^7.3.0
         version: 7.3.0
-      drizzle-kit:
-        specifier: ^0.19.13
-        version: 0.19.13
       eslint:
         specifier: ^8.49.0
         version: 8.49.0
@@ -135,6 +135,9 @@ importers:
       "@planetscale/database":
         specifier: ^1.11.0
         version: 1.11.0
+      db:
+        specifier: workspace:*
+        version: link:../../packages/db
       drizzle-orm:
         specifier: ^0.28.6
         version: 0.28.6(@planetscale/database@1.11.0)(mysql2@3.6.1)
@@ -194,6 +197,37 @@ importers:
       dotenv-cli:
         specifier: ^7.3.0
         version: 7.3.0
+
+  packages/db:
+    dependencies:
+      "@planetscale/database":
+        specifier: ^1.11.0
+        version: 1.11.0
+      drizzle-orm:
+        specifier: ^0.28.6
+        version: 0.28.6(@planetscale/database@1.11.0)(mysql2@3.6.1)
+    devDependencies:
+      dotenv-cli:
+        specifier: ^7.3.0
+        version: 7.3.0
+      drizzle-kit:
+        specifier: ^0.19.13
+        version: 0.19.13
+      eslint:
+        specifier: ^8.49.0
+        version: 8.49.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      eslint-config-next:
+        specifier: ^13.5.1
+        version: 13.5.1(eslint@8.49.0)(typescript@5.2.2)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
 
   packages/eslint-config-custom:
     devDependencies:

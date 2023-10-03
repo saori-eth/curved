@@ -12,7 +12,7 @@ export async function getPublishedId() {
   try {
     const shareId = await db.transaction(async (tx) => {
       const pending = await tx.query.pendingPost.findFirst({
-        where: (row, { eq }) => eq(row.userId, session.user.userId),
+        where: (row, { eq }) => eq(row.owner, session.user.address),
       });
       if (pending) {
         throw new Error("You have a pending post");

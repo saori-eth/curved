@@ -1,11 +1,11 @@
 "use server";
 
+import { pendingPost } from "db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { pendingPost } from "@/lib/db/schema";
 
 const EditPendingSchema = z.object({
   caption: z.string(),
@@ -27,5 +27,5 @@ export async function editPending(_args: EditPendingArgs) {
     .set({
       caption: args.caption,
     })
-    .where(eq(pendingPost.userId, session.user.userId));
+    .where(eq(pendingPost.owner, session.user.address));
 }

@@ -2,12 +2,12 @@
 
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { user } from "db";
 import { eq } from "drizzle-orm";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
-import { user } from "@/lib/db/schema";
 import { s3, S3_BUCKET } from "@/lib/s3";
 
 export async function getAvatarUpload() {

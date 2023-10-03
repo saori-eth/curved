@@ -1,10 +1,10 @@
+import { ethereumSession } from "db";
 import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 import { generateNonce } from "siwe";
 
 import { ETH_SESSION_COOKIE } from "@/lib/auth/ethereum";
 import { db } from "@/lib/db";
-import { ethereumSession } from "@/lib/db/schema";
 
 import { GetNonceResponse } from "./types";
 

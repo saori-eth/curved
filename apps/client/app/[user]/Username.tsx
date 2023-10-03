@@ -1,9 +1,8 @@
 "use client";
 
+import { MAX_USERNAME_LENGTH } from "db";
 import { useRef, useState, useTransition } from "react";
 import { MdCheck, MdEdit } from "react-icons/md";
-
-import { MAX_USERNAME_LENGTH } from "@/lib/db/constants";
 
 import { useAuth } from "../AuthProvider";
 import { editUsername } from "./editUsername";

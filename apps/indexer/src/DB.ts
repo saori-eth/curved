@@ -1,8 +1,7 @@
 import { connect } from "@planetscale/database";
+import * as schema from "db";
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
-
-import * as schema from "./schema";
 
 const secureUrl = process.env.DATABASE_URL?.replace(
   "?sslaccept=strict",
