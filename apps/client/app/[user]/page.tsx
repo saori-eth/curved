@@ -10,6 +10,7 @@ import { formatPostQuery, postQuery } from "@/src/server/postQuery";
 import { FollowButton } from "./FollowButton";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
+import { RoyaltiesEarned } from "./RoyaltiesEarned";
 
 export const revalidate = 10;
 
@@ -70,6 +71,7 @@ export default async function User({ params }: Props) {
 
       <div className="flex h-8 items-center">
         <FollowButton address={profile.address} username={profile.username} />
+        <RoyaltiesEarned address={profile.address} username={profile.username} />
       </div>
 
       <div className="w-full space-y-2 pt-2">
