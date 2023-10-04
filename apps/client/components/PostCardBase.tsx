@@ -12,8 +12,9 @@ export function PostCardBase({ id, layer, children, disableLink }: Props) {
 
   return (
     <div
-      className={`relative p-3 pb-2.5 ${layer === 1 ? "md:rounded-2xl" : "rounded-2xl"
-        } ${disableLink ? "" : "transition hover:bg-slate-700/20"}`}
+      className={`relative p-3 pb-2.5 ${
+        layer === 1 ? "md:rounded-2xl" : "rounded-2xl"
+      } ${disableLink ? "" : "transition hover:bg-slate-700/20"}`}
     >
       <div className="w-full space-y-2">{children}</div>
 

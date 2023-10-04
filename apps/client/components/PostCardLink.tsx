@@ -1,1 +1,1 @@
-export function PostCardBase() { }
+export function PostCardBase() {}

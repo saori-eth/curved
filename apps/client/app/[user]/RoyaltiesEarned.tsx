@@ -1,7 +1,8 @@
+import { formatEther } from "viem";
+
 import { getSession } from "@/lib/auth/getSession";
 import { fetchRoyalties } from "@/lib/fetchRoyalties";
-import { ETH_SYMBOL, formatUnits } from "@/lib/utils";
-import { formatEther } from "viem";
+import { ETH_SYMBOL } from "@/lib/utils";
 
 interface Props {
   address: string;

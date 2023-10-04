@@ -1,7 +1,8 @@
+import { nftPost, post, shareData } from "db";
+import { and, eq, sql } from "drizzle-orm";
 import { cache } from "react";
+
 import { db } from "./db";
-import { nftPost, post, shareData, user } from "db";
-import { and, eq, like, sql } from "drizzle-orm";
 
 export const fetchRoyalties = cache(
   async (creator: string): Promise<bigint | null> => {
