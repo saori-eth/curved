@@ -125,32 +125,42 @@ export class Indexer {
         });
 
         await tx.delete(pendingPost).where(eq(pendingPost.owner, owner));
-      });
 
-      const tradeEntry = {
-        amount: 1,
-        hash: event.transactionHash,
-        owner: owner.toLowerCase(),
-        price: BigInt(0),
-        shareId: shareId,
-        side: 0,
-        supply: 1,
-        trader: owner.toLowerCase(),
-      };
+        const tradeEntry = {
+          amount: 1,
+          hash: event.transactionHash,
+          owner: owner.toLowerCase(),
+          price: BigInt(0),
+          shareId: shareId,
+          side: 0,
+          supply: 1,
+          trader: owner.toLowerCase(),
+        };
 
-      console.log("Inserting trade", tradeEntry);
-      await db.insert(trade).values(tradeEntry);
+        console.log("Inserting trade", tradeEntry);
+        await tx.insert(trade).values(tradeEntry);
 
-      const paths = [`/post/${publicId}`, "/"];
-      console.log("Revalidating paths", paths);
+        const user = await tx.query.user.findFirst({
+          columns: {
+            username: true,
+          },
+          where: (row, { like }) => like(row.address, owner),
+        });
 
-      await Promise.all(
-        paths.map((path) =>
-          fetch(
-            `${process.env.DEPLOYED_URL}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}&path=${path}`,
+        const paths = [`/post/${publicId}`, "/"];
+
+        if (user) {
+          paths.push(`/@${user.username}`);
+        }
+
+        await Promise.all(
+          paths.map((path) =>
+            fetch(
+              `${process.env.DEPLOYED_URL}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}&path=${path}`,
+            ),
           ),
-        ),
-      );
+        );
+      });
     } catch (e) {
       console.error(e);
     }

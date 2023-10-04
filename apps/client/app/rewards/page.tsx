@@ -27,7 +27,7 @@ export default function Post() {
   }
 
   return (
-    <div className="m-4 space-y-2">
+    <div className="m-4 space-y-2 pt-4">
       <h1 className="text-center text-5xl">🎁</h1>
       <h2 className="text-center text-3xl font-bold">Your Rewards</h2>
 
@@ -48,9 +48,8 @@ export default function Post() {
         <button
           disabled={disabled}
           onClick={claim}
-          className={`mx-auto w-fit rounded-full bg-slate-900 px-4 py-1 text-lg font-bold transition ${
-            disabled ? "opacity-50" : "hover:bg-slate-950 active:scale-95"
-          }`}
+          className={`mx-auto w-fit rounded-full bg-slate-900 px-4 py-1 text-lg font-bold transition ${disabled ? "opacity-50" : "hover:bg-slate-950 active:scale-95"
+            }`}
         >
           Claim
         </button>
