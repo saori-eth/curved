@@ -56,7 +56,7 @@ export function TradeButtons({ shareId }: Props) {
 
   return (
     <div className="space-y-1">
-      <div className="flex w-full space-x-4">
+      <div className="flex w-full space-x-2">
         <div className="w-full space-y-1">
           <button
             disabled={disableBuy}
@@ -75,7 +75,7 @@ export function TradeButtons({ shareId }: Props) {
             {isReadError || isPrepareBuyError
               ? "Error"
               : !buyPrice
-                ? "..."
+                ? ""
                 : formatEther(buyPrice)}
           </p>
 
@@ -113,7 +113,7 @@ export function TradeButtons({ shareId }: Props) {
               {isReadError || isPrepareSellError
                 ? "Error"
                 : !sellPrice
-                  ? "..."
+                  ? ""
                   : formatEther(sellPrice)}
             </p>
 

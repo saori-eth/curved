@@ -41,13 +41,12 @@ export default function RootLayout({ children }: Props) {
     <html lang="en" className={font.className}>
       <body className="md:scrollbar-fix overflow-x-hidden overflow-y-scroll bg-slate-800 text-white">
         <ClientWrapper>
-          <div className="max-w-content mx-auto md:grid md:grid-cols-7 md:gap-8">
+          <div className="max-w-content relative mx-auto pb-16 md:grid md:grid-cols-7 md:gap-4 md:pb-0 md:pt-14">
             <div className="col-span-2">
               <Sidebar />
             </div>
-            <div className="z-20 pb-16 pt-2 md:col-span-4 md:pb-0">
-              {children}
-            </div>
+
+            {children}
           </div>
         </ClientWrapper>
       </body>

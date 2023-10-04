@@ -63,7 +63,7 @@ export default async function User({ params }: Props) {
   const posts = formatPostQuery(data);
 
   return (
-    <div className="flex flex-col items-center space-y-2 py-4 md:pt-14">
+    <div className="z-20 col-span-3 flex flex-col items-center space-y-2 py-2">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />

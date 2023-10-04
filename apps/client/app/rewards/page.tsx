@@ -28,7 +28,7 @@ export default function Post() {
   }
 
   return (
-    <div className="m-4 space-y-2 pt-4">
+    <div className="z-20 col-span-3 m-4 space-y-2 pt-4">
       <h1 className="text-center text-5xl">🎁</h1>
       <h2 className="text-center text-3xl font-bold">Your Rewards</h2>
 

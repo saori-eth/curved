@@ -64,15 +64,17 @@ export default async function Post({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <div className="space-y-2 md:pt-14">
-      <PostCard post={post} disablePostLink />
+    <>
+      <div className="z-20 col-span-5 md:col-span-3">
+        <PostCard post={post} disablePostLink />
+      </div>
 
       {post.type === PostType.Post ? (
-        <div className="space-y-2 py-4">
-          <TradeButtons shareId={post.data.shareId} />
+        <div className="z-20 col-span-5 flex flex-col-reverse space-y-4 md:col-span-2 md:mx-0 md:flex-col md:pt-14">
           <Trades shareId={post.data.shareId} />
+          <TradeButtons shareId={post.data.shareId} />
         </div>
       ) : null}
-    </div>
+    </>
   );
 }

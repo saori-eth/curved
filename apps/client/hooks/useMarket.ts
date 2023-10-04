@@ -41,6 +41,7 @@ export const useMarket = (shareId: number) => {
       },
     ],
     enabled: Boolean(address),
+    suspense: true,
     watch: true,
   });
 
