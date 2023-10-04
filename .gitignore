@@ -35,4 +35,4 @@ next-env.d.ts
 
 .turbo
 
-apps/indexer/src/abi
+apps/indexer/src/abi/Curved.json
