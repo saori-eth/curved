@@ -1,5 +1,6 @@
 "use client";
 
+import { SubmitButton } from "@/components/SubmitButton";
 import { useRewards } from "@/hooks/useRewards";
 import { formatUnits } from "@/lib/utils";
 
@@ -45,15 +46,11 @@ export default function Post() {
           )}
         </div>
 
-        <button
-          disabled={disabled}
-          onClick={claim}
-          className={`mx-auto w-fit rounded-full bg-slate-900 px-4 py-1 text-lg font-bold transition ${
-            disabled ? "opacity-50" : "hover:bg-slate-950 active:scale-95"
-          }`}
-        >
-          Claim
-        </button>
+        <div className="mx-auto">
+          <SubmitButton disabled={disabled} onClick={claim}>
+            Claim
+          </SubmitButton>
+        </div>
 
         {!user ? (
           <p className="text-center text-slate-500">

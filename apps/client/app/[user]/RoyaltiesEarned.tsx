@@ -6,10 +6,9 @@ import { ETH_SYMBOL } from "@/lib/utils";
 
 interface Props {
   address: string;
-  username: string;
 }
 
-export async function RoyaltiesEarned({ address, username }: Props) {
+export async function RoyaltiesEarned({ address }: Props) {
   const session = await getSession();
 
   if (!(session && session.user.address === address)) {

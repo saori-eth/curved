@@ -71,7 +71,6 @@ export default async function User({ params }: Props) {
         <FollowButton address={profile.address} username={profile.username} />
         <RoyaltiesEarned
           address={profile.address}
-          username={profile.username}
         />
       </div>
 

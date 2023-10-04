@@ -31,13 +31,13 @@ export async function Trades({ shareId }: Props) {
   const profiles =
     traders.length > 0
       ? await db.query.user.findMany({
-          columns: {
-            address: true,
-            avatarId: true,
-            username: true,
-          },
-          where: (row, { inArray }) => inArray(row.address, traders),
-        })
+        columns: {
+          address: true,
+          avatarId: true,
+          username: true,
+        },
+        where: (row, { inArray }) => inArray(row.address, traders),
+      })
       : [];
 
   const withProfiles = trades.map((trade) => {
@@ -66,24 +66,31 @@ export async function Trades({ shareId }: Props) {
 
         return (
           <li key={hash} className="flex items-center space-x-2 text-sm">
-            <Avatar
-              uniqueKey={trade.trader.username ?? trade.trader.address}
-              size={24}
-              src={trade.trader.avatar}
-              draggable={false}
-            />
+            {trade.trader.username ? (
+              <Link
+                href={`/@${trade.trader.username}`}
+                className="flex items-center space-x-2 font-bold hover:underline"
+              >
+                <Avatar
+                  uniqueKey={trade.trader.username}
+                  size={24}
+                  src={trade.trader.avatar}
+                  draggable={false}
+                />
+                <span>{trade.trader.username}</span>
+              </Link>
+            ) : (
+              <>
+                <Avatar
+                  uniqueKey={trade.trader.address}
+                  size={24}
+                  draggable={false}
+                />
+                <span>{formatAddress(trade.trader.address)}</span>
+              </>
+            )}
 
             <div className="space-x-1">
-              {trade.trader.username ? (
-                <Link
-                  href={`/@${trade.trader.username}`}
-                  className="font-bold hover:underline"
-                >
-                  {trade.trader.username}
-                </Link>
-              ) : (
-                <span>{formatAddress(trade.trader.address)}</span>
-              )}
               <span className="text-slate-400">{verb}</span>
               <span className="font-bold text-white">{amount}</span>
               <span className="text-slate-400">
@@ -93,15 +100,15 @@ export async function Trades({ shareId }: Props) {
 
             <div className="flex w-full items-center justify-end space-x-2">
               <div
-                className={`text-sm ${
-                  sign === "+" ? "text-sky-500" : "text-amber-500"
-                }`}
+                className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
+                  }`}
               >
                 {sign}
                 {formatUnits(price, 4)} {ETH_SYMBOL}
               </div>
 
               <Link
+                title="View on Etherscan"
                 href={`https://etherscan.io/tx/${hash}`}
                 target="_blank"
                 rel="noopener noreferrer"
