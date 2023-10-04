@@ -13,7 +13,7 @@ export default async function Feed() {
       <div className="w-full space-y-2 pb-4">
         <FeedProvider initialPosts={posts}>
           <PostFeed />
-          <LoadMore />
+          <LoadMore fetchType="latest" />
         </FeedProvider>
       </div>
     </div>
