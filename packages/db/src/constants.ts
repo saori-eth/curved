@@ -1,4 +1,4 @@
-export const NANOID_LENGTH = 21;
+export const PUBLIC_ID_LENGTH = 14;
 
 export const AUTH_USER_TABLE_NAME = "auth_user";
 export const AUTH_KEY_TABLE_NAME = "auth_key";

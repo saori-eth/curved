@@ -1,10 +1,10 @@
 import { ethereumSession } from "db";
-import { nanoid } from "nanoid";
 import { NextRequest, NextResponse } from "next/server";
 import { generateNonce } from "siwe";
 
 import { ETH_SESSION_COOKIE } from "@/lib/auth/ethereum";
 import { db } from "@/lib/db";
+import { nanoidLowercase } from "@/lib/db/nanoid";
 
 import { GetNonceResponse } from "./types";
 
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
   // Get ethereum session id from cookie
   const ethSessionCookie = request.cookies.get(ETH_SESSION_COOKIE);
-  const publicId = ethSessionCookie?.value ?? nanoid();
+  const publicId = ethSessionCookie?.value ?? nanoidLowercase();
 
   try {
     await db

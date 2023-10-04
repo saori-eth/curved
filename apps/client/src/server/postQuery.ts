@@ -191,12 +191,12 @@ function formatPost(row: QueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-          ...baseRepost,
-          data: {
-            ...baseRepost.data,
-            repost: nftPost,
-          },
-        } as Repost)
+            ...baseRepost,
+            data: {
+              ...baseRepost.data,
+              repost: nftPost,
+            },
+          } as Repost)
         : null;
 
       console.log("repostPost", repostPost);

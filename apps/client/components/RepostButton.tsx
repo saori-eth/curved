@@ -68,8 +68,9 @@ export function RepostButton({ post }: Props) {
     <DialogRoot>
       <DialogTrigger
         title="Repost"
-        className={`group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300 ${numReposts ? "" : "aspect-square"
-          }`}
+        className={`group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300 ${
+          numReposts ? "" : "aspect-square"
+        }`}
       >
         {numReposts ? <span className="text-sm">{numReposts}</span> : null}
         <span className="flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">
@@ -100,8 +101,9 @@ export function RepostButton({ post }: Props) {
             placeholder="Add a comment..."
             maxLength={MAX_CAPTION_LENGTH}
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${disabled ? "opacity-50" : ""
-              }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
+              disabled ? "opacity-50" : ""
+            }`}
           />
 
           <div className="flex justify-center">

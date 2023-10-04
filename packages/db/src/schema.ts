@@ -19,7 +19,7 @@ import {
   ETH_AUTH_NONCE_LENGTH,
   MAX_CAPTION_LENGTH,
   MAX_USERNAME_LENGTH,
-  NANOID_LENGTH,
+  PUBLIC_ID_LENGTH,
   USER_ID_LENGTH,
 } from "./constants";
 
@@ -31,7 +31,7 @@ export const post = mysqlTable(
       .notNull(),
     id: serial("id").primaryKey(),
     owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
+    publicId: char("public_id", { length: PUBLIC_ID_LENGTH }).notNull(),
     type: mysqlEnum("type", ["post", "repost"]).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
@@ -55,7 +55,7 @@ export const nftPost = mysqlTable(
   {
     caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
     id: serial("id").primaryKey(),
-    postId: char("post_id", { length: NANOID_LENGTH }).notNull(),
+    postId: char("post_id", { length: PUBLIC_ID_LENGTH }).notNull(),
     shareId: bigint("share_id", { mode: "number" }).notNull(),
     url: varchar("url", { length: 255 }).notNull(),
   },
@@ -82,7 +82,7 @@ export const pendingPost = mysqlTable(
       .notNull(),
     id: serial("id").primaryKey(),
     owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
+    publicId: char("public_id", { length: PUBLIC_ID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()
@@ -99,8 +99,8 @@ export const repost = mysqlTable(
   {
     caption: varchar("caption", { length: MAX_CAPTION_LENGTH }),
     id: serial("id").primaryKey(),
-    postId: char("post_id", { length: NANOID_LENGTH }).notNull(),
-    referencePostId: char("reference_post_id", { length: NANOID_LENGTH }),
+    postId: char("post_id", { length: PUBLIC_ID_LENGTH }).notNull(),
+    referencePostId: char("reference_post_id", { length: PUBLIC_ID_LENGTH }),
     referenceShareId: bigint("reference_share_id", { mode: "number" }),
   },
   (table) => ({
@@ -164,7 +164,7 @@ export const user = mysqlTable(
   AUTH_USER_TABLE_NAME,
   {
     address: char("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
-    avatarId: varchar("avatarId", { length: NANOID_LENGTH }),
+    avatarId: varchar("avatarId", { length: PUBLIC_ID_LENGTH }),
     id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
     username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
   },
@@ -235,7 +235,7 @@ export const ethereumSession = mysqlTable(
       .notNull(),
     id: serial("id").primaryKey(),
     nonce: char("nonce", { length: ETH_AUTH_NONCE_LENGTH }).notNull(),
-    publicId: char("public_id", { length: NANOID_LENGTH }).notNull(),
+    publicId: char("public_id", { length: PUBLIC_ID_LENGTH }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()

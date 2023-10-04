@@ -1,6 +1,6 @@
 // worker.js
 import { shareData } from "db";
-import { and,eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import PQueue from "p-queue";
 import { parentPort } from "worker_threads";
 
