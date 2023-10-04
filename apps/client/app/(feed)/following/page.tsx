@@ -5,6 +5,8 @@ import { LoadMore } from "../LoadMore";
 import { PostFeed } from "../PostFeed";
 import { fetchFollowingPosts } from "./fetchFollowingPosts";
 
+export const dynamic = "force-dynamic";
+
 export default async function Following() {
   const session = await getSession();
   if (!session) {
