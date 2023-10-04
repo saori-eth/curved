@@ -64,8 +64,8 @@ export default async function Post({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <div className="space-y-2 px-2 md:px-0 md:pt-14">
-      <PostCard post={post} disableLink />
+    <div className="space-y-2 md:pt-14">
+      <PostCard post={post} />
 
       {post.type === PostType.Post ? (
         <div className="space-y-2 py-4">

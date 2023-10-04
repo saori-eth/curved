@@ -72,7 +72,7 @@ export default async function User({ params }: Props) {
         <FollowButton address={profile.address} username={profile.username} />
       </div>
 
-      <div className="w-full space-y-6 pt-2">
+      <div className="w-full space-y-4 pt-2">
         {posts.map((post) => (
           <PostCard
             key={`${post.owner.address}-${post.createdAt}`}

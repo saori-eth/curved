@@ -26,11 +26,7 @@ export function RepostButton({ post }: Props) {
 
   const numReposts = 0;
 
-  if (!user) {
-    return null;
-  }
-
-  const disabled = pending;
+  const disabled = !user || pending;
 
   function repost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -68,48 +64,54 @@ export function RepostButton({ post }: Props) {
     <DialogRoot>
       <DialogTrigger
         title="Repost"
-        className={`group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300 ${
-          numReposts ? "" : "aspect-square"
-        }`}
+        disabled={disabled}
+        className={`group z-40 flex items-center space-x-1 rounded-full px-1 transition ${numReposts ? "" : "aspect-square"
+          } ${disabled ? "opacity-50" : "hover:text-sky-300"}`}
       >
         {numReposts ? <span className="text-sm">{numReposts}</span> : null}
-        <span className="flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">
+        <span
+          className={`flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition ${disabled
+              ? ""
+              : "group-hover:bg-slate-600 group-hover:text-sky-300 group-active:bg-slate-600"
+            }`}
+        >
           <BiRepost />
         </span>
       </DialogTrigger>
 
       <DialogContent title="Repost">
-        <form onSubmit={repost} className="flex flex-col space-y-4">
-          <RepostCard
-            disableLink
-            disableActions
-            post={{
-              createdAt: new Date().toLocaleString(),
-              data: {
-                caption: null,
-                repost: post,
-              },
-              id: "fake",
-              owner: user,
-              type: PostType.Repost,
-            }}
-          />
+        {user ? (
+          <form onSubmit={repost} className="flex flex-col space-y-4">
+            <RepostCard
+              disableLink
+              disableActions
+              post={{
+                createdAt: new Date().toLocaleString(),
+                data: {
+                  caption: null,
+                  repost: post,
+                },
+                id: "fake",
+                owner: user,
+                type: PostType.Repost,
+              }}
+            />
 
-          <textarea
-            ref={captionRef}
-            disabled={disabled}
-            placeholder="Add a comment..."
-            maxLength={MAX_CAPTION_LENGTH}
-            rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
-              disabled ? "opacity-50" : ""
-            }`}
-          />
+            <textarea
+              ref={captionRef}
+              disabled={disabled}
+              placeholder="Add a comment..."
+              maxLength={MAX_CAPTION_LENGTH}
+              rows={2}
+              className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${disabled ? "opacity-50" : ""
+                }`}
+            />
 
-          <div className="flex justify-center">
-            <SubmitButton disabled={disabled}>Post</SubmitButton>
-          </div>
-        </form>
+            <div className="flex justify-center">
+              <SubmitButton disabled={disabled}>Post</SubmitButton>
+            </div>
+          </form>
+        ) : null}
       </DialogContent>
     </DialogRoot>
   );
