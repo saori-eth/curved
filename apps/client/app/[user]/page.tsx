@@ -1,5 +1,5 @@
 import { post } from "db";
-import { desc, eq } from "drizzle-orm";
+import { desc, like } from "drizzle-orm";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -55,7 +55,7 @@ export default async function User({ params }: Props) {
   if (!profile) notFound();
 
   const data = await postQuery
-    .where(eq(post.owner, profile.address))
+    .where(like(post.owner, profile.address))
     .orderBy(desc(post.createdAt))
     .limit(20);
 

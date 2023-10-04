@@ -1,9 +1,11 @@
 "use client";
 
 import { MAX_CAPTION_LENGTH } from "db";
+import { useRouter } from "next/navigation";
 import { useRef, useTransition } from "react";
 import { BiRepost } from "react-icons/bi";
 
+import { RepostArgs, RepostResponse } from "@/app/api/user/repost/types";
 import { useAuth } from "@/app/AuthProvider";
 import { Post, PostType } from "@/src/types/post";
 
@@ -19,6 +21,7 @@ export function RepostButton({ post }: Props) {
   const captionRef = useRef<HTMLTextAreaElement>(null);
 
   const { user } = useAuth();
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const numReposts = 0;
@@ -37,11 +40,13 @@ export function RepostButton({ post }: Props) {
     }
 
     startTransition(async () => {
+      const args: RepostArgs = {
+        caption: captionRef.current?.value,
+        postId: post.id,
+      };
+
       const res = await fetch("/api/user/repost", {
-        body: JSON.stringify({
-          caption: captionRef.current?.value,
-          publicId: post.id,
-        }),
+        body: JSON.stringify(args),
         headers: { "Content-Type": "application/json" },
         method: "POST",
       });
@@ -51,7 +56,11 @@ export function RepostButton({ post }: Props) {
         return;
       }
 
+      const { postId } = (await res.json()) as RepostResponse;
+
       console.log("Reposted");
+
+      router.push(`/post/${postId}`);
     });
   }
 
@@ -59,7 +68,8 @@ export function RepostButton({ post }: Props) {
     <DialogRoot>
       <DialogTrigger
         title="Repost"
-        className="group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300"
+        className={`group flex items-center space-x-1 rounded-full px-1 transition hover:text-sky-300 ${numReposts ? "" : "aspect-square"
+          }`}
       >
         {numReposts ? <span className="text-sm">{numReposts}</span> : null}
         <span className="flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition group-hover:bg-slate-700 group-hover:text-sky-300 group-active:bg-slate-600">
@@ -76,7 +86,6 @@ export function RepostButton({ post }: Props) {
               createdAt: new Date().toLocaleString(),
               data: {
                 caption: null,
-                referencePostId: post.id,
                 repost: post,
               },
               id: "fake",

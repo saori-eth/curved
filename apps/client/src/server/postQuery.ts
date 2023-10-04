@@ -1,15 +1,17 @@
 import { nftPost, post, repost, user } from "db";
-import { and, eq } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 
 import { db } from "@/lib/db";
 import { getAvatarUrl } from "@/lib/getAvatarUrl";
-import { Post, PostType } from "@/src/types/post";
+import { Post, PostType, Repost } from "@/src/types/post";
 
 const repostPost = alias(post, "repostPost");
 const repostUser = alias(user, "repostUser");
-const repostNftPost = alias(nftPost, "repostNftPost");
 const repostRepost = alias(repost, "repostRepost");
+const repostNftPost = alias(nftPost, "repostNftPost");
+const repostNftPostPost = alias(post, "repostNftPostPost");
+const repostNftPostUser = alias(user, "repostNftPostUser");
 
 export const postQuery = db
   .select({
@@ -24,22 +26,27 @@ export const postQuery = db
     repost: {
       createdAt: repostPost.createdAt,
       id: repostPost.publicId,
-      nftCaption: repostNftPost.caption,
-      nftShareId: repostNftPost.shareId,
-      nftUrl: repostNftPost.url,
       ownerAddress: repostUser.address,
       ownerAvatarId: repostUser.avatarId,
       ownerUsername: repostUser.username,
       repostCaption: repostRepost.caption,
-      repostReference: repostRepost.referencePostId,
       type: repostPost.type,
     },
     repostCaption: repost.caption,
-    repostReference: repost.referencePostId,
+    repostNft: {
+      caption: repostNftPost.caption,
+      createdAt: repostNftPostPost.createdAt,
+      id: repostNftPostPost.publicId,
+      ownerAddress: repostNftPostUser.address,
+      ownerAvatarId: repostNftPostUser.avatarId,
+      ownerUsername: repostNftPostUser.username,
+      shareId: repostNftPost.shareId,
+      url: repostNftPost.url,
+    },
     type: post.type,
   })
   .from(post)
-  .leftJoin(user, eq(post.owner, user.address))
+  .leftJoin(user, like(post.owner, user.address))
   .leftJoin(
     nftPost,
     and(eq(post.type, "post"), eq(post.publicId, nftPost.postId)),
@@ -48,39 +55,35 @@ export const postQuery = db
     repost,
     and(eq(post.type, "repost"), eq(post.publicId, repost.postId)),
   )
+  .leftJoin(repostPost, eq(repost.referencePostId, repostPost.publicId))
+  .leftJoin(repostUser, like(repostPost.owner, repostUser.address))
+  .leftJoin(repostRepost, eq(repostPost.publicId, repostRepost.postId))
+  .leftJoin(repostNftPost, eq(repost.referenceShareId, repostNftPost.shareId))
   .leftJoin(
-    repostPost,
-    and(
-      eq(post.type, "repost"),
-      eq(repost.referencePostId, repostPost.publicId),
-    ),
+    repostNftPostPost,
+    eq(repostNftPost.postId, repostNftPostPost.publicId),
   )
   .leftJoin(
-    repostUser,
-    and(eq(post.type, "repost"), eq(repostPost.owner, repostUser.address)),
-  )
-  .leftJoin(
-    repostNftPost,
-    and(eq(post.type, "repost"), eq(repostPost.publicId, repostNftPost.postId)),
-  )
-  .leftJoin(
-    repostRepost,
-    and(eq(post.type, "repost"), eq(repostPost.publicId, repostRepost.postId)),
+    repostNftPostUser,
+    like(repostNftPostPost.owner, repostNftPostUser.address),
   );
 
 export function formatPostQuery(data: Awaited<typeof postQuery>): Post[] {
-  return data.map((row) => {
-    return formatPost(row);
-  });
+  return data
+    .map((row) => {
+      return formatPost(row);
+    })
+    .filter((post): post is Post => post !== null);
 }
 
 type QueryRow = Awaited<typeof postQuery>[0];
 
-function formatPost(row: QueryRow): Post {
+function formatPost(row: QueryRow): Post | null {
   switch (row.type) {
     case "post": {
       if (!row.nftShareId || !row.nftUrl) {
-        throw new Error("Invalid post");
+        console.error("Invalid post", row);
+        return null;
       }
 
       return {
@@ -100,16 +103,109 @@ function formatPost(row: QueryRow): Post {
       };
     }
     case "repost": {
-      if (!row.repostReference) {
-        throw new Error("Invalid repost");
+      if (
+        !row.repostNft.createdAt ||
+        !row.repostNft.id ||
+        !row.repostNft.ownerAddress
+      ) {
+        console.error("Invalid repost", row);
+        return null;
       }
+
+      const nftPost = formatPost({
+        createdAt: row.repostNft.createdAt,
+        id: row.repostNft.id,
+        nftCaption: row.repostNft.caption,
+        nftShareId: row.repostNft.shareId,
+        nftUrl: row.repostNft.url,
+        ownerAddress: row.repostNft.ownerAddress,
+        ownerAvatarId: row.repostNft.ownerAvatarId,
+        ownerUsername: row.repostNft.ownerUsername,
+        repost: {
+          createdAt: null,
+          id: null,
+          ownerAddress: null,
+          ownerAvatarId: null,
+          ownerUsername: null,
+          repostCaption: null,
+          type: null,
+        },
+        repostCaption: row.repostNft.caption,
+        repostNft: {
+          caption: null,
+          createdAt: null,
+          id: null,
+          ownerAddress: null,
+          ownerAvatarId: null,
+          ownerUsername: null,
+          shareId: null,
+          url: null,
+        },
+        type: "post",
+      });
+
+      let baseRepost: Post | null = null;
+
+      // If there is a repost of a repost,
+      // add the nft post to the reposted repost's repost
+      if (
+        row.repost.createdAt &&
+        row.repost.id &&
+        row.repost.ownerAddress &&
+        row.repost.type
+      ) {
+        baseRepost = formatPost({
+          createdAt: row.repost.createdAt,
+          id: row.repost.id,
+          nftCaption: null,
+          nftShareId: null,
+          nftUrl: null,
+          ownerAddress: row.repost.ownerAddress,
+          ownerAvatarId: row.repost.ownerAvatarId,
+          ownerUsername: row.repost.ownerUsername,
+          repost: {
+            createdAt: null,
+            id: null,
+            ownerAddress: null,
+            ownerAvatarId: null,
+            ownerUsername: null,
+            repostCaption: null,
+            type: null,
+          },
+          repostCaption: row.repost.repostCaption,
+          repostNft: {
+            caption: row.repostNft.caption,
+            createdAt: row.repostNft.createdAt,
+            id: row.repostNft.id,
+            ownerAddress: row.repostNft.ownerAddress,
+            ownerAvatarId: row.repostNft.ownerAvatarId,
+            ownerUsername: row.repostNft.ownerUsername,
+            shareId: row.repostNft.shareId,
+            url: row.repostNft.url,
+          },
+          type: row.repost.type,
+        });
+
+        console.log("baseRepost", baseRepost);
+      }
+
+      const repostPost = baseRepost
+        ? ({
+          ...baseRepost,
+          data: {
+            ...baseRepost.data,
+            repost: nftPost,
+          },
+        } as Repost)
+        : null;
+
+      console.log("repostPost", repostPost);
 
       return {
         createdAt: row.createdAt.toISOString(),
         data: {
           caption: row.repostCaption,
-          referencePostId: row.repostReference,
-          repost: row.repost ? formatPost(row.repost as QueryRow) : null,
+          repost: repostPost ?? nftPost,
         },
         id: row.id,
         owner: {

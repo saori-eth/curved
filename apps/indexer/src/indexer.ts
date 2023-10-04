@@ -92,7 +92,7 @@ export class Indexer {
 
     try {
       const pending = await db.query.pendingPost.findFirst({
-        where: (row, { eq }) => eq(row.owner, owner),
+        where: (row, { like }) => like(row.owner, owner),
       });
 
       if (!pending) {

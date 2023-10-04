@@ -60,6 +60,7 @@ export const nftPost = mysqlTable(
     url: varchar("url", { length: 255 }).notNull(),
   },
   (table) => ({
+    postIdIndex: index("postId").on(table.postId),
     shareIdIndex: uniqueIndex("shareId").on(table.shareId),
   }),
 );
@@ -100,9 +101,11 @@ export const repost = mysqlTable(
     id: serial("id").primaryKey(),
     postId: char("post_id", { length: NANOID_LENGTH }).notNull(),
     referencePostId: char("reference_post_id", { length: NANOID_LENGTH }),
+    referenceShareId: bigint("reference_share_id", { mode: "number" }),
   },
   (table) => ({
-    referencePostIdIndex: index("referencePostId").on(table.referencePostId),
+    postIdIndex: index("postId").on(table.postId),
+    referenceShareIdIndex: index("referenceShareId").on(table.referenceShareId),
   }),
 );
 
@@ -114,6 +117,10 @@ export const repostRelations = relations(repost, ({ one }) => ({
   referencePost: one(post, {
     fields: [repost.referencePostId],
     references: [post.publicId],
+  }),
+  referenceShare: one(nftPost, {
+    fields: [repost.referenceShareId],
+    references: [nftPost.shareId],
   }),
 }));
 

@@ -1,10 +1,12 @@
-import { MAX_CAPTION_LENGTH, post, repost } from "db";
-import { NextRequest } from "next/server";
-import { z } from "zod";
+import { nftPost, post, repost } from "db";
+import { and, eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
 import { nanoidLowercase } from "@/lib/db/nanoid";
+
+import { RepostArgs, RepostResponse } from "./types";
 
 /*
   try {
@@ -22,11 +24,6 @@ import { nanoidLowercase } from "@/lib/db/nanoid";
   }
 */
 
-const RepostArgs = z.object({
-  caption: z.string().max(MAX_CAPTION_LENGTH).optional(),
-  publicId: z.string(),
-});
-
 export async function POST(request: NextRequest) {
   const session = await getSession();
   if (!session) {
@@ -39,14 +36,49 @@ export async function POST(request: NextRequest) {
     return new Response("Bad Request", { status: 400 });
   }
 
-  const { publicId, caption } = parsed.data;
+  const { postId, caption } = parsed.data;
 
   try {
+    const newPostId = nanoidLowercase();
+
     await db.transaction(async (tx) => {
-      const newPostId = nanoidLowercase();
+      const data = await tx
+        .select({
+          nftShareId: nftPost.shareId,
+          repostShareId: repost.referenceShareId,
+          type: post.type,
+        })
+        .from(post)
+        .where(eq(post.publicId, postId))
+        .limit(1)
+        .leftJoin(
+          nftPost,
+          and(eq(post.type, "post"), eq(post.publicId, nftPost.postId)),
+        )
+        .leftJoin(
+          repost,
+          and(eq(post.type, "repost"), eq(post.publicId, repost.postId)),
+        );
+
+      const shareId = data[0]?.nftShareId ?? data[0]?.repostShareId;
+      if (!shareId) {
+        throw new Error("No shareId found");
+      }
+
+      const type = data[0]?.type;
+      if (!type) {
+        throw new Error("No type found");
+      }
+
+      console.log("inserting repost", {
+        caption,
+        postId: newPostId,
+        referencePostId: postId,
+        referenceShareId: shareId,
+      });
 
       await tx.insert(post).values({
-        owner: session.user.address,
+        owner: session.user.address.toLowerCase(),
         publicId: newPostId,
         type: "repost",
       });
@@ -54,11 +86,16 @@ export async function POST(request: NextRequest) {
       await tx.insert(repost).values({
         caption,
         postId: newPostId,
-        referencePostId: publicId,
+        referencePostId: type === "repost" ? postId : null,
+        referenceShareId: shareId,
       });
     });
 
-    return new Response("OK", { status: 200 });
+    const respose: RepostResponse = {
+      postId: newPostId,
+    };
+
+    return NextResponse.json(respose);
   } catch (e) {
     console.log(e);
     return new Response("Bad Request", { status: 400 });
