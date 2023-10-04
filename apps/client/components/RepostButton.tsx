@@ -79,7 +79,7 @@ export function RepostButton({ post }: Props) {
         </span>
       </DialogTrigger>
 
-      <DialogContent title="Repost">
+      <DialogContent title="Repost" disabled={disabled}>
         {user ? (
           <form onSubmit={repost} className="flex flex-col space-y-4">
             <RepostCard
