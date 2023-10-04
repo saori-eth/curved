@@ -1,5 +1,6 @@
 import { nftPost, post, repost } from "db";
 import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/getSession";
@@ -90,6 +91,11 @@ export async function POST(request: NextRequest) {
         referenceShareId: shareId,
       });
     });
+
+    revalidatePath(`/post/${postId}`);
+    revalidatePath(`/post/${newPostId}`);
+    revalidatePath(`/@${session.user.username}`);
+    revalidatePath("/(feed)", "page");
 
     const respose: RepostResponse = {
       postId: newPostId,

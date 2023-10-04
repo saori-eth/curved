@@ -17,7 +17,7 @@ export function PostFeed() {
   return (
     <>
       {posts.map((post) => (
-        <PostCard key={`${post.owner.address}-${post.createdAt}`} post={post} />
+        <PostCard key={post.id} post={post} />
       ))}
     </>
   );

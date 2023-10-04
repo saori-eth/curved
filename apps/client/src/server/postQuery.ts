@@ -185,21 +185,17 @@ function formatPost(row: QueryRow): Post | null {
           },
           type: row.repost.type,
         });
-
-        console.log("baseRepost", baseRepost);
       }
 
       const repostPost = baseRepost
         ? ({
-            ...baseRepost,
-            data: {
-              ...baseRepost.data,
-              repost: nftPost,
-            },
-          } as Repost)
+          ...baseRepost,
+          data: {
+            ...baseRepost.data,
+            repost: nftPost,
+          },
+        } as Repost)
         : null;
-
-      console.log("repostPost", repostPost);
 
       return {
         createdAt: row.createdAt.toISOString(),

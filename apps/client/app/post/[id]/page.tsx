@@ -8,7 +8,7 @@ import { PostType } from "@/src/types/post";
 import { TradeButtons } from "./TradeButtons";
 import { Trades } from "./Trades";
 
-export const revalidate = 30;
+export const revalidate = 5;
 
 interface Props {
   params: {

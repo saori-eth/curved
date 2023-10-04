@@ -27,6 +27,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_RPC_URL: process.env.NEXT_PUBLIC_RPC_URL,
+    REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
   },
 
   /*
@@ -38,5 +39,6 @@ export const env = createEnv({
     CLOUDFLARE_ACCOUNT_ID: z.string(),
     CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
     DATABASE_URL: z.string(),
+    REVALIDATE_SECRET: z.string(),
   },
 });

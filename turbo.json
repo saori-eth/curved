@@ -2,16 +2,26 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["build/**", "dist/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**"
+      ]
     },
     "client#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**"
+      ],
       "env": [
         "NEXT_PUBLIC_CONTRACT_ADDRESS",
         "NEXT_PUBLIC_RPC_URL",
         "DATABASE_URL",
+        "REVALIDATE_SECRET",
         "NODE_ENV",
         "CLOUDFLARE_ACCOUNT_ID",
         "CLOUDFLARE_ACCESS_KEY_ID",
@@ -19,18 +29,40 @@
       ]
     },
     "db#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "env": ["DATABASE_URL"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
+      "env": [
+        "DATABASE_URL"
+      ]
     },
     "indexer#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "env": ["DATABASE_URL", "WS_URL", "CONTRACT_ADDRESS"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "WS_URL",
+        "REVALIDATE_SECRET",
+        "DEPLOYED_URL",
+        "CONTRACT_ADDRESS"
+      ]
     },
     "start": {
-      "dependsOn": ["build", "^start"],
-      "outputs": ["build/**", "dist/**"]
+      "dependsOn": [
+        "build",
+        "^start"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**"
+      ]
     },
     "lint": {},
     "dev": {

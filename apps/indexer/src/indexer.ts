@@ -101,9 +101,9 @@ export class Indexer {
         return;
       }
 
-      await db.transaction(async (tx) => {
-        const publicId = nanoidLowercase();
+      const publicId = nanoidLowercase();
 
+      await db.transaction(async (tx) => {
         console.log(
           "Inserting post",
           { owner, publicId },
@@ -139,8 +139,18 @@ export class Indexer {
       };
 
       console.log("Inserting trade", tradeEntry);
-
       await db.insert(trade).values(tradeEntry);
+
+      const paths = [`/post/${publicId}`, "/"];
+      console.log("Revalidating paths", paths);
+
+      await Promise.all(
+        paths.map((path) =>
+          fetch(
+            `${process.env.DEPLOYED_URL}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}&path=${path}`,
+          ),
+        ),
+      );
     } catch (e) {
       console.error(e);
     }

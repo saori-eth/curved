@@ -19,6 +19,14 @@ export default async function Following() {
     page: 0,
   });
 
+  if (posts.length === 0) {
+    return (
+      <p className="text-center text-slate-500">
+        Posts from people you follow will appear here!
+      </p>
+    );
+  }
+
   return (
     <div className="flex justify-center">
       <div className="w-full space-y-2 pb-4">
