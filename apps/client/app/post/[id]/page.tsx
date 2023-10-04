@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { PostImage } from "@/components/PostImage";
-import { PostTopBar } from "@/components/PostTopBar";
+import { PostCard } from "@/components/PostCard";
 import { fetchPost } from "@/lib/fetchPost";
 import { PostType } from "@/src/types/post";
 
@@ -66,9 +65,7 @@ export default async function Post({ params }: Props) {
 
   return (
     <div className="space-y-2 px-2 md:px-0 md:pt-14">
-      <PostTopBar owner={post.owner} />
-      <PostImage post={post} />
-      <h3 className="text-sm text-slate-400">{post.data.caption}</h3>
+      <PostCard post={post} disableLink />
 
       {post.type === PostType.Post ? (
         <div className="space-y-2 py-4">
