@@ -13,7 +13,12 @@ interface Props {
 export function NftPostCard({ post, disableActions, disableLink }: Props) {
   return (
     <>
-      <PostTopBar owner={post.owner} disableLink={disableLink} />
+      <PostTopBar
+        createdAt={post.createdAt}
+        owner={post.owner}
+        disableLink={disableLink}
+      />
+
       <PostImage post={post} />
 
       {post.data.caption ? (

@@ -9,6 +9,7 @@ interface Props {
   layer?: number;
   disableActions?: boolean;
   disableLink?: boolean;
+  disablePostLink?: boolean;
 }
 
 export function PostCard({
@@ -16,9 +17,14 @@ export function PostCard({
   layer = 1,
   disableActions,
   disableLink,
+  disablePostLink,
 }: Props) {
   return (
-    <PostCardBase id={post.id} layer={layer} disableLink={disableLink}>
+    <PostCardBase
+      id={post.id}
+      layer={layer}
+      disableLink={disablePostLink ?? disableLink}
+    >
       {post.type === PostType.Post ? (
         <NftPostCard
           post={post}

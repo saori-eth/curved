@@ -18,7 +18,7 @@ export function PostImage({ post, sizes = "517px" }: Props) {
         sizes={sizes}
         draggable={false}
         priority
-        className="h-auto max-h-[1000px] w-full object-contain md:rounded-lg"
+        className="h-auto max-h-[1000px] w-full rounded-lg object-contain"
       />
     );
   }

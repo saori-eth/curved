@@ -21,7 +21,11 @@ export function RepostCard({
 }: Props) {
   return (
     <>
-      <PostTopBar owner={post.owner} disableLink={disableLink}>
+      <PostTopBar
+        createdAt={post.createdAt}
+        owner={post.owner}
+        disableLink={disableLink}
+      >
         <BiRepost className="text-lg text-slate-400" />
         <span className="text-sm text-slate-400">
           {post.data.repost?.owner.username ?? post.data.repost?.owner.address}

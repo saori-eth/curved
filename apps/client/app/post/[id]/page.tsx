@@ -65,7 +65,7 @@ export default async function Post({ params }: Props) {
 
   return (
     <div className="space-y-2 md:pt-14">
-      <PostCard post={post} />
+      <PostCard post={post} disablePostLink />
 
       {post.type === PostType.Post ? (
         <div className="space-y-2 py-4">

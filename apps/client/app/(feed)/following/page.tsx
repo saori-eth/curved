@@ -21,7 +21,7 @@ export default async function Following() {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full space-y-4 pb-4">
+      <div className="w-full space-y-2 pb-4">
         <FeedProvider initialPosts={posts}>
           <PostFeed />
           <LoadMore />
