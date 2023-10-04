@@ -3,6 +3,8 @@ import { fetchLatestPosts } from "./fetchLatestPosts";
 import { LoadMore } from "./LoadMore";
 import { PostFeed } from "./PostFeed";
 
+export const revalidate = 5;
+
 export default async function Feed() {
   const posts = await fetchLatestPosts({
     page: 0,

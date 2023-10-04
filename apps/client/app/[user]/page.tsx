@@ -12,6 +12,8 @@ import { RoyaltiesEarned } from "./RoyaltiesEarned";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
 
+export const revalidate = 10;
+
 interface Props {
   params: {
     user: string;
@@ -69,9 +71,7 @@ export default async function User({ params }: Props) {
 
       <div className="flex h-8 items-center">
         <FollowButton address={profile.address} username={profile.username} />
-        <RoyaltiesEarned
-          address={profile.address}
-        />
+        <RoyaltiesEarned address={profile.address} />
       </div>
 
       <div className="w-full space-y-2 pt-2">
