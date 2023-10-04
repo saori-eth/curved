@@ -2,34 +2,53 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { IoIosClose } from "react-icons/io";
 
 interface DialogContentProps {
   title?: string;
+  disabled?: boolean;
   children: React.ReactNode;
 }
 
-export function DialogContent({ title, children }: DialogContentProps) {
+export function DialogContent({
+  title,
+  disabled,
+  children,
+}: DialogContentProps) {
   const [mounted, setMounted] = useState(false);
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${
-          mounted ? "" : "opacity-0"
-        }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm transition ${mounted ? "" : "opacity-0"
+          }`}
       >
         <Dialog.Content
-          className={`mx-2 h-fit max-h-[85%] w-full max-w-xl overflow-y-auto rounded-2xl bg-slate-800 px-8 py-6 shadow-lg transition ${
-            mounted ? "" : "scale-75 opacity-0"
-          }`}
+          className={`mx-2 h-fit max-h-[85%] w-full max-w-xl overflow-y-auto rounded-2xl bg-slate-800 py-5 shadow-lg transition ${mounted ? "" : "scale-75 opacity-0"
+            }`}
         >
-          {title ? (
-            <h1 className="-mt-2 pb-4 text-center text-xl font-bold">
-              {title}
-            </h1>
-          ) : null}
+          <div className="grid grid-cols-3 px-5 pb-4">
+            <div />
 
-          {children}
+            {title ? (
+              <h1 className="text-center text-xl font-bold">{title}</h1>
+            ) : null}
+
+            <div className="flex items-center justify-end">
+              <Dialog.Close
+                title="Close"
+                className={`rounded-full text-slate-500 transition ${disabled
+                    ? "cursor-default opacity-50"
+                    : "hover:bg-slate-700 hover:text-slate-200 active:scale-95"
+                  }`}
+              >
+                <IoIosClose className="text-3xl" />
+              </Dialog.Close>
+            </div>
+          </div>
+
+          <div className="px-8">{children}</div>
+
           <Mount setMounted={setMounted} />
         </Dialog.Content>
       </Dialog.Overlay>

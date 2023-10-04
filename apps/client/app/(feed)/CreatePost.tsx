@@ -235,20 +235,19 @@ export function CreatePost() {
 
   if (!user || status !== "authenticated") return null;
 
+  const closeDisabled =
+    isUploading ||
+    isLoadingWrite ||
+    isRedirecting ||
+    isWaitingOnTx ||
+    waitingForIndex;
+
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(o) => {
-        if (open) {
-          if (
-            isUploading ||
-            isLoadingWrite ||
-            isRedirecting ||
-            isWaitingOnTx ||
-            waitingForIndex
-          ) {
-            return;
-          }
+        if (open && closeDisabled) {
+          return;
         }
 
         setOpen(o);
@@ -262,7 +261,7 @@ export function CreatePost() {
         <span className="hidden text-xl font-bold md:block">Upload</span>
       </Dialog.Trigger>
 
-      <DialogContent title="Create Post">
+      <DialogContent title="Create Post" disabled={closeDisabled}>
         <form onSubmit={submit} className="space-y-2">
           <PostTopBar owner={user} disableLink />
 
