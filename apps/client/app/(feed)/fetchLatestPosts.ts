@@ -1,9 +1,10 @@
 "use server";
 
-import { post } from "db";
-import { desc, lte } from "drizzle-orm";
+import { post, repost } from "db";
+import { desc, eq, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 
+import { db } from "@/lib/db";
 import { formatPostQuery, postQuery } from "@/src/server/postQuery";
 import { Post } from "@/src/types/post";
 
@@ -29,6 +30,21 @@ export async function fetchLatestPosts(
       .where(lte(post.createdAt, new Date(start)))
       .limit(FEED_PAGE_SIZE)
       .offset(page * FEED_PAGE_SIZE);
+
+    console.log(data);
+
+    await Promise.all(
+      data.map(async (post) => {
+        const data = await db
+          .select({
+            repostCount: sql<number>`count(*)`,
+          })
+          .from(repost)
+          .where(eq(repost.postId, post.id));
+
+        console.log(data[0]?.repostCount);
+      }),
+    );
 
     return formatPostQuery(data);
   } catch (e) {

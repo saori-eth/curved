@@ -11,8 +11,9 @@ export const SubmitButton = forwardRef<HTMLButtonElement, Props>(
       <button
         ref={ref}
         disabled={disabled}
-        className={`rounded-full bg-sky-600 px-5 py-1 text-lg font-bold text-white transition ${disabled ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
-          } ${className}`}
+        className={`rounded-full bg-sky-600 px-5 py-1 text-lg font-bold text-white transition ${
+          disabled ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
+        } ${className}`}
         {...props}
       >
         {children}

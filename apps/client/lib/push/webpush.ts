@@ -1,8 +1,9 @@
 "use server";
 const webpush = require("web-push");
-import { db } from "@/lib/db";
 import { pushNotifications } from "db";
 import { eq } from "drizzle-orm";
+
+import { db } from "@/lib/db";
 
 webpush.setVapidDetails(
   process.env.VAPID_EMAIL,

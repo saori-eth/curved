@@ -5,13 +5,13 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { darkTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { useEffect } from "react";
 import { WagmiConfig } from "wagmi";
+import { useAccount } from "wagmi";
 
 import { listenToChanges, sub } from "@/lib/push";
 
 import AuthProvider from "./AuthProvider";
 import { RainbowKitAuthProvider } from "./RainbowkitAuthProvider";
 import { chains, config } from "./wagmi";
-import { useAccount } from "wagmi";
 
 const theme = darkTheme({
   accentColor: "#7dd3fc",

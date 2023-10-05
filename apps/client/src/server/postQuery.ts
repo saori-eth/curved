@@ -99,7 +99,7 @@ function formatPost(row: QueryRow): Post | null {
           avatar: getAvatarUrl(row.ownerAvatarId),
           username: row.ownerUsername,
         },
-        reposts: row.repostCount,
+        repostCount: 0,
         type: PostType.Post,
       };
     }
@@ -132,7 +132,6 @@ function formatPost(row: QueryRow): Post | null {
           type: null,
         },
         repostCaption: row.repostNft.caption,
-        repostCount: 0,
         repostNft: {
           caption: null,
           createdAt: null,
@@ -175,7 +174,6 @@ function formatPost(row: QueryRow): Post | null {
             type: null,
           },
           repostCaption: row.repost.repostCaption,
-          repostCount: 0,
           repostNft: {
             caption: row.repostNft.caption,
             createdAt: row.repostNft.createdAt,
@@ -192,12 +190,12 @@ function formatPost(row: QueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-          ...baseRepost,
-          data: {
-            ...baseRepost.data,
-            repost: nftPost,
-          },
-        } as Repost)
+            ...baseRepost,
+            data: {
+              ...baseRepost.data,
+              repost: nftPost,
+            },
+          } as Repost)
         : null;
 
       return {
@@ -212,7 +210,7 @@ function formatPost(row: QueryRow): Post | null {
           avatar: getAvatarUrl(row.ownerAvatarId),
           username: row.ownerUsername,
         },
-        reposts: row.repostCount,
+        repostCount: 0,
         type: PostType.Repost,
       };
     }

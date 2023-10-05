@@ -11,7 +11,7 @@ interface BasePost {
     username: string | null;
     avatar: string | null;
   };
-  reposts: number;
+  repostCount: number;
   createdAt: string;
 }
 
