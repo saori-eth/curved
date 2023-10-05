@@ -13,72 +13,72 @@ const repostNftPost = alias(nftPost, "repostNftPost");
 const repostNftPostPost = alias(post, "repostNftPostPost");
 const repostNftPostUser = alias(user, "repostNftPostUser");
 
-export const postQuery = db
-  .select({
-    createdAt: post.createdAt,
-    id: post.publicId,
-    nftCaption: nftPost.caption,
-    nftShareId: nftPost.shareId,
-    nftUrl: nftPost.url,
-    ownerAddress: post.owner,
-    ownerAvatarId: user.avatarId,
-    ownerUsername: user.username,
-    repost: {
-      createdAt: repostPost.createdAt,
-      id: repostPost.publicId,
-      ownerAddress: repostUser.address,
-      ownerAvatarId: repostUser.avatarId,
-      ownerUsername: repostUser.username,
-      repostCaption: repostRepost.caption,
-      type: repostPost.type,
-    },
-    repostCaption: repost.caption,
-    repostNft: {
-      caption: repostNftPost.caption,
-      createdAt: repostNftPostPost.createdAt,
-      id: repostNftPostPost.publicId,
-      ownerAddress: repostNftPostUser.address,
-      ownerAvatarId: repostNftPostUser.avatarId,
-      ownerUsername: repostNftPostUser.username,
-      shareId: repostNftPost.shareId,
-      url: repostNftPost.url,
-    },
-    type: post.type,
-  })
-  .from(post)
-  .leftJoin(user, like(post.owner, user.address))
-  .leftJoin(
-    nftPost,
-    and(eq(post.type, "post"), eq(post.publicId, nftPost.postId)),
-  )
-  .leftJoin(
-    repost,
-    and(eq(post.type, "repost"), eq(post.publicId, repost.postId)),
-  )
-  .leftJoin(repostPost, eq(repost.referencePostId, repostPost.publicId))
-  .leftJoin(repostUser, like(repostPost.owner, repostUser.address))
-  .leftJoin(repostRepost, eq(repostPost.publicId, repostRepost.postId))
-  .leftJoin(repostNftPost, eq(repost.referenceShareId, repostNftPost.shareId))
-  .leftJoin(
-    repostNftPostPost,
-    eq(repostNftPost.postId, repostNftPostPost.publicId),
-  )
-  .leftJoin(
-    repostNftPostUser,
-    like(repostNftPostPost.owner, repostNftPostUser.address),
-  );
-
-export function formatPostQuery(data: Awaited<typeof postQuery>): Post[] {
-  return data
-    .map((row) => {
-      return formatPost(row);
+export const postQuery = (tx = db) =>
+  tx
+    .select({
+      createdAt: post.createdAt,
+      id: post.publicId,
+      nftCaption: nftPost.caption,
+      nftShareId: nftPost.shareId,
+      nftUrl: nftPost.url,
+      ownerAddress: post.owner,
+      ownerAvatarId: user.avatarId,
+      ownerUsername: user.username,
+      repost: {
+        createdAt: repostPost.createdAt,
+        id: repostPost.publicId,
+        ownerAddress: repostUser.address,
+        ownerAvatarId: repostUser.avatarId,
+        ownerUsername: repostUser.username,
+        repostCaption: repostRepost.caption,
+        type: repostPost.type,
+      },
+      repostCaption: repost.caption,
+      repostNft: {
+        caption: repostNftPost.caption,
+        createdAt: repostNftPostPost.createdAt,
+        id: repostNftPostPost.publicId,
+        ownerAddress: repostNftPostUser.address,
+        ownerAvatarId: repostNftPostUser.avatarId,
+        ownerUsername: repostNftPostUser.username,
+        shareId: repostNftPost.shareId,
+        url: repostNftPost.url,
+      },
+      type: post.type,
     })
+    .from(post)
+    .leftJoin(user, like(post.owner, user.address))
+    .leftJoin(
+      nftPost,
+      and(eq(post.type, "post"), eq(post.publicId, nftPost.postId)),
+    )
+    .leftJoin(
+      repost,
+      and(eq(post.type, "repost"), eq(post.publicId, repost.postId)),
+    )
+    .leftJoin(repostNftPost, eq(repost.referenceShareId, repostNftPost.shareId))
+    .leftJoin(
+      repostNftPostPost,
+      eq(repostNftPost.postId, repostNftPostPost.publicId),
+    )
+    .leftJoin(
+      repostNftPostUser,
+      like(repostNftPostPost.owner, repostNftPostUser.address),
+    )
+    .leftJoin(repostPost, and(eq(repost.referencePostId, repostPost.publicId)))
+    .leftJoin(repostUser, like(repostPost.owner, repostUser.address))
+    .leftJoin(repostRepost, eq(repostPost.publicId, repostRepost.postId));
+
+export type PostQueryResponse = Awaited<ReturnType<typeof postQuery>>;
+export type PostQueryRow = PostQueryResponse[0];
+
+export function formatPostQuery(data: PostQueryResponse): Post[] {
+  return data
+    .map((row) => formatPostQueryRow(row))
     .filter((post): post is Post => post !== null);
 }
 
-type QueryRow = Awaited<typeof postQuery>[0];
-
-function formatPost(row: QueryRow): Post | null {
+export function formatPostQueryRow(row: PostQueryRow): Post | null {
   switch (row.type) {
     case "post": {
       if (!row.nftShareId || !row.nftUrl) {
@@ -113,7 +113,7 @@ function formatPost(row: QueryRow): Post | null {
         return null;
       }
 
-      const nftPost = formatPost({
+      const nftPost = formatPostQueryRow({
         createdAt: row.repostNft.createdAt,
         id: row.repostNft.id,
         nftCaption: row.repostNft.caption,
@@ -155,7 +155,7 @@ function formatPost(row: QueryRow): Post | null {
         row.repost.ownerAddress &&
         row.repost.type
       ) {
-        baseRepost = formatPost({
+        baseRepost = formatPostQueryRow({
           createdAt: row.repost.createdAt,
           id: row.repost.id,
           nftCaption: null,

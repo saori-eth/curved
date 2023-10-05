@@ -24,8 +24,6 @@ export function RepostButton({ post }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const numReposts = 0;
-
   const disabled = !user || pending;
 
   function repost(e: React.FormEvent<HTMLFormElement>) {
@@ -66,10 +64,12 @@ export function RepostButton({ post }: Props) {
         title="Repost"
         disabled={disabled}
         className={`group z-40 flex items-center space-x-1 rounded-full px-1 transition ${
-          numReposts ? "" : "aspect-square"
+          post.repostCount ? "" : "aspect-square"
         } ${disabled ? "opacity-50" : "hover:text-sky-300"}`}
       >
-        {numReposts ? <span className="text-sm">{numReposts}</span> : null}
+        {post.repostCount ? (
+          <span className="text-sm">{post.repostCount}</span>
+        ) : null}
         <span
           className={`flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition ${
             disabled

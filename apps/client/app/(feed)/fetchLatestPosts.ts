@@ -1,11 +1,15 @@
 "use server";
 
-import { post, repost } from "db";
-import { desc, eq, lte, sql } from "drizzle-orm";
+import { post } from "db";
+import { desc, lte } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
-import { formatPostQuery, postQuery } from "@/src/server/postQuery";
+import { postQuery } from "@/src/server/postQuery";
+import {
+  formatRepostCountQuery,
+  queryPostRepostCounts,
+} from "@/src/server/repostCountQuery";
 import { Post } from "@/src/types/post";
 
 import { FEED_PAGE_SIZE } from "./constants";
@@ -25,28 +29,15 @@ export async function fetchLatestPosts(
     const page = args.page;
     const start = args.start ?? Date.now();
 
-    const data = await postQuery
+    const data = await postQuery(db)
       .orderBy(desc(post.createdAt))
       .where(lte(post.createdAt, new Date(start)))
       .limit(FEED_PAGE_SIZE)
       .offset(page * FEED_PAGE_SIZE);
 
-    console.log(data);
+    const repostCounts = await queryPostRepostCounts(data, db);
 
-    await Promise.all(
-      data.map(async (post) => {
-        const data = await db
-          .select({
-            repostCount: sql<number>`count(*)`,
-          })
-          .from(repost)
-          .where(eq(repost.postId, post.id));
-
-        console.log(data[0]?.repostCount);
-      }),
-    );
-
-    return formatPostQuery(data);
+    return formatRepostCountQuery(data, repostCounts);
   } catch (e) {
     console.error(e);
     return [];

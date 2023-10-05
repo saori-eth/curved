@@ -48,7 +48,7 @@ export async function fetchFollowingPosts(
     // Get posts
     const start = args.start ?? Date.now();
 
-    const data = await postQuery
+    const data = await postQuery()
       .where(
         and(
           inArray(post.owner, followingAddresses),

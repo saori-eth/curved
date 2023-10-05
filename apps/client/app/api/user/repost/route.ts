@@ -71,13 +71,6 @@ export async function POST(request: NextRequest) {
         throw new Error("No type found");
       }
 
-      console.log("inserting repost", {
-        caption,
-        postId: newPostId,
-        referencePostId: postId,
-        referenceShareId: shareId,
-      });
-
       await tx.insert(post).values({
         owner: session.user.address.toLowerCase(),
         publicId: newPostId,
@@ -87,7 +80,7 @@ export async function POST(request: NextRequest) {
       await tx.insert(repost).values({
         caption,
         postId: newPostId,
-        referencePostId: type === "repost" ? postId : null,
+        referencePostId: postId,
         referenceShareId: shareId,
       });
     });

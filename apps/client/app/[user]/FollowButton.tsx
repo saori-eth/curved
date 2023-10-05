@@ -67,11 +67,11 @@ export async function FollowButton({ address, username }: Props) {
   const disabled = !session;
 
   return (
-    <form action={toggleFollow}>
+    <form action={toggleFollow} className="flex items-stretch">
       <button
         type="submit"
         disabled={disabled}
-        className={`group w-24 rounded-full border py-1 ${
+        className={`group w-24 rounded-full border ${
           isFollowing
             ? "border-slate-400"
             : "border-transparent bg-white text-slate-900"
