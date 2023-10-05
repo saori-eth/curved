@@ -12,7 +12,7 @@ export default async function Following() {
   if (!session) {
     return (
       <p className="text-center text-slate-500">
-        You must be signed in to view this page
+        You must be signed in to view this page.
       </p>
     );
   }

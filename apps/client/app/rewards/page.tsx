@@ -54,7 +54,7 @@ export default function Post() {
 
         {!user ? (
           <p className="text-center text-slate-500">
-            You must be logged in to claim rewards.
+            You must be signed in to claim rewards.
           </p>
         ) : methodError ? (
           <p className="text-center text-red-500">Error claiming rewards.</p>
