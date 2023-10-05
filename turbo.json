@@ -16,7 +16,10 @@
         "NODE_ENV",
         "CLOUDFLARE_ACCOUNT_ID",
         "CLOUDFLARE_ACCESS_KEY_ID",
-        "CLOUDFLARE_SECRET_ACCESS_KEY"
+        "CLOUDFLARE_SECRET_ACCESS_KEY",
+        "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+        "VAPID_EMAIL",
+        "VAPID_PRIVATE_KEY"
       ]
     },
     "db#build": {
