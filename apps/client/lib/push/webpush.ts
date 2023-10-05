@@ -1,3 +1,4 @@
+"use server";
 const webpush = require("web-push");
 import { db } from "@/lib/db";
 import { pushNotifications } from "db";
