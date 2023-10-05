@@ -235,7 +235,7 @@ export const ethereumSession = mysqlTable(
       .notNull(),
     id: serial("id").primaryKey(),
     nonce: char("nonce", { length: ETH_AUTH_NONCE_LENGTH }).notNull(),
-    publicId: char("public_id", { length: PUBLIC_ID_LENGTH }).notNull(),
+    publicId: char("public_id", { length: 21 }).notNull(),
     updatedAt: timestamp("updated_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .onUpdateNow()
