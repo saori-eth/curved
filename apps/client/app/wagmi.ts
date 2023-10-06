@@ -40,7 +40,7 @@ export const {
   chains: Chain[];
   publicClient: any;
 } = configureChains(
-  [...(env.NEXT_PUBLIC_NODE_ENV === "development" ? [goerli] : [base])],
+  [...(env.NEXT_PUBLIC_NODE_ENV === "development" ? [goerli] : [goerli])],
   [publicProvider()],
 );
 
