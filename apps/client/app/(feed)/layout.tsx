@@ -12,7 +12,7 @@ export default function FeedLayout({ children }: Props) {
         <FeedButton href="/following">Following</FeedButton>
       </div>
 
-      <div className="w-full pt-2">{children}</div>
+      <div className="w-full pt-12 md:pt-2">{children}</div>
     </div>
   );
 }
