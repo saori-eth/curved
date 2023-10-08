@@ -5,8 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
-import { sendNotification } from "@/lib/push/webpush";
 import { nanoidLowercase } from "@/lib/db/nanoid";
+import { sendNotification } from "@/lib/push/webpush";
 
 import { RepostArgs, RepostResponse } from "./types";
 
@@ -48,9 +48,9 @@ export async function POST(request: NextRequest) {
       const data = await tx
         .select({
           nftShareId: nftPost.shareId,
+          owner: post.owner,
           repostShareId: repost.referenceShareId,
           type: post.type,
-          owner: post.owner,
         })
         .from(post)
         .where(eq(post.publicId, postId))
@@ -101,8 +101,9 @@ export async function POST(request: NextRequest) {
 
     if (owner) {
       sendNotification(owner, {
-        title: "New Repost",
         body: `${session.user.username} reposted your post`,
+        icon: "/images/favicon-32x32.png",
+        title: "New Repost",
         url: `/post/${newPostId}`,
       });
     }
