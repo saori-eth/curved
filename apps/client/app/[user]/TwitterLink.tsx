@@ -13,18 +13,14 @@ export async function TwitterLink({ username }: Props) {
     return null;
   }
 
-  function connectTwitter() {
-    fetch("/api/auth/methods/twitter/connect");
-  }
-
   return (
     <div>
-      <button
-        onClick={connectTwitter}
+      <a
+        href="/api/auth/methods/twitter/connect"
         className="rounded-full bg-sky-600 px-4 font-bold"
       >
         Twitter
-      </button>
+      </a>
     </div>
   );
 }
