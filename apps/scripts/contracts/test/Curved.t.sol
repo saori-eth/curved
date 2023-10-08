@@ -172,7 +172,7 @@ contract CurvedTest is Test {
                 _userPurchaseTimestamp[_users[i]] = block.timestamp;
             }
         }
-        uint256 totalDeposit = _curved.openInterest();
+        uint256 totalDeposit = _curved.totalVolume();
 
         uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
         vm.warp(targetTime);
@@ -183,7 +183,7 @@ contract CurvedTest is Test {
             _curved.getReward();
             uint256 earnedDuration = block.timestamp -
                 _userPurchaseTimestamp[_users[i]];
-            int256 userDeposit = _curved.userNetEthContributed(_users[i]);
+            uint256 userDeposit = _curved.userVolume(_users[i]);
             uint256 expectedReward;
             if (userDeposit < 0) {
                 expectedReward = 0;
@@ -199,7 +199,7 @@ contract CurvedTest is Test {
     }
 
     function testRewardProportionSamePool() public createShare(1) purchaseFromMany(2, 1) {
-        uint256 totalDeposit = _curved.openInterest();
+        uint256 totalDeposit = _curved.totalVolume();
         uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
         vm.warp(targetTime);
         uint256 currentRate = _curved.getRate(block.timestamp);
@@ -209,7 +209,7 @@ contract CurvedTest is Test {
             _curved.getReward();
             uint256 earnedDuration = block.timestamp -
                 _userPurchaseTimestamp[_users[i]];
-            int256 userDeposit = _curved.userNetEthContributed(_users[i]);
+            uint256 userDeposit = _curved.userVolume(_users[i]);
             uint256 expectedReward;
             if (userDeposit < 0) {
                 expectedReward = 0;
@@ -220,34 +220,6 @@ contract CurvedTest is Test {
             uint256 userRewardBalance = _rewardToken.balanceOf(_users[i]);
             assertEq(userRewardBalance, expectedReward);
         }
-    }
-
-    function testNegativeEthContributed() public createShare(1) {
-
-        // first purchase
-        uint256 initEthContributed = _curved.getBuyPrice(0, 1);
-        uint256 fullCost = _curved.getBuyPriceAfterFee(0, 1);
-        vm.startPrank(_users[1]);
-        _curved.buyShare{value: fullCost}(0, 1);
-        int256 userEthContributed = _curved.userNetEthContributed(_users[1]);
-        assertEq(userEthContributed, int256(initEthContributed));
-
-        // new user enables first user to tp
-        uint256 newUserCost = _curved.getBuyPriceAfterFee(0, 10);
-        vm.startPrank(_users[2]);
-        _curved.buyShare{value: newUserCost}(0, 10);
-
-        // skip a block and some time
-        vm.warp(block.timestamp + 1 weeks);
-        vm.roll(block.number + 1);
-
-        // first user sells
-        uint256 ethTaken = _curved.getSellPrice(0, 1);
-        vm.startPrank(_users[1]);
-        _curved.sellShare(0, 1);
-        int256 totalEthTaken = int256(ethTaken) - int256(initEthContributed);
-        userEthContributed = _curved.userNetEthContributed(_users[1]);
-        assertEq(userEthContributed, -totalEthTaken);
     }
 
     function testClaimOnSell() public createShare(1) purchaseShare(1) {
@@ -265,48 +237,6 @@ contract CurvedTest is Test {
         uint256 earnedAfterClaim = _curved.earned(_users[1]);
         assertEq(balanceAfterClaim, earnedBeforeSell);
         assertEq(earnedAfterClaim, 0);
-    }
-
-    // TODO: test claim each individual year
-    // TODO: test claim on sell
-
-    function testRewardsAfterProfit() public createShare(1) purchaseShare(1) {
-      vm.stopPrank();
-      uint256 cost = _curved.getBuyPriceAfterFee(0, 15);
-      vm.prank(_users[2]);
-      _curved.buyShare{value: cost}(0, 15);
-      uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
-      vm.warp(targetTime);
-      vm.roll(block.number + 1);
-      vm.prank(_users[1]);
-      _curved.sellShare(0, 1);
-      uint256 earnedAfterSell = _curved.earned(_users[1]);
-      // result: if they try to claim after taking profit, all rewards will be lost
-      assertEq(earnedAfterSell, 0);
-    }
-
-    function testRewardsBackInProfit() public createShare(1) purchaseShare(1) {
-      vm.stopPrank();
-      uint256 cost = _curved.getBuyPriceAfterFee(0, 15);
-      vm.prank(_users[2]);
-      _curved.buyShare{value: cost}(0, 15);
-      uint256 targetTime = _userPurchaseTimestamp[_users[1]] + 1 weeks;
-      vm.warp(targetTime);
-      vm.roll(block.number + 1);
-      uint256 earnedBeforeOGSale = _curved.earned(_users[1]);
-      vm.prank(_users[1]);
-      _curved.sellShare(0, 1);
-      vm.prank(_users[3]);
-      _curved.createShare("ipfs://test");
-      uint256 cost2 = _curved.getBuyPriceAfterFee(1, 15);
-      vm.prank(_users[1]);
-      _curved.buyShare{value: cost2}(1, 15);
-      vm.warp(block.timestamp + 1);
-      vm.roll(block.number + 1);
-      uint256 earnedAfterBuyingMore = _curved.earned(_users[1]);
-      assertLe(earnedAfterBuyingMore, earnedBeforeOGSale);
-      // result: it totally resets if they don't claim
-      // were potentially screwing people by not forcing them to claim while taking profit
     }
 
     function testRoyaltyFees() public createShare(1) {

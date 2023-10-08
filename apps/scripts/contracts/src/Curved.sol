@@ -32,9 +32,9 @@ contract Curved is Ownable, ERC20, ERC20Permit, ERC20Votes {
     // User address => rewards to be claimed
     mapping(address => uint256) public rewards;
     // Net ETH from buy/sell transactions
-    uint256 public openInterest;
+    uint256 public totalVolume;
     // User address => staked amount
-    mapping(address => int256) public userNetEthContributed;
+    mapping(address => uint256) public userVolume;
 
     // ====== Token Variables ======
 
@@ -166,8 +166,8 @@ contract Curved is Ownable, ERC20, ERC20Permit, ERC20Votes {
             "Only the shares subject can buy the first share"
         );
         uint256 price = getPrice(supply, amount);
-        userNetEthContributed[msg.sender] = userNetEthContributed[msg.sender] + int(price);
-        openInterest = openInterest + price;
+        userVolume [msg.sender] += price;
+        totalVolume += price;
         uint256 protocolFee = (price * protocolFeePercent) / 1 ether;
         uint256 royaltyFee = (price * royaltyFeePercent) / 1 ether;
         require(msg.value >= price + protocolFee + royaltyFee, "Insufficient payment");
@@ -192,8 +192,8 @@ contract Curved is Ownable, ERC20, ERC20Permit, ERC20Votes {
             "Cannot sell all shares, must leave at least one"
         );
         uint256 owed = getPrice(supply - amount, amount);
-        userNetEthContributed[msg.sender] = userNetEthContributed[msg.sender] - int(owed);
-        openInterest = openInterest - owed;
+        userVolume [msg.sender] += owed;
+        totalVolume += owed;
         uint256 protocolFee = (owed * protocolFeePercent) / 1 ether;
         uint256 royaltyFee = (owed * royaltyFeePercent) / 1 ether;
         require(address(this).balance >= owed - protocolFee - royaltyFee, "Insufficient funds");
@@ -255,7 +255,7 @@ contract Curved is Ownable, ERC20, ERC20Permit, ERC20Votes {
     }
 
     function rewardPerToken() public view returns (uint) {
-        if (openInterest == 0) {
+        if (totalVolume == 0) {
             return rewardPerEthStored;
         }
 
@@ -264,16 +264,16 @@ contract Curved is Ownable, ERC20, ERC20Permit, ERC20Votes {
             (getRate(block.timestamp) *
                 (lastTimeRewardApplicable() - updatedAt) *
                 1e18) /
-            openInterest;
+            totalVolume;
     }
 
     function earned(address _account) public view returns (uint) {
-      if (userNetEthContributed[_account] < 0){
+      if (userVolume[_account] < 0){
         return 0;
       }
 
       return
-          ((uint(userNetEthContributed[_account]) *
+          ((uint(userVolume[_account]) *
               (rewardPerToken() - userRewardPerEthPaid[_account])) / 1e18) +
           rewards[_account];
     }
