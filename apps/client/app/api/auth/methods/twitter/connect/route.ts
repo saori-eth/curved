@@ -18,6 +18,7 @@ export async function GET() {
     httpOnly: true,
     maxAge: 60 * 60,
     name: "twitter-code-verifier",
+    path: "/",
     value: codeVerifier,
   });
 
@@ -25,6 +26,7 @@ export async function GET() {
     httpOnly: true,
     maxAge: 60 * 60,
     name: "twitter-state",
+    path: "/",
     value: state,
   });
 
