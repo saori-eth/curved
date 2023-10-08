@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
+import { sendNotification } from "@/lib/push/webpush";
 import { nanoidLowercase } from "@/lib/db/nanoid";
 
 import { RepostArgs, RepostResponse } from "./types";
@@ -42,12 +43,14 @@ export async function POST(request: NextRequest) {
   try {
     const newPostId = nanoidLowercase();
 
+    let owner;
     await db.transaction(async (tx) => {
       const data = await tx
         .select({
           nftShareId: nftPost.shareId,
           repostShareId: repost.referenceShareId,
           type: post.type,
+          owner: post.owner,
         })
         .from(post)
         .where(eq(post.publicId, postId))
@@ -61,7 +64,10 @@ export async function POST(request: NextRequest) {
           and(eq(post.type, "repost"), eq(post.publicId, repost.postId)),
         );
 
+      owner = data[0]?.owner;
+
       const shareId = data[0]?.nftShareId ?? data[0]?.repostShareId;
+
       if (!shareId) {
         throw new Error("No shareId found");
       }
@@ -89,6 +95,17 @@ export async function POST(request: NextRequest) {
     revalidatePath(`/post/${newPostId}`);
     revalidatePath(`/@${session.user.username}`);
     revalidatePath("/(feed)", "page");
+
+    // send notification to post owner
+    // send notification to repost owner
+
+    if (owner) {
+      sendNotification(owner, {
+        title: "New Repost",
+        body: `${session.user.username} reposted your post`,
+        url: `/post/${newPostId}`,
+      });
+    }
 
     const respose: RepostResponse = {
       postId: newPostId,
