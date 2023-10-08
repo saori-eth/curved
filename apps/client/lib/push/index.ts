@@ -1,7 +1,9 @@
 "use client";
 export const sub = async () => {
   if ("serviceWorker" in navigator) {
-    await navigator.serviceWorker.register("/service-worker.js");
+    await navigator.serviceWorker.register("/service-worker.js", {
+      scope: "/app/notifications",
+    });
   }
 
   const permissionResult = await Notification.requestPermission();
