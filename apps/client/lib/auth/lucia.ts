@@ -1,6 +1,7 @@
 import "lucia/polyfill/node";
 
 import { planetscale } from "@lucia-auth/adapter-mysql";
+import { twitter } from "@lucia-auth/oauth/providers";
 import {
   AUTH_KEY_TABLE_NAME,
   AUTH_SESSION_TABLE_NAME,
@@ -39,6 +40,12 @@ export const auth = lucia({
     expires: false,
     name: SESSION_COOKIE_NAME,
   },
+});
+
+export const twitterAuth = twitter(auth, {
+  clientId: env.TWITTER_CLIENT_ID,
+  clientSecret: env.TWITTER_CLIENT_SECRET,
+  redirectUri: "/",
 });
 
 export type Auth = typeof auth;

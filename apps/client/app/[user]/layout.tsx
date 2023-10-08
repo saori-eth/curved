@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
 import { FeedButton } from "../(feed)/FeedButton";
 import { FollowButton } from "./FollowButton";
 import { RoyaltiesEarned } from "./RoyaltiesEarned";
+import { TwitterLink } from "./TwitterLink";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
 
@@ -51,13 +51,20 @@ export default async function UserLayout({ children, params }: Props) {
   const username = params.user.replace("%40", "");
 
   const profile = await fetchProfileFromUsername(username);
-  if (!profile) notFound();
+  if (!profile) {
+    return (
+      <p className="z-20 col-span-3 pt-2 text-center text-slate-400">
+        User not found.
+      </p>
+    );
+  }
 
   return (
     <div className="z-20 col-span-3 flex flex-col items-center space-y-2 py-2">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />
+        <TwitterLink username={profile.username} />
       </div>
 
       <div className="flex h-8 items-stretch">

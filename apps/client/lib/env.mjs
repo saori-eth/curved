@@ -28,6 +28,9 @@ export const env = createEnv({
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_RPC_URL: process.env.NEXT_PUBLIC_RPC_URL,
     REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
+    TWITTER_CLIENT_ID: process.env.TWITTER_CLIENT_ID,
+    TWITTER_CLIENT_SECRET: process.env.TWITTER_CLIENT_SECRET,
+    DEPLOYED_URL: process.env.DEPLOYED_URL,
   },
 
   /*
@@ -39,6 +42,9 @@ export const env = createEnv({
     CLOUDFLARE_ACCOUNT_ID: z.string(),
     CLOUDFLARE_SECRET_ACCESS_KEY: z.string(),
     DATABASE_URL: z.string(),
+    DEPLOYED_URL: z.string().url(),
     REVALIDATE_SECRET: z.string(),
+    TWITTER_CLIENT_ID: z.string(),
+    TWITTER_CLIENT_SECRET: z.string(),
   },
 });

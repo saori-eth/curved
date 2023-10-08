@@ -39,8 +39,6 @@ export default async function Collection({ params }: Props) {
     .map((row) => row.id)
     .filter((id): id is string => id !== null);
 
-  console.log(postIds);
-
   if (postIds.length === 0) {
     return (
       <p className="pt-2 text-center text-slate-500">

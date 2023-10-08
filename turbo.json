@@ -2,34 +2,56 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["build/**", "dist/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**"
+      ]
     },
     "client#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**"
+      ],
       "env": [
         "NEXT_PUBLIC_CONTRACT_ADDRESS",
         "NEXT_PUBLIC_RPC_URL",
         "DATABASE_URL",
+        "DEPLOYED_URL",
         "REVALIDATE_SECRET",
         "NODE_ENV",
         "CLOUDFLARE_ACCOUNT_ID",
         "CLOUDFLARE_ACCESS_KEY_ID",
         "CLOUDFLARE_SECRET_ACCESS_KEY",
         "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+        "TWITTER_CLIENT_ID",
+        "TWITTER_CLIENT_SECRET",
         "VAPID_EMAIL",
         "VAPID_PRIVATE_KEY"
       ]
     },
     "db#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "env": ["DATABASE_URL"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
+      "env": [
+        "DATABASE_URL"
+      ]
     },
     "indexer#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
       "env": [
         "DATABASE_URL",
         "WS_URL",
@@ -39,8 +61,14 @@
       ]
     },
     "start": {
-      "dependsOn": ["build", "^start"],
-      "outputs": ["build/**", "dist/**"]
+      "dependsOn": [
+        "build",
+        "^start"
+      ],
+      "outputs": [
+        "build/**",
+        "dist/**"
+      ]
     },
     "lint": {},
     "dev": {
