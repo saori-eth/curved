@@ -26,6 +26,14 @@ export default async function User({ params }: Props) {
 
   const posts = formatPostQuery(data);
 
+  if (posts.length === 0) {
+    return (
+      <p className="z-20 col-span-3 pt-2 text-center text-slate-500">
+        This user has not posted anything yet.
+      </p>
+    );
+  }
+
   return (
     <div className="w-full space-y-2 pt-2">
       {posts.map((post) => (

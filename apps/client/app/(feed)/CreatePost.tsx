@@ -175,7 +175,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function (compressedFile) {
+          success: function(compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -255,10 +255,12 @@ export function CreatePost() {
     >
       <Dialog.Trigger
         onClick={promptFile}
-        className="flex h-5/6 w-full select-none items-center justify-center space-x-2 rounded-2xl bg-white p-5 text-black shadow-dark drop-shadow transition hover:bg-slate-200 hover:shadow-lg active:scale-95 active:drop-shadow-lg md:w-full md:px-6 md:py-4"
+        className="select-none items-center justify-center space-x-2 rounded-2xl bg-white p-5 shadow-dark drop-shadow transition hover:bg-slate-200 hover:shadow-lg active:scale-95 active:drop-shadow-lg md:flex md:h-full md:w-full md:rounded-xl md:px-6 md:py-4"
       >
-        <span className="mb-2 text-xl">📷</span>
-        <span className="hidden text-xl font-bold md:block">Upload</span>
+        <span className="text-2xl md:mb-2">📷</span>
+        <span className="hidden text-xl font-bold text-black md:block">
+          Upload
+        </span>
       </Dialog.Trigger>
 
       <DialogContent title="Create Post" disabled={closeDisabled}>
@@ -269,11 +271,10 @@ export function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[700px] w-full rounded-lg object-contain transition ${
-                imageDisabled
+              className={`max-h-[700px] w-full rounded-lg object-contain transition ${imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
-              }`}
+                }`}
               alt="Upload preview"
             />
           ) : (
@@ -286,9 +287,8 @@ export function CreatePost() {
             maxLength={MAX_CAPTION_LENGTH}
             placeholder="Add a caption..."
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
-              captionDisabled ? "opacity-50" : ""
-            }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${captionDisabled ? "opacity-50" : ""
+              }`}
           />
 
           <div className="flex justify-center">

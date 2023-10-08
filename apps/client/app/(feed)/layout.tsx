@@ -1,3 +1,4 @@
+import { CreatePost } from "./CreatePost";
 import { FeedButton } from "./FeedButton";
 
 interface Props {
@@ -13,6 +14,10 @@ export default function FeedLayout({ children }: Props) {
       </div>
 
       <div className="w-full pt-12 md:pt-2">{children}</div>
+
+      <div className="fixed bottom-20 right-2 z-50 md:hidden">
+        <CreatePost />
+      </div>
     </div>
   );
 }

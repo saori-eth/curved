@@ -65,13 +65,15 @@ export function LoadMore({ fetchType }: Props) {
       ref={ref}
       className="group block w-full select-none space-y-2 rounded-xl bg-slate-800 transition"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-3">
         <div className="flex items-center space-x-2">
           <div className="h-8 w-8 animate-pulse rounded-full bg-slate-700" />
         </div>
       </div>
 
-      <div className="relative aspect-square w-full animate-pulse rounded-lg bg-slate-700"></div>
+      <div className="px-3">
+        <div className="relative aspect-square w-full animate-pulse rounded-lg bg-slate-700"></div>
+      </div>
     </div>
   );
 }
