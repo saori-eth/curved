@@ -1,17 +1,6 @@
 export const CURVED_ABI = [
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_protocolFeeDestination",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_protocolFeePercent",
-        type: "uint256",
-      },
-    ],
+    inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -749,6 +738,19 @@ export const CURVED_ABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "royaltyFeePercent",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -788,6 +790,19 @@ export const CURVED_ABI = [
       },
     ],
     name: "setProtocolFeePercent",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_royaltyFeePercent",
+        type: "uint256",
+      },
+    ],
+    name: "setRoyaltyFeePercent",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -966,12 +981,12 @@ export const CURVED_ABI = [
         type: "address",
       },
     ],
-    name: "userEthContributed",
+    name: "userNetEthContributed",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "int256",
         name: "",
-        type: "uint256",
+        type: "int256",
       },
     ],
     stateMutability: "view",
