@@ -36,3 +36,10 @@ next-env.d.ts
 .turbo
 
 apps/indexer/src/abi/Curved.json
+
+apps/client/public/sw.js
+apps/client/public/workbox-*.js
+apps/client/public/worker-*.js
+apps/client/public/sw.js.map
+apps/client/public/workbox-*.js.map
+apps/client/public/worker-*.js.map
