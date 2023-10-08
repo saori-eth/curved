@@ -13,8 +13,8 @@ export async function TwitterLink({ username }: Props) {
     return null;
   }
 
-  async function connectTwitter() {
-    const res = await fetch("/api/auth/methods/twitter/connect");
+  function connectTwitter() {
+    fetch("/api/auth/methods/twitter/connect");
   }
 
   return (
