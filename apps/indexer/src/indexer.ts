@@ -30,6 +30,7 @@ export class Indexer {
       CurveABI.abi,
       this.provider,
     );
+    console.log(`Indexer listening to ${CONTRACT_ADDRESS} on ${WS_URL}...`);
     this.start();
   }
 

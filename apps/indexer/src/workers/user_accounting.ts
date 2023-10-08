@@ -110,3 +110,5 @@ const handleMessage = async (event: any) => {
 parentPort.on("message", async (event: any) => {
   queue.add(() => handleMessage(event));
 });
+
+console.log(`Worker ${process.pid} started (user_accounting)`);
