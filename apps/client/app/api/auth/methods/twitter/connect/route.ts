@@ -30,5 +30,12 @@ export async function GET() {
     value: state,
   });
 
+  url.searchParams.set(
+    "redirect_uri",
+    "https://yuyu.social/api/auth/methods/twitter/callback",
+  );
+
+  url.searchParams.set("scope", "users.read");
+
   return NextResponse.redirect(url);
 }
