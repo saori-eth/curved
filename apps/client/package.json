@@ -12,6 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "~3.418.0",
     "@aws-sdk/s3-request-presigner": "~3.418.0",
+    "@ducanh2912/next-pwa": "^9.7.1",
     "@lucia-auth/adapter-mysql": "^2.1.0",
     "@lucia-auth/oauth": "^3.3.0",
     "@planetscale/database": "^1.11.0",
