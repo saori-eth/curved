@@ -38,6 +38,8 @@ export async function GET(req: NextRequest) {
       throw new Error("Invalid state");
     }
 
+    console.log("Code", code);
+
     const twitter = await twitterAuth.validateCallback(
       code,
       codeVerifierCookie.value,
