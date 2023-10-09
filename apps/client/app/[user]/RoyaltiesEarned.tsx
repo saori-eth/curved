@@ -11,7 +11,7 @@ interface Props {
 export async function RoyaltiesEarned({ address }: Props) {
   const session = await getSession();
 
-  if (!(session && session.user.address === address)) {
+  if (session?.user.address !== address) {
     return null;
   }
 

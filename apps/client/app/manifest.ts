@@ -43,7 +43,7 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
     name: "yuyu.social",
-    short_name: "yuyu.social",
+    short_name: "yuyu",
     start_url: "/",
     theme_color: "#075985",
   };

@@ -167,6 +167,9 @@ export const user = mysqlTable(
     address: char("address", { length: ETH_ADDRESS_LENGTH }).notNull(),
     avatarId: varchar("avatarId", { length: PUBLIC_ID_LENGTH }),
     id: varchar("id", { length: USER_ID_LENGTH }).primaryKey(),
+    twitterUsername: varchar("twitterUsername", {
+      length: 15,
+    }).unique(),
     username: varchar("username", { length: MAX_USERNAME_LENGTH }).notNull(),
   },
   (table) => ({

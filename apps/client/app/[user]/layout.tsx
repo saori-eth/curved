@@ -64,12 +64,13 @@ export default async function UserLayout({ children, params }: Props) {
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
         <Username username={profile.username} />
-        <TwitterLink username={profile.username} />
       </div>
 
+      <TwitterLink username={profile.username} />
+
       <div className="flex h-8 items-stretch">
-        <FollowButton address={profile.address} username={profile.username} />
         <RoyaltiesEarned address={profile.address} />
+        <FollowButton address={profile.address} username={profile.username} />
       </div>
 
       <div className="flex h-9 items-stretch space-x-2 pt-1.5">
