@@ -31,9 +31,19 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/images/apple-touch-icon.png",
         type: "image/png",
       },
+      {
+        sizes: "256x256",
+        src: "/images/icon-256x256.png",
+        type: "image/png",
+      },
+      {
+        sizes: "384x384",
+        src: "/images/icon-384x384.png",
+        type: "image/png",
+      },
     ],
     name: "yuyu.social",
-    short_name: "yuyu",
+    short_name: "yuyu.social",
     start_url: "/",
     theme_color: "#075985",
   };
