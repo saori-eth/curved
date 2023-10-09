@@ -63,19 +63,17 @@ export function RepostButton({ post }: Props) {
       <DialogTrigger
         title="Repost"
         disabled={disabled}
-        className={`group z-40 flex items-center space-x-1 rounded-full px-1 transition ${
-          post.repostCount ? "" : "aspect-square"
-        } ${disabled ? "opacity-50" : "hover:text-sky-300"}`}
+        className={`group z-40 flex items-center space-x-1 rounded-full px-1 transition ${post.repostCount ? "" : "aspect-square"
+          } ${disabled ? "opacity-50" : "hover:text-sky-300"}`}
       >
         {post.repostCount ? (
           <span className="text-sm">{post.repostCount}</span>
         ) : null}
         <span
-          className={`flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition ${
-            disabled
+          className={`flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition ${disabled
               ? ""
               : "group-hover:bg-slate-600 group-hover:text-sky-300 group-active:bg-slate-600"
-          }`}
+            }`}
         >
           <BiRepost />
         </span>
@@ -106,9 +104,8 @@ export function RepostButton({ post }: Props) {
               placeholder="Add a comment..."
               maxLength={MAX_CAPTION_LENGTH}
               rows={2}
-              className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
-                disabled ? "opacity-50" : ""
-              }`}
+              className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${disabled ? "opacity-50" : ""
+                }`}
             />
 
             <div className="flex justify-center">

@@ -253,14 +253,16 @@ export function CreatePost() {
         setOpen(o);
       }}
     >
-      <Dialog.Trigger
-        onClick={promptFile}
-        className="select-none items-center justify-center space-x-2 rounded-2xl bg-white p-5 shadow-dark drop-shadow transition hover:bg-slate-200 hover:shadow-lg active:scale-95 active:drop-shadow-lg md:flex md:h-full md:w-full md:rounded-xl md:px-6 md:py-4"
-      >
-        <span className="text-2xl md:mb-2">📷</span>
-        <span className="hidden text-xl font-bold text-black md:block">
-          Upload
-        </span>
+      <Dialog.Trigger onClick={promptFile} asChild>
+        <button
+          draggable={false}
+          className="flex h-full w-full select-none items-center justify-center rounded-xl py-4 opacity-30 transition hover:opacity-100 active:scale-95 md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:bg-slate-100"
+        >
+          <span className="text-2xl md:hidden md:w-9">📷</span>
+          <span className="hidden w-full justify-center text-xl font-bold md:flex">
+            Upload
+          </span>
+        </button>
       </Dialog.Trigger>
 
       <DialogContent title="Create Post" disabled={closeDisabled}>
