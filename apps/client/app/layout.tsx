@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Gemunu_Libre } from "next/font/google";
 
+import { env } from "@/lib/env.mjs";
+
 import { Sidebar } from "./Sidebar";
 
 const ClientWrapper = dynamic(() => import("./ClientWrapper"));
@@ -19,6 +21,7 @@ const description = "Welcome to yuyu.social!";
 export const metadata: Metadata = {
   applicationName: title,
   description,
+  metadataBase: new URL(env.DEPLOYED_URL),
   openGraph: {
     description,
     title,
