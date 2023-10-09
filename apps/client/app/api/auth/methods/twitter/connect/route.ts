@@ -4,6 +4,11 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/getSession";
 import { twitterAuth } from "@/lib/auth/lucia";
 
+import {
+  TWITTER_CODE_VERIFIER_COOKIE,
+  TWITTER_STATE_COOKIE,
+} from "../constants";
+
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -17,7 +22,7 @@ export async function GET() {
   cookies().set({
     httpOnly: true,
     maxAge: 60 * 60,
-    name: "twitter-code-verifier",
+    name: TWITTER_CODE_VERIFIER_COOKIE,
     path: "/",
     value: codeVerifier,
   });
@@ -25,7 +30,7 @@ export async function GET() {
   cookies().set({
     httpOnly: true,
     maxAge: 60 * 60,
-    name: "twitter-state",
+    name: TWITTER_STATE_COOKIE,
     path: "/",
     value: state,
   });

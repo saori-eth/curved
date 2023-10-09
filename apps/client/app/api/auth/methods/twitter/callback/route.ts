@@ -7,31 +7,36 @@ import { getSession } from "@/lib/auth/getSession";
 import { twitterAuth } from "@/lib/auth/lucia";
 import { db } from "@/lib/db";
 
+import {
+  TWITTER_CODE_VERIFIER_COOKIE,
+  TWITTER_STATE_COOKIE,
+} from "../constants";
+
 export async function GET(req: NextRequest) {
   const session = await getSession();
   if (!session) {
-    console.log("Twitter Callback - No session");
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const code = req.nextUrl.searchParams.get("code");
-  const state = req.nextUrl.searchParams.get("state");
-
-  const stateCookie = cookies().get("twitter-state");
-  const storedState = stateCookie?.value;
-
-  if (!code || !state || !storedState || state !== storedState) {
-    console.log("Twitter Callback - Invalid state");
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const codeVerifierCookie = cookies().get("twitter-code-verifier");
-  if (!codeVerifierCookie) {
-    console.log("Twitter Callback - No code verifier");
     return new Response("Unauthorized", { status: 401 });
   }
 
   try {
+    const code = req.nextUrl.searchParams.get("code");
+    const state = req.nextUrl.searchParams.get("state");
+    const stateCookie = cookies().get(TWITTER_STATE_COOKIE);
+    const codeVerifierCookie = cookies().get(TWITTER_CODE_VERIFIER_COOKIE);
+
+    const storedState = stateCookie?.value;
+
+    if (
+      !code ||
+      !state ||
+      !codeVerifierCookie ||
+      !storedState ||
+      state !== storedState
+    ) {
+      console.log("Invalid state", { state, storedState });
+      throw new Error("Invalid state");
+    }
+
     const twitter = await twitterAuth.validateCallback(
       code,
       codeVerifierCookie.value,
@@ -45,10 +50,9 @@ export async function GET(req: NextRequest) {
         twitterUsername: twitter.twitterUser.username,
       })
       .where(eq(user.id, session.user.userId));
-
-    return NextResponse.redirect(`/@${session.user.username}`);
   } catch (e) {
     console.error(e);
-    return new Response("Unauthorized", { status: 401 });
   }
+
+  return NextResponse.redirect(`/@${session.user.username}`);
 }
