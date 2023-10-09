@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/getSession";
 import { twitterAuth } from "@/lib/auth/lucia";
 import { db } from "@/lib/db";
+import { env } from "@/lib/env.mjs";
 
 import {
   TWITTER_CODE_VERIFIER_COOKIE,
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
       !storedState ||
       state !== storedState
     ) {
-      console.log("Invalid state", { state, storedState });
+      console.error("Invalid state", { state, storedState });
       throw new Error("Invalid state");
     }
 
@@ -54,5 +55,5 @@ export async function GET(req: NextRequest) {
     console.error(e);
   }
 
-  return NextResponse.redirect(`/@${session.user.username}`);
+  return NextResponse.redirect(`${env.DEPLOYED_URL}/@${session.user.username}`);
 }
