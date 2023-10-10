@@ -1,14 +1,13 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { MdEdit } from "react-icons/md";
 
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
 import { FeedButton } from "../(feed)/FeedButton";
 import { FollowButton } from "./FollowButton";
-import { RoyaltiesEarned } from "./RoyaltiesEarned";
-import { TwitterLink } from "./TwitterLink";
-import { UserAvatar } from "./UserAvatar";
-import { Username } from "./Username";
 import { TwitterUsername } from "./TwitterUsername";
+import { UserAvatar } from "./UserAvatar";
 
 export const revalidate = 10;
 
@@ -61,23 +60,28 @@ export default async function UserLayout({ children, params }: Props) {
   }
 
   return (
-    <div className="z-20 col-span-3 flex flex-col items-center space-y-2 py-2">
+    <div className="relative z-20 col-span-3 flex flex-col items-center space-y-2 pb-2 pt-6">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <UserAvatar username={profile.username} avatar={profile.avatar} />
-        <Username username={profile.username} />
+        <h3 className="text-2xl font-bold">{profile.username}</h3>
       </div>
+
+      <Link
+        href="/settings"
+        title="Edit profile"
+        className="absolute right-4 top-2 rounded-full p-1 text-slate-400 transition active:text-white md:right-0 md:top-0 md:hover:text-white"
+      >
+        <MdEdit className="text-xl" />
+      </Link>
 
       <TwitterUsername
         username={profile.username}
         twitterUsername={profile.twitterUsername}
       />
 
-      <div className="flex h-8 items-stretch">
-        <RoyaltiesEarned address={profile.address} />
-        <FollowButton address={profile.address} username={profile.username} />
-      </div>
+      <FollowButton address={profile.address} username={profile.username} />
 
-      <div className="flex h-9 items-stretch space-x-2 pt-1.5">
+      <div className="flex items-center pt-1.5">
         <FeedButton href={`/@${profile.username}`}>Posts</FeedButton>
         <FeedButton href={`/@${profile.username}/collection`}>
           Collection

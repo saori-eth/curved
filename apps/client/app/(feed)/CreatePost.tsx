@@ -256,7 +256,7 @@ export function CreatePost() {
       <Dialog.Trigger onClick={promptFile} asChild>
         <button
           draggable={false}
-          className="flex h-full w-full select-none items-center justify-center rounded-xl py-4 opacity-30 transition hover:opacity-100 active:scale-95 md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:bg-slate-100"
+          className="flex h-full w-full select-none items-center justify-center rounded-xl py-3.5 opacity-30 transition hover:opacity-100 active:scale-95 md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:opacity-90"
         >
           <span className="text-2xl md:hidden md:w-9">📷</span>
           <span className="hidden w-full justify-center text-xl font-bold md:flex">

@@ -14,7 +14,7 @@ export const fetchProfileFromAddress = cache(
   async (address: string): Promise<Profile | null> => {
     try {
       const data = await db.query.user.findFirst({
-        columns: { avatarId: true, username: true, twitterUsername: true },
+        columns: { avatarId: true, twitterUsername: true, username: true },
         where: (row, { eq }) => eq(row.address, address),
       });
 
@@ -24,8 +24,8 @@ export const fetchProfileFromAddress = cache(
 
       return {
         address,
-        twitterUsername: data.twitterUsername,
         avatar: getAvatarUrl(data.avatarId),
+        twitterUsername: data.twitterUsername,
         username: data.username,
       };
     } catch (e) {
