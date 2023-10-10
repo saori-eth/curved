@@ -27,10 +27,10 @@ export function RewardsLink() {
   return (
     <Link
       href="/rewards"
-      className="flex items-center space-x-0.5 rounded-full border border-slate-600 px-3 py-0.5 text-sm font-semibold text-slate-400 transition active:bg-slate-700"
+      className="flex items-center space-x-0.5 rounded-full border border-slate-600 px-3 py-0.5 text-sm font-semibold transition hover:border-slate-500 hover:bg-slate-700 active:opacity-90"
     >
       <span>{earned ? formatUnits(earned) : "0.00"}</span>
-      <span>YUYU</span>
+      <span className="text-slate-400">YUYU</span>
     </Link>
   );
 }

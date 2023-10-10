@@ -42,17 +42,19 @@ export function Yuyu({ address }: Props) {
   return (
     <Stat title="Claimable rewards" value={value} currency={currency}>
       <div className="absolute inset-y-0 right-4 flex items-center pt-2">
-        <SubmitButton disabled={disabled} onClick={claim}>
+        <SubmitButton title="Claim rewards" disabled={disabled} onClick={claim}>
           Claim
         </SubmitButton>
       </div>
 
       {methodError ? (
-        <p className="text-red-500">Error claiming rewards.</p>
+        <p className="text-center text-red-500">Error claiming rewards.</p>
       ) : isWaitingForTransaction ? (
-        <p className="text-slate-500">Waiting for transaction...</p>
+        <p className="text-center text-slate-400">Waiting for transaction...</p>
       ) : isTransactionSuccess ? (
-        <p className="text-sky-400">Successfully claimed rewards! 🎉</p>
+        <p className="text-center text-sky-400">
+          Successfully claimed rewards! 🎉
+        </p>
       ) : null}
     </Stat>
   );

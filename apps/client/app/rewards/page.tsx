@@ -7,12 +7,13 @@ export default async function Rewards() {
   const session = await getSession();
 
   return (
-    <div className="z-20 col-span-3 mx-4 space-y-8 pt-8">
+    <div className="z-20 col-span-3 mx-4 space-y-8 pt-8 md:pt-2">
       <h1 className="text-center text-5xl">🎁</h1>
 
       <div className="flex items-center justify-center">
         <p className="text-center text-slate-400">
-          Creators earn ETH royalties and YUYU tokens whenever their content is
+          Creators earn <span className="text-white">ETH</span> royalties and{" "}
+          <span className="text-white">YUYU</span> tokens when their content is
           traded.
         </p>
       </div>
