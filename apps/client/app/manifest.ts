@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    background_color: "#075985",
+    background_color: "#1e293b",
     description: "An awesome social network",
     display: "standalone",
     icons: [
@@ -45,6 +45,6 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "yuyu.social",
     short_name: "yuyu",
     start_url: "/",
-    theme_color: "#075985",
+    theme_color: "#1e293b",
   };
 }

@@ -45,6 +45,6 @@ const NotificationWrapper = ({ children }: Props) => {
     if (!address) return;
     sub();
     listenToChanges();
-  }, []);
+  }, [address]);
   return <>{children}</>;
 };
