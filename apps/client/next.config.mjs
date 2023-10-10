@@ -1,6 +1,5 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 
-
 /**
  * @template {import('next').NextConfig} T
  * @param {T} config - A generic parameter that flows through to the return type
@@ -9,10 +8,11 @@ import withPWAInit from "@ducanh2912/next-pwa";
 async function defineNextConfig(config) {
   const plugins = [];
 
-  // if (env.NODE_ENV === "development") {
-  const withPWA = withPWAInit({ dest: "public" });
+  const withPWA = withPWAInit({
+    dest: "public",
+    disable: process.env.NODE_ENV === "development",
+  });
   plugins.push(withPWA);
-  // }
 
   return plugins.reduce((acc, plugin) => plugin(acc), config);
 }
