@@ -26,9 +26,29 @@ function randomColor(index = 0) {
 }
 
 export function AppTitle() {
-  const color1 = randomColor(1);
-  const color2 = randomColor(2);
-  const color3 = randomColor(3);
+  const color1 = randomColor(0);
+
+  let color2: string | undefined;
+  let color3: string | undefined;
+
+  // Pick unique colors
+  let i = 0;
+  while (!color2 || !color3) {
+    i++;
+
+    const color = randomColor(i);
+    if (color === color1 || color === color2 || color === color3) continue;
+
+    if (!color2) {
+      color2 = color;
+      continue;
+    }
+
+    if (!color3) {
+      color3 = color;
+      continue;
+    }
+  }
 
   return (
     <Link href="/" className="w-fit">
