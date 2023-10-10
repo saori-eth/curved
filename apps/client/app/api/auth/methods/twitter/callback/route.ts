@@ -27,14 +27,6 @@ export async function GET(req: NextRequest) {
 
     const storedState = stateCookie?.value;
 
-    console.log("Code", code);
-    console.log("Code verifier", codeVerifierCookie?.value);
-    console.log("State", state);
-    console.log("Stored state", storedState);
-    console.log("Request body", await req.text());
-    console.log("Request headers", JSON.stringify(req.headers, null, 2));
-    console.log("Request cookies", JSON.stringify(req.cookies, null, 2));
-
     if (
       !code ||
       !state ||

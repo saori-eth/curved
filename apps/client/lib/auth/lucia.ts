@@ -10,6 +10,8 @@ import {
 import { lucia } from "lucia";
 import { nextjs } from "lucia/middleware";
 
+import { TWITTER_REDIRECT_URL } from "@/app/api/auth/methods/twitter/constants";
+
 import { planetscaleConnection } from "../db/";
 import { env } from "../env.mjs";
 import { getAvatarUrl } from "../getAvatarUrl";
@@ -45,7 +47,7 @@ export const auth = lucia({
 export const twitterAuth = twitter(auth, {
   clientId: env.TWITTER_CLIENT_ID,
   clientSecret: env.TWITTER_CLIENT_SECRET,
-  redirectUri: "/",
+  redirectUri: TWITTER_REDIRECT_URL,
 });
 
 export type Auth = typeof auth;
