@@ -27,6 +27,11 @@ export async function GET(req: NextRequest) {
 
     const storedState = stateCookie?.value;
 
+    console.log("Code", code);
+    console.log("Code verifier", codeVerifierCookie?.value);
+    console.log("State", state);
+    console.log("Stored state", storedState);
+
     if (
       !code ||
       !state ||
@@ -37,8 +42,6 @@ export async function GET(req: NextRequest) {
       console.error("Invalid state", { state, storedState });
       throw new Error("Invalid state");
     }
-
-    console.log("Code", code);
 
     const twitter = await twitterAuth.validateCallback(
       code,
