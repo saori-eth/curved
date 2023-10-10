@@ -8,6 +8,7 @@ import { RoyaltiesEarned } from "./RoyaltiesEarned";
 import { TwitterLink } from "./TwitterLink";
 import { UserAvatar } from "./UserAvatar";
 import { Username } from "./Username";
+import { TwitterUsername } from "./TwitterUsername";
 
 export const revalidate = 10;
 
@@ -66,7 +67,10 @@ export default async function UserLayout({ children, params }: Props) {
         <Username username={profile.username} />
       </div>
 
-      <TwitterLink username={profile.username} />
+      <TwitterUsername
+        username={profile.username}
+        twitterUsername={profile.twitterUsername}
+      />
 
       <div className="flex h-8 items-stretch">
         <RoyaltiesEarned address={profile.address} />
