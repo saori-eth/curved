@@ -2,12 +2,12 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { MdEdit } from "react-icons/md";
 
+import Avatar from "@/components/Avatar";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
 import { FeedButton } from "../(feed)/FeedButton";
 import { FollowButton } from "./FollowButton";
 import { TwitterUsername } from "./TwitterUsername";
-import { UserAvatar } from "./UserAvatar";
 
 export const revalidate = 10;
 
@@ -62,7 +62,7 @@ export default async function UserLayout({ children, params }: Props) {
   return (
     <div className="relative z-20 col-span-3 flex flex-col items-center space-y-2 pb-2 pt-6">
       <div className="relative flex w-full flex-col items-center space-y-2">
-        <UserAvatar username={profile.username} avatar={profile.avatar} />
+        <Avatar src={profile.avatar} uniqueKey={profile.username} size={128} />
         <h3 className="text-2xl font-bold">{profile.username}</h3>
       </div>
 

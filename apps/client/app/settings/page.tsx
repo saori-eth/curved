@@ -1,6 +1,9 @@
 import { getSession } from "@/lib/auth/getSession";
 
-export default async function Setting() {
+import { LogoutButton } from "./LogoutButton";
+import { ProfileSettings } from "./ProfileSettings";
+
+export default async function Settings() {
   const session = await getSession();
   if (!session) {
     return (
@@ -11,8 +14,17 @@ export default async function Setting() {
   }
 
   return (
-    <div className="z-20 col-span-3 w-full space-y-2 pt-4 md:pt-2">
-      <h1 className="text-center text-2xl font-bold">Settings</h1>
+    <div className="z-20 mx-4 space-y-8 pt-4 md:col-span-3 md:w-full md:pt-2">
+      <h1 className="text-center text-2xl font-bold">Account</h1>
+
+      <ProfileSettings
+        avatar={session.user.avatar}
+        username={session.user.username}
+      />
+
+      <hr className="border-slate-700" />
+
+      <LogoutButton />
     </div>
   );
 }

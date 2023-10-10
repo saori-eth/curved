@@ -5,7 +5,6 @@ import { useState, useTransition } from "react";
 import Avatar from "@/components/Avatar";
 import { cropImage } from "@/lib/cropImage";
 
-import { useAuth } from "../AuthProvider";
 import { getAvatarUpload } from "./getAvatarUpload";
 
 interface Props {
@@ -14,20 +13,11 @@ interface Props {
 }
 
 export function UserAvatar({ username, avatar }: Props) {
-  const { user } = useAuth();
   const [pending, startTransition] = useTransition();
   const [newAvatar, setNewAvatar] = useState<string | null>(null);
 
-  const isCurrentUser = user?.username === username;
-
-  if (!isCurrentUser) {
-    return <Avatar size={128} src={avatar} uniqueKey={username} />;
-  }
-
-  const disabled = pending || !user;
-
   function handleUpload() {
-    if (disabled) return;
+    if (pending) return;
 
     const input = document.createElement("input");
     input.type = "file";
@@ -79,11 +69,10 @@ export function UserAvatar({ username, avatar }: Props) {
     <button
       title="Upload avatar"
       onClick={handleUpload}
-      className={`flex items-center justify-center rounded-full bg-slate-900 transition hover:opacity-80 active:opacity-75 ${
-        disabled ? "cursor-default opacity-50" : ""
-      }`}
+      className={`flex items-center justify-center rounded-full bg-slate-900 transition hover:opacity-80 active:opacity-75 ${pending ? "cursor-default opacity-50" : ""
+        }`}
     >
-      <Avatar size={128} src={newAvatar ?? avatar} uniqueKey={username} />
+      <Avatar size={96} src={newAvatar ?? avatar} uniqueKey={username} />
     </button>
   );
 }

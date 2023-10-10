@@ -21,14 +21,14 @@ export type AuthContextValue = {
   loading: boolean; // Separate loading state for transitions
   user: User | null;
   login: (args: AuthData) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => Promise<boolean>;
 };
 
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => {},
-    logout: async () => {},
+    login: async () => { },
+    logout: async () => false,
     status: "loading",
     user: null,
   });
@@ -81,7 +81,7 @@ export default function AuthProvider({ children }: Props) {
   );
 
   const logout = useCallback(async () => {
-    if (status === "unauthenticated" || status === "loading") return;
+    if (status === "unauthenticated" || status === "loading") return false;
 
     setStatus("loading");
 
@@ -98,9 +98,11 @@ export default function AuthProvider({ children }: Props) {
 
       setStatus("unauthenticated");
       setUser(null);
+
+      return true;
     } catch (err) {
       setStatus("authenticated");
-      throw err;
+      return false;
     }
   }, [status, disconnect, setStatus, setUser, router]);
 
