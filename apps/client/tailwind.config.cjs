@@ -15,6 +15,7 @@ module.exports = {
       },
       boxShadow: {
         dark: "0 2px 12px 0 rgb(0 0 0 / 0.2)",
+        top: "0 -2px 12px 0 rgb(0 0 0 / 0.2)",
       },
       dropShadow: {
         dark: "0 2px 16px rgba(0, 0, 0, 0.8)",

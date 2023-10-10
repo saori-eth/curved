@@ -175,7 +175,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function (compressedFile) {
+          success: function(compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -256,7 +256,7 @@ export function CreatePost() {
       <Dialog.Trigger onClick={promptFile} asChild>
         <button
           draggable={false}
-          className="flex h-full w-full select-none items-center justify-center rounded-xl py-3.5 opacity-30 transition hover:opacity-100 active:scale-95 md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:opacity-90"
+          className="flex h-full w-full select-none items-center justify-center rounded-xl py-3.5 opacity-50 transition hover:opacity-100 active:scale-95 md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:opacity-90"
         >
           <span className="text-2xl md:hidden md:w-9">📷</span>
           <span className="hidden w-full justify-center text-xl font-bold md:flex">
@@ -273,11 +273,10 @@ export function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[700px] w-full rounded-lg object-contain transition ${
-                imageDisabled
+              className={`max-h-[700px] w-full rounded-lg object-contain transition ${imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
-              }`}
+                }`}
               alt="Upload preview"
             />
           ) : (
@@ -290,9 +289,8 @@ export function CreatePost() {
             maxLength={MAX_CAPTION_LENGTH}
             placeholder="Add a caption..."
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
-              captionDisabled ? "opacity-50" : ""
-            }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${captionDisabled ? "opacity-50" : ""
+              }`}
           />
 
           <div className="flex justify-center">
