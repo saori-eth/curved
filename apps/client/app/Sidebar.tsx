@@ -17,7 +17,7 @@ export function Sidebar() {
   return (
     <div className="md:fixed md:inset-0 md:mx-4">
       <div className="max-w-content fixed inset-x-0 bottom-0 z-50 md:absolute md:inset-0 md:mx-auto md:grid md:grid-cols-7 md:gap-4">
-        <ul className="relative flex rounded-t-xl bg-slate-800 pb-2 shadow-top md:col-span-2 md:block md:h-full md:space-x-0 md:space-y-2 md:p-0 md:shadow-none">
+        <ul className="relative flex rounded-t-xl bg-slate-800 pb-1.5 shadow-top md:col-span-2 md:block md:h-full md:space-x-0 md:space-y-2 md:p-0 md:shadow-none">
           <div className="mt-1 hidden h-14 items-center pl-4 md:flex">
             <AppTitle />
           </div>
@@ -40,7 +40,7 @@ export function Sidebar() {
                 title="Profile"
                 icon={
                   <Avatar
-                    size={32}
+                    size={36}
                     src={user.avatar}
                     uniqueKey={user.username}
                   />

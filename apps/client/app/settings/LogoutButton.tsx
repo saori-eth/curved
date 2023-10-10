@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { useAuth } from "../AuthProvider";
@@ -9,7 +8,6 @@ export function LogoutButton() {
   const [pending, startTransition] = useTransition();
 
   const { logout } = useAuth();
-  const router = useRouter();
 
   function handleLogout() {
     if (pending) return;
@@ -17,7 +15,7 @@ export function LogoutButton() {
     startTransition(async () => {
       const success = await logout();
       if (success) {
-        router.push("/");
+        window.location.href = "/";
       }
     });
   }
