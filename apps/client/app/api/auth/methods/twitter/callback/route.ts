@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
     console.log("Code verifier", codeVerifierCookie?.value);
     console.log("State", state);
     console.log("Stored state", storedState);
+    console.log("Request body", await req.text());
 
     if (
       !code ||
