@@ -25,11 +25,11 @@ export async function TwitterUsername({ username, twitterUsername }: Props) {
       href={href}
       target={target}
       rel="noopener noreferrer"
-      title="View on Twitter"
+      title={twitterUsername ? "View on Twitter" : undefined}
       className="flex items-center space-x-1 rounded-full bg-slate-900 px-3 font-bold transition hover:bg-slate-950 active:opacity-90"
     >
       <RiTwitterXFill className="text-sm" />
-      <span>{twitterUsername}</span>
+      <span>{twitterUsername ?? "Link Twitter"}</span>
     </a>
   );
 }
