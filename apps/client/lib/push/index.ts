@@ -1,7 +1,25 @@
 "use client";
 export const sub = async () => {
   if ("serviceWorker" in navigator) {
-    await navigator.serviceWorker.register("/sw.js");
+    const registration = await navigator.serviceWorker.register("/sw.js");
+
+    registration.onupdatefound = () => {
+      const installingWorker = registration.installing;
+
+      if (installingWorker == null) {
+        return;
+      }
+
+      installingWorker.onstatechange = () => {
+        if (installingWorker.state === "installed") {
+          if (navigator.serviceWorker.controller) {
+            console.log("New content is available; please refresh.");
+          } else {
+            console.log("Content is cached for offline use.");
+          }
+        }
+      };
+    };
   }
 
   const permissionResult = await Notification.requestPermission();
