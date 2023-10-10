@@ -11,7 +11,7 @@ export default async function Setting() {
   }
 
   return (
-    <div className="z-20 col-span-3 w-full space-y-2 pt-2">
+    <div className="z-20 col-span-3 w-full space-y-2 pt-4 md:pt-2">
       <h1 className="text-center text-2xl font-bold">Settings</h1>
     </div>
   );

@@ -1,73 +1,32 @@
-"use client";
+import { getSession } from "@/lib/auth/getSession";
 
-import { SubmitButton } from "@/components/SubmitButton";
-import { useRewards } from "@/hooks/useRewards";
-import { formatUnits } from "@/lib/utils";
+import { Royalties } from "./Royalties";
+import { Yuyu } from "./Yuyu";
 
-import { useAuth } from "../AuthProvider";
-
-export default function Post() {
-  const { user } = useAuth();
-  const { read, write } = useRewards(user?.address);
-
-  const { earned, dataLoading, dataError } = read;
-  const {
-    getReward,
-    isTransactionSuccess,
-    isWaitingForTransaction,
-    methodLoading,
-    methodError,
-  } = write;
-
-  const disabled =
-    !user || !getReward || methodLoading || dataLoading || dataError;
-
-  function claim() {
-    if (disabled) return;
-    getReward();
-  }
+export default async function Rewards() {
+  const session = await getSession();
 
   return (
-    <div className="z-20 col-span-3 mx-4 space-y-2 pt-4">
+    <div className="z-20 col-span-3 mx-4 space-y-8 pt-8">
       <h1 className="text-center text-5xl">🎁</h1>
-      <h2 className="text-center text-3xl font-bold">Your Rewards</h2>
 
-      <div className="flex flex-col justify-center space-y-4 pt-2">
-        <div className="rounded-xl border border-slate-400 py-6">
-          {dataLoading ? (
-            <p className="text-center text-lg">Loading...</p>
-          ) : dataError ? (
-            <p className="text-center text-lg">Error loading rewards.</p>
-          ) : (
-            <p className="text-center text-lg">
-              <span className="font-bold">{formatUnits(earned ?? 0n)} </span>
-              <span className="text-slate-400">YUYU</span>
-            </p>
-          )}
-        </div>
-
-        <div className="mx-auto">
-          <SubmitButton disabled={disabled} onClick={claim}>
-            Claim
-          </SubmitButton>
-        </div>
-
-        {!user ? (
-          <p className="text-center text-slate-500">
-            You must be signed in to claim rewards.
-          </p>
-        ) : methodError ? (
-          <p className="text-center text-red-500">Error claiming rewards.</p>
-        ) : isWaitingForTransaction ? (
-          <p className="text-center text-slate-500">
-            Waiting for transaction...
-          </p>
-        ) : isTransactionSuccess ? (
-          <p className="text-center text-sky-400">
-            Successfully claimed rewards! 🎉
-          </p>
-        ) : null}
+      <div className="flex items-center justify-center">
+        <p className="text-center text-slate-400">
+          Creators earn ETH royalties and YUYU tokens whenever their content is
+          traded.
+        </p>
       </div>
+
+      {session ? (
+        <div className="space-y-4">
+          <Royalties address={session.user.address} />
+          <Yuyu address={session.user.address} />
+        </div>
+      ) : (
+        <p className="text-center text-slate-400">
+          You must be logged in to view your rewards.
+        </p>
+      )}
     </div>
   );
 }

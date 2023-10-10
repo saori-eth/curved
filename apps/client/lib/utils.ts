@@ -1,8 +1,8 @@
 import { formatEther } from "viem";
 
-export const formatUnits = (value: bigint, decimals?: number) => {
+export const formatUnits = (value: bigint, decimals = 2) => {
   const ethValue = formatEther(value);
-  const formatted = Number(ethValue).toFixed(decimals || 2);
+  const formatted = Number(ethValue).toFixed(decimals);
   return formatted;
 };
 

@@ -24,6 +24,7 @@ export const useRewards = (address: `0x${string}` | undefined) => {
     args: address ? [address] : undefined,
     enabled: Boolean(address),
     functionName: "earned",
+    suspense: true,
     watch: true,
   });
 

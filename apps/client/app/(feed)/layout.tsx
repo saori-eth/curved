@@ -1,8 +1,6 @@
-import { Quicksand } from "next/font/google";
-import Link from "next/link";
-
-import { FeedButton } from "./FeedButton";
 import { AppTitle } from "../AppTitle";
+import { FeedButton } from "./FeedButton";
+import { RewardsLink } from "./RewardsLink";
 
 interface Props {
   children: React.ReactNode;
@@ -14,11 +12,15 @@ export default function FeedLayout({ children }: Props) {
       <div className="fixed top-0 z-50 w-full bg-slate-800/95 px-3 py-2 shadow backdrop-blur-lg md:h-16 md:w-1/2 md:py-0 md:shadow-none">
         <div className="md:hidden">
           <AppTitle />
-        </div >
+        </div>
 
         <div className="hidden h-full md:flex md:items-center md:justify-center">
           <FeedButton href="/">Latest</FeedButton>
           <FeedButton href="/following">Following</FeedButton>
+        </div>
+
+        <div className="absolute right-3 top-0 flex h-full items-center md:hidden">
+          <RewardsLink />
         </div>
       </div>
 
