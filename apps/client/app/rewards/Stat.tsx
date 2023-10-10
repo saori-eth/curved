@@ -14,7 +14,7 @@ export function Stat({ title, value, currency, children }: Props) {
         <span className="text-xl font-semibold leading-snug">
           {value ? value : "0.00"}
         </span>
-        <span className="text-slate-100">{currency}</span>
+        <span className="font-semibold">{currency}</span>
       </p>
 
       {children}

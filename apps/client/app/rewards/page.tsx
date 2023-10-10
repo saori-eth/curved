@@ -12,9 +12,9 @@ export default async function Rewards() {
 
       <div className="flex items-center justify-center">
         <p className="text-center text-slate-400">
-          Creators earn <span className="text-white">ETH</span> royalties and{" "}
-          <span className="text-white">YUYU</span> tokens when their content is
-          traded.
+          Creators earn <span className="font-semibold text-white">ETH</span>{" "}
+          royalties and <span className="font-semibold text-white">YUYU</span>{" "}
+          tokens when their content is traded.
         </p>
       </div>
 
