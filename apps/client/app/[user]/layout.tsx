@@ -79,9 +79,11 @@ export default async function UserLayout({ children, params }: Props) {
         twitterUsername={profile.twitterUsername}
       />
 
-      <FollowButton address={profile.address} username={profile.username} />
+      <div className="py-1.5">
+        <FollowButton address={profile.address} username={profile.username} />
+      </div>
 
-      <div className="flex items-center pt-1.5">
+      <div className="flex items-center">
         <FeedButton href={`/@${profile.username}`}>Posts</FeedButton>
         <FeedButton href={`/@${profile.username}/collection`}>
           Collection

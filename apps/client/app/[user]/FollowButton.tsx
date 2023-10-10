@@ -71,17 +71,15 @@ export async function FollowButton({ address, username }: Props) {
       <button
         type="submit"
         disabled={disabled}
-        className={`group w-24 rounded-full border ${
-          isFollowing
+        className={`group w-24 rounded-full border py-1 ${isFollowing
             ? "border-slate-400"
             : "border-transparent bg-white text-slate-900"
-        } ${
-          disabled
+          } ${disabled
             ? "opacity-50"
             : isFollowing
-            ? "transition-transform hover:border-amber-500 hover:bg-amber-950/50 hover:text-amber-500 active:scale-95"
-            : "transition hover:text-slate-900 hover:opacity-90 active:scale-95"
-        }`}
+              ? "transition-transform hover:border-amber-500 hover:bg-amber-950/50 hover:text-amber-500 active:scale-95"
+              : "transition hover:text-slate-900 hover:opacity-90 active:scale-95"
+          }`}
       >
         {isFollowing ? (
           disabled ? (
