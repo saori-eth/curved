@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
     if (owner) {
       sendNotification(owner, {
         body: `${session.user.username} reposted your post`,
-        icon: "/images/favicon-32x32.png",
+        icon: "/images/android-chrome-192x192.png",
         title: "New Repost",
         url: `/post/${newPostId}`,
       });

@@ -3,6 +3,7 @@
     "paths": {
       "@/*": ["./*"]
     },
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "plugins": [
       {
         "name": "next"
