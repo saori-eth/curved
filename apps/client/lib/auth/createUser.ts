@@ -14,7 +14,8 @@ export async function createUser({
   const data = await auth.createUser({
     attributes: {
       address,
-      avatarId: "",
+      avatarId: null,
+      twitterUsername: null,
       username: nanoidLowercase(10),
     },
     key: {

@@ -34,7 +34,6 @@ export async function GET(req: NextRequest) {
       !storedState ||
       state !== storedState
     ) {
-      console.error("Invalid state", { state, storedState });
       throw new Error("Invalid state");
     }
 

@@ -7,7 +7,7 @@ interface Props {
 export async function TwitterLink({ username }: Props) {
   const session = await getSession();
 
-  if (session?.user.username !== username) {
+  if (session?.user.username !== username || session.user.twitterUsername) {
     return null;
   }
 

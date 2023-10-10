@@ -6,7 +6,6 @@ import { twitterAuth } from "@/lib/auth/lucia";
 
 import {
   TWITTER_CODE_VERIFIER_COOKIE,
-  TWITTER_REDIRECT_URL,
   TWITTER_STATE_COOKIE,
 } from "../constants";
 
@@ -35,10 +34,6 @@ export async function GET() {
     path: "/",
     value: state,
   });
-
-  url.searchParams.set("redirect_uri", TWITTER_REDIRECT_URL);
-
-  url.searchParams.set("scope", "users.read");
 
   return NextResponse.redirect(url);
 }

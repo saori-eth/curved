@@ -10,8 +10,6 @@ import {
 import { lucia } from "lucia";
 import { nextjs } from "lucia/middleware";
 
-import { TWITTER_REDIRECT_URL } from "@/app/api/auth/methods/twitter/constants";
-
 import { planetscaleConnection } from "../db/";
 import { env } from "../env.mjs";
 import { getAvatarUrl } from "../getAvatarUrl";
@@ -34,6 +32,7 @@ export const auth = lucia({
       address: data.address as `0x${string}`,
       avatar: getAvatarUrl(data.avatarId),
       avatarId: data.avatarId,
+      twitterUsername: data.twitterUsername,
       username: data.username,
     };
   },
@@ -47,7 +46,8 @@ export const auth = lucia({
 export const twitterAuth = twitter(auth, {
   clientId: env.TWITTER_CLIENT_ID,
   clientSecret: env.TWITTER_CLIENT_SECRET,
-  redirectUri: TWITTER_REDIRECT_URL,
+  redirectUri: "https://yuyu.social/api/auth/methods/twitter/callback",
+  scope: ["users.read"],
 });
 
 export type Auth = typeof auth;
