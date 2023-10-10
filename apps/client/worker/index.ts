@@ -1,7 +1,7 @@
 export {};
 declare let self: ServiceWorkerGlobalScope;
 
-//@ts-ignore
+//@ts-expect-error
 self.__WB_DISABLE_DEV_LOGS = true;
 
 // Install service worker

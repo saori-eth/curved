@@ -1,6 +1,5 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 
-import { env } from "./lib/env.mjs";
 
 /**
  * @template {import('next').NextConfig} T
