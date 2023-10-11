@@ -27,7 +27,7 @@ export type AuthContextValue = {
 export const AuthContext: Context<AuthContextValue> =
   createContext<AuthContextValue>({
     loading: false,
-    login: async () => { },
+    login: async () => {},
     logout: async () => false,
     status: "loading",
     user: null,

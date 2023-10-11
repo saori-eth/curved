@@ -69,8 +69,9 @@ export function UserAvatar({ username, avatar }: Props) {
     <button
       title="Upload avatar"
       onClick={handleUpload}
-      className={`flex items-center justify-center rounded-full bg-slate-900 transition hover:opacity-80 active:opacity-75 ${pending ? "cursor-default opacity-50" : ""
-        }`}
+      className={`flex items-center justify-center rounded-full bg-slate-900 transition hover:opacity-80 active:opacity-75 ${
+        pending ? "cursor-default opacity-50" : ""
+      }`}
     >
       <Avatar size={96} src={newAvatar ?? avatar} uniqueKey={username} />
     </button>

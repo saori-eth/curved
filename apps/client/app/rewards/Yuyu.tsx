@@ -32,10 +32,10 @@ export function Yuyu({ address }: Props) {
   const value = dataLoading
     ? "..."
     : dataError
-      ? "Error loading rewards."
-      : earned
-        ? formatUnits(earned)
-        : "0.00";
+    ? "Error loading rewards."
+    : earned
+    ? formatUnits(earned)
+    : "0.00";
 
   const currency = dataError ? "" : "YUYU";
 

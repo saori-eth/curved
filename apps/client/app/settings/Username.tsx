@@ -74,12 +74,13 @@ export function Username({ username }: Props) {
           minLength={3}
           maxLength={MAX_USERNAME_LENGTH}
           disabled={disabled}
-          className={`w-52 rounded-lg px-3 py-1 text-xl font-bold md:w-80 ${editing
+          className={`w-52 rounded-lg px-3 py-1 text-xl font-bold md:w-80 ${
+            editing
               ? "bg-slate-900"
               : pending
-                ? "bg-transparent opacity-50"
-                : "bg-transparent"
-            }`}
+              ? "bg-transparent opacity-50"
+              : "bg-transparent"
+          }`}
         />
 
         <button
