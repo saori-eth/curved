@@ -26,7 +26,7 @@ export default async function User({ params }: Props) {
   const data = await postQuery()
     .where(like(post.owner, profile.address))
     .orderBy(desc(post.createdAt))
-    .limit(20);
+    .limit(99);
 
   const repostCounts = await queryPostRepostCounts(data);
 
