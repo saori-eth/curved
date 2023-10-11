@@ -4,6 +4,7 @@ import { LoadMore } from "./LoadMore";
 import { PostFeed } from "./PostFeed";
 
 export const revalidate = 5;
+export const dynamic = "force-dynamic";
 
 export default async function Feed() {
   const posts = await fetchLatestPosts({
