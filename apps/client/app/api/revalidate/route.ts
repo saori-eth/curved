@@ -7,6 +7,8 @@ import { env } from "@/lib/env.mjs";
  * @example /api/revalidate?secret=<token>&path=/api/feed
  */
 export async function POST(request: NextRequest) {
+  console.log("Revalidate request", request.nextUrl.toString());
+
   const secret = request.nextUrl.searchParams.get("secret");
   const path = request.nextUrl.searchParams.get("path");
 
