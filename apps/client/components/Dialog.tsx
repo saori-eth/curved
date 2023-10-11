@@ -24,7 +24,7 @@ export function DialogContent({
           }`}
       >
         <Dialog.Content
-          className={`mx-2 h-fit max-h-[85%] w-full max-w-xl overflow-y-auto rounded-2xl bg-slate-800 p-4 shadow-lg transition md:py-5 ${mounted ? "" : "scale-75 opacity-0"
+          className={`mx-2 h-fit max-h-[95%] w-full max-w-xl overflow-y-auto rounded-2xl bg-slate-800 p-4 shadow-lg transition md:py-5 ${mounted ? "" : "scale-75 opacity-0"
             }`}
         >
           <div className="grid grid-cols-3 md:px-5 md:pb-4">
