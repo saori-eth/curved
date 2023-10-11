@@ -155,11 +155,11 @@ export class Indexer {
         }
 
         await Promise.all(
-          paths.map((path) =>
-            fetch(
-              `${process.env.DEPLOYED_URL}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}&path=${path}`,
-            ),
-          ),
+          paths.map(async (path) => {
+            const url = `${process.env.DEPLOYED_URL}/api/revalidate?secret=${process.env.REVALIDATE_SECRET}&path=${path}`;
+            console.log("Revalidating", url);
+            await fetch(url, { method: "POST" });
+          }),
         );
       });
     } catch (e) {
