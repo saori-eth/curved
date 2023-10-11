@@ -281,7 +281,7 @@ export const pushNotifications = mysqlTable(
       .notNull(),
   },
   (table) => ({
-    uniqueIndex: uniqueIndex("address").on(table.address),
+    uniqueIndex: uniqueIndex("endpoint").on(table.endpoint),
   }),
 );
 
