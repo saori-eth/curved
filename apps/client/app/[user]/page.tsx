@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
-import { formatPostQuery, postQuery } from "@/src/server/postQuery";
+import { postQuery } from "@/src/server/postQuery";
+import {
+  formatRepostCountQuery,
+  queryPostRepostCounts,
+} from "@/src/server/repostCountQuery";
 
 interface Props {
   params: {
@@ -24,7 +28,9 @@ export default async function User({ params }: Props) {
     .orderBy(desc(post.createdAt))
     .limit(20);
 
-  const posts = formatPostQuery(data);
+  const repostCounts = await queryPostRepostCounts(data);
+
+  const posts = formatRepostCountQuery(data, repostCounts);
 
   if (posts.length === 0) {
     return (
