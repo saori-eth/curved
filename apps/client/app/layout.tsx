@@ -17,6 +17,14 @@ const font = Gemunu_Libre({
 
 const title = "yuyu.social";
 const description = "Welcome to yuyu.social!";
+const images = [
+  {
+    height: 512,
+    type: "image/png",
+    url: "/images/android-chrome-512x512.png",
+    width: 512,
+  },
+];
 
 export const metadata: Metadata = {
   applicationName: title,
@@ -24,6 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(env.DEPLOYED_URL),
   openGraph: {
     description,
+    images,
     title,
     type: "website",
   },
@@ -31,6 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     description,
+    images,
     title,
   },
 };

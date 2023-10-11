@@ -273,7 +273,7 @@ export function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[700px] ${imageDisabled
+              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[600px] ${imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
                 }`}
