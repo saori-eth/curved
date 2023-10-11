@@ -175,7 +175,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function(compressedFile) {
+          success: function (compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -184,7 +184,24 @@ export function CreatePost() {
           },
         });
       } else {
-        setFile(file);
+        // its an image. need to draw on canvas to remove exif data
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx?.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) return;
+              setFile(new File([blob], file.name, { type: file.type }));
+            },
+            file.type,
+            1,
+          );
+        };
       }
 
       setUrl("");
@@ -273,10 +290,11 @@ export function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[600px] ${imageDisabled
+              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[600px] ${
+                imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
-                }`}
+              }`}
               alt="Upload preview"
             />
           ) : (
@@ -289,8 +307,9 @@ export function CreatePost() {
             maxLength={MAX_CAPTION_LENGTH}
             placeholder="Add a caption..."
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${captionDisabled ? "opacity-50" : ""
-              }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
+              captionDisabled ? "opacity-50" : ""
+            }`}
           />
 
           <div className="flex justify-center">
