@@ -47,6 +47,18 @@ export function Sidebar() {
                 }
               />
 
+              <span className="hidden md:block">
+                <SidebarButton text="Messages" icon="💬" disabled>
+                  <span className="pl-2">(Coming Soon)</span>
+                </SidebarButton>
+              </span>
+
+              <span className="hidden md:block">
+                <SidebarButton text="Search" icon="🔍" disabled>
+                  <span className="pl-2">(Coming Soon)</span>
+                </SidebarButton>
+              </span>
+
               <span className="hidden pt-4 md:block">
                 <CreatePost />
               </span>
@@ -56,7 +68,7 @@ export function Sidebar() {
               </div>
             </>
           ) : (
-            <SidebarButton onClick={openConnectModal} title="Login" icon="🔑" />
+            <SidebarButton onClick={openConnectModal} text="Login" icon="🔑" />
           )}
         </ul>
       </div>
