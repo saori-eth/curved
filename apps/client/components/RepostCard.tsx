@@ -4,21 +4,14 @@ import { Repost } from "@/src/types/post";
 
 import { PostCard } from "./PostCard";
 import { PostTopBar } from "./PostTopBar";
-import { RepostButton } from "./RepostButton";
 
 interface Props {
   post: Repost;
   layer?: number;
-  disableActions?: boolean;
   disableLink?: boolean;
 }
 
-export function RepostCard({
-  post,
-  layer = 1,
-  disableActions,
-  disableLink,
-}: Props) {
+export function RepostCard({ post, layer = 1, disableLink }: Props) {
   return (
     <>
       <PostTopBar
@@ -48,12 +41,6 @@ export function RepostCard({
           />
         </div>
       ) : null}
-
-      {disableActions ? null : (
-        <div className="flex items-center justify-end space-x-1 px-2 md:px-0">
-          <RepostButton post={post} />
-        </div>
-      )}
     </>
   );
 }

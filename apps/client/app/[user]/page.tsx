@@ -1,5 +1,5 @@
 import { post } from "db";
-import { desc, like } from "drizzle-orm";
+import { and, desc, eq, like } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
@@ -24,7 +24,7 @@ export default async function User({ params }: Props) {
   if (!profile) notFound();
 
   const data = await postQuery()
-    .where(like(post.owner, profile.address))
+    .where(and(like(post.owner, profile.address), eq(post.deleted, false)))
     .orderBy(desc(post.createdAt))
     .limit(99);
 

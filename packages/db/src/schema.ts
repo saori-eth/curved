@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   char,
   datetime,
   index,
@@ -30,6 +31,7 @@ export const post = mysqlTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    deleted: boolean("deleted").default(false).notNull(),
     id: serial("id").primaryKey(),
     owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
     publicId: char("public_id", { length: PUBLIC_ID_LENGTH }).notNull(),

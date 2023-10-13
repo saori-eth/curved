@@ -2,15 +2,13 @@ import { NftPost } from "@/src/types/post";
 
 import { PostImage } from "./PostImage";
 import { PostTopBar } from "./PostTopBar";
-import { RepostButton } from "./RepostButton";
 
 interface Props {
   post: NftPost;
-  disableActions?: boolean;
   disableLink?: boolean;
 }
 
-export function NftPostCard({ post, disableActions, disableLink }: Props) {
+export function NftPostCard({ post, disableLink }: Props) {
   return (
     <>
       <PostTopBar
@@ -26,12 +24,6 @@ export function NftPostCard({ post, disableActions, disableLink }: Props) {
           {post.data.caption}
         </h3>
       ) : null}
-
-      {disableActions ? null : (
-        <div className="flex items-center justify-end space-x-1 px-2 md:px-0">
-          <RepostButton post={post} />
-        </div>
-      )}
     </>
   );
 }

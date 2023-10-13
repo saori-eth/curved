@@ -1,7 +1,7 @@
 "use server";
 
 import { post } from "db";
-import { desc, lte } from "drizzle-orm";
+import { and, desc, eq, lte } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
@@ -31,7 +31,7 @@ export async function fetchLatestPosts(
 
     const data = await postQuery(db)
       .orderBy(desc(post.createdAt))
-      .where(lte(post.createdAt, new Date(start)))
+      .where(and(lte(post.createdAt, new Date(start)), eq(post.deleted, false)))
       .limit(FEED_PAGE_SIZE)
       .offset(page * FEED_PAGE_SIZE);
 

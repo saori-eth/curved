@@ -1,7 +1,7 @@
 "use server";
 
 import { post } from "db";
-import { and, desc, inArray, lte } from "drizzle-orm";
+import { and, desc, eq, inArray, lte } from "drizzle-orm";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
@@ -51,6 +51,7 @@ export async function fetchFollowingPosts(
     const data = await postQuery()
       .where(
         and(
+          eq(post.deleted, false),
           inArray(post.owner, followingAddresses),
           lte(post.createdAt, new Date(start)),
         ),

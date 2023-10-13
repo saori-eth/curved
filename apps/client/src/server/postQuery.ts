@@ -47,6 +47,7 @@ export const postQuery = (tx = db) =>
       type: post.type,
     })
     .from(post)
+    .where(eq(post.deleted, false))
     .leftJoin(user, like(post.owner, user.address))
     .leftJoin(
       nftPost,
@@ -59,13 +60,22 @@ export const postQuery = (tx = db) =>
     .leftJoin(repostNftPost, eq(repost.referenceShareId, repostNftPost.shareId))
     .leftJoin(
       repostNftPostPost,
-      eq(repostNftPost.postId, repostNftPostPost.publicId),
+      and(
+        eq(repostNftPost.postId, repostNftPostPost.publicId),
+        eq(repostNftPostPost.deleted, false),
+      ),
     )
     .leftJoin(
       repostNftPostUser,
       like(repostNftPostPost.owner, repostNftPostUser.address),
     )
-    .leftJoin(repostPost, and(eq(repost.referencePostId, repostPost.publicId)))
+    .leftJoin(
+      repostPost,
+      and(
+        eq(repost.referencePostId, repostPost.publicId),
+        eq(repostPost.deleted, false),
+      ),
+    )
     .leftJoin(repostUser, like(repostPost.owner, repostUser.address))
     .leftJoin(repostRepost, eq(repostPost.publicId, repostRepost.postId));
 
@@ -190,12 +200,12 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-            ...baseRepost,
-            data: {
-              ...baseRepost.data,
-              repost: nftPost,
-            },
-          } as Repost)
+          ...baseRepost,
+          data: {
+            ...baseRepost.data,
+            repost: nftPost,
+          },
+        } as Repost)
         : null;
 
       return {

@@ -1,5 +1,5 @@
 import { post } from "db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { cache } from "react";
 
 import { formatPostQuery, postQuery } from "@/src/server/postQuery";
@@ -9,7 +9,9 @@ import { Post } from "@/src/types/post";
 export const fetchPost = cache(async (id: string): Promise<Post | null> => {
   try {
     const [data, repostCount] = await Promise.all([
-      postQuery().where(eq(post.publicId, id)).limit(1),
+      postQuery()
+        .where(and(eq(post.publicId, id), eq(post.deleted, false)))
+        .limit(1),
       repostCountQuery(id),
     ]);
 
