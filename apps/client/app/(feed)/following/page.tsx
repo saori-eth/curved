@@ -1,3 +1,4 @@
+import { baseMetadata } from "@/app/baseMetadata";
 import { getSession } from "@/lib/auth/getSession";
 
 import { FeedProvider } from "../FeedContext";
@@ -12,10 +13,12 @@ export function generateMetadata() {
 
   return {
     openGraph: {
+      ...baseMetadata.openGraph,
       title,
     },
     title,
     twitter: {
+      ...baseMetadata.twitter,
       title,
     },
   };

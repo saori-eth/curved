@@ -1,3 +1,5 @@
+import { baseMetadata } from "@/app/baseMetadata";
+
 import { FeedProvider } from "./FeedContext";
 import { fetchLatestPosts } from "./fetchLatestPosts";
 import { LoadMore } from "./LoadMore";
@@ -11,10 +13,12 @@ export function generateMetadata() {
 
   return {
     openGraph: {
+      ...baseMetadata.openGraph,
       title,
     },
     title,
     twitter: {
+      ...baseMetadata.twitter,
       title,
     },
   };
