@@ -27,20 +27,35 @@ const images = [
 ];
 
 export const metadata: Metadata = {
+  appleWebApp: {
+    capable: true,
+    startupImage: {
+      url: "/images/android-chrome-512x512.png",
+    },
+    title,
+  },
   applicationName: title,
+  colorScheme: "dark",
   description,
+  formatDetection: {
+    telephone: false,
+  },
+  keywords: ["Web3", "Social"],
   metadataBase: new URL(env.NEXT_PUBLIC_DEPLOYED_URL),
   openGraph: {
     description,
     images,
+    siteName: title,
     title,
     type: "website",
   },
-  title,
+  themeColor: "#1e293b",
+  title: { default: title, template: "%s • yuyu.social" },
   twitter: {
     card: "summary",
     description,
     images,
+    site: "@yuyu_social",
     title,
   },
 };

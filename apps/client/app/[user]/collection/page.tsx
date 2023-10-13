@@ -1,5 +1,6 @@
 import { nftPost, post, userBalances } from "db";
 import { and, eq, inArray, like, not } from "drizzle-orm";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
@@ -10,6 +11,23 @@ import { formatPostQuery, postQuery } from "@/src/server/postQuery";
 interface Props {
   params: {
     user: string;
+  };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // Strip @ from username
+  const username = params.user.replace("%40", "");
+
+  const title = `@${username}'s collection`;
+
+  return {
+    openGraph: {
+      title,
+    },
+    title,
+    twitter: {
+      title,
+    },
   };
 }
 

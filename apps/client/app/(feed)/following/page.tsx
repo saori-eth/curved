@@ -7,6 +7,20 @@ import { fetchFollowingPosts } from "./fetchFollowingPosts";
 
 export const dynamic = "force-dynamic";
 
+export function generateMetadata() {
+  const title = "Following";
+
+  return {
+    openGraph: {
+      title,
+    },
+    title,
+    twitter: {
+      title,
+    },
+  };
+}
+
 export default async function Following() {
   const session = await getSession();
   if (!session) {

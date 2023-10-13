@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { PostCard } from "@/components/PostCard";
 import { fetchPost } from "@/lib/fetchPost";
+import { formatAddress } from "@/lib/utils";
 import { PostType } from "@/src/types/post";
 
 import { TradeButtons } from "./TradeButtons";
@@ -16,28 +17,42 @@ interface Props {
   };
 }
 
+type NotNull<T> = T extends null | undefined ? never : T;
+type MetadataImages = NotNull<Metadata["openGraph"]>["images"];
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await fetchPost(params.id);
   if (!post) return {};
 
-  const user = post.owner.username
-    ? `@${post.owner.username}`
-    : post.owner.address;
-  const description = `Post by ${user}`;
+  const user = post.owner.username || formatAddress(post.owner.address);
 
   let title = "";
-  let images = undefined;
+  let description = "";
+  let images: MetadataImages = [];
 
   switch (post.type) {
     case PostType.Post: {
-      title = post.data.caption || `Post #${post.id}`;
       images = [{ url: post.data.url }];
+
+      if (post.data.caption) {
+        title = `"${post.data.caption}"`;
+        description = `Post by ${user}`;
+      } else {
+        title = `Post by ${user}`;
+      }
+
       break;
     }
 
     case PostType.Repost: {
-      title = `Repost #${post.id}`;
-      images = undefined;
+      if (post.data.caption) {
+        title = `"${post.data.caption}"`;
+      } else if (post.data.repost) {
+        title = `Repost of "${post.data.repost.data.caption}"`;
+      } else {
+        title = `Repost #${post.id}`;
+      }
+
       break;
     }
   }

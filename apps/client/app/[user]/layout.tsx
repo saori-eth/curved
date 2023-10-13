@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const profile = await fetchProfileFromUsername(username);
   if (!profile) return {};
 
-  const title = `@${profile.username} on yuyu.social`;
+  const title = `@${profile.username}`;
   const images = profile.avatar ? [{ url: profile.avatar }] : [];
 
   return {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       type: "profile",
     },
-    title,
+    title: { default: title, template: `%s • yuyu.social` },
     twitter: {
       card: "summary",
       description: "",

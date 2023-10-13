@@ -6,6 +6,20 @@ import { PostFeed } from "./PostFeed";
 export const revalidate = 5;
 export const dynamic = "force-dynamic";
 
+export function generateMetadata() {
+  const title = "Latest posts";
+
+  return {
+    openGraph: {
+      title,
+    },
+    title,
+    twitter: {
+      title,
+    },
+  };
+}
+
 export default async function Feed() {
   const posts = await fetchLatestPosts({
     page: 0,
