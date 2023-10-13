@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return {};
 
   const title = `@${profile.username}`;
-  const description = `View ${profile.username}'s profile on yuyu.social.`;
+  const description = `View ${profile.username}'s profile on yuyu.social`;
   const images = profile.avatar ? [{ url: profile.avatar }] : [];
 
   return {
