@@ -1,10 +1,13 @@
-import { repost } from "db";
-import { eq, sql } from "drizzle-orm";
+import { post, repost } from "db";
+import { and, eq, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
 
 import { db } from "@/lib/db";
 
 import { Post } from "../types/post";
 import { formatPostQueryRow, PostQueryResponse } from "./postQuery";
+
+const repostPost = alias(post, "repostPost");
 
 export const repostCountQuery = (id: string, tx = db) =>
   tx
@@ -12,7 +15,8 @@ export const repostCountQuery = (id: string, tx = db) =>
       repostCount: sql<number>`count(*)`,
     })
     .from(repost)
-    .where(eq(repost.referencePostId, id));
+    .leftJoin(repostPost, eq(repost.postId, repostPost.publicId))
+    .where(and(eq(repost.referencePostId, id), eq(repostPost.deleted, false)));
 
 export const queryPostRepostCounts = async (
   data: PostQueryResponse,
