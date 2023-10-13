@@ -24,10 +24,11 @@ export function RefreshButton() {
     <button
       title="Refresh"
       onClick={refresh}
-      className={`absolute right-2 rounded-full p-1 text-slate-400 transition duration-300 ${pending
+      className={`absolute right-2 rounded-full p-1 text-slate-400 transition duration-300 ${
+        pending
           ? "-rotate-180 text-slate-600"
           : "active:text-white md:hover:text-white md:active:opacity-80 "
-        }`}
+      }`}
     >
       <MdSync />
     </button>

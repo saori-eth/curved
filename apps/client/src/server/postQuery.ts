@@ -17,6 +17,7 @@ export const postQuery = (tx = db) =>
   tx
     .select({
       createdAt: post.createdAt,
+      deleted: post.deleted,
       id: post.publicId,
       nftCaption: nftPost.caption,
       nftShareId: nftPost.shareId,
@@ -26,6 +27,7 @@ export const postQuery = (tx = db) =>
       ownerUsername: user.username,
       repost: {
         createdAt: repostPost.createdAt,
+        deleted: repostPost.deleted,
         id: repostPost.publicId,
         ownerAddress: repostUser.address,
         ownerAvatarId: repostUser.avatarId,
@@ -37,6 +39,7 @@ export const postQuery = (tx = db) =>
       repostNft: {
         caption: repostNftPost.caption,
         createdAt: repostNftPostPost.createdAt,
+        deleted: repostNftPostPost.deleted,
         id: repostNftPostPost.publicId,
         ownerAddress: repostNftPostUser.address,
         ownerAvatarId: repostNftPostUser.avatarId,
@@ -60,22 +63,13 @@ export const postQuery = (tx = db) =>
     .leftJoin(repostNftPost, eq(repost.referenceShareId, repostNftPost.shareId))
     .leftJoin(
       repostNftPostPost,
-      and(
-        eq(repostNftPost.postId, repostNftPostPost.publicId),
-        eq(repostNftPostPost.deleted, false),
-      ),
+      eq(repostNftPost.postId, repostNftPostPost.publicId),
     )
     .leftJoin(
       repostNftPostUser,
       like(repostNftPostPost.owner, repostNftPostUser.address),
     )
-    .leftJoin(
-      repostPost,
-      and(
-        eq(repost.referencePostId, repostPost.publicId),
-        eq(repostPost.deleted, false),
-      ),
-    )
+    .leftJoin(repostPost, eq(repost.referencePostId, repostPost.publicId))
     .leftJoin(repostUser, like(repostPost.owner, repostUser.address))
     .leftJoin(repostRepost, eq(repostPost.publicId, repostRepost.postId));
 
@@ -103,6 +97,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
           shareId: row.nftShareId,
           url: row.nftUrl,
         },
+        deleted: row.deleted,
         id: row.id,
         owner: {
           address: row.ownerAddress,
@@ -123,8 +118,9 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
         return null;
       }
 
-      const nftPost = formatPostQueryRow({
+      const formattedNftPost = formatPostQueryRow({
         createdAt: row.repostNft.createdAt,
+        deleted: row.repostNft.deleted ?? false,
         id: row.repostNft.id,
         nftCaption: row.repostNft.caption,
         nftShareId: row.repostNft.shareId,
@@ -134,6 +130,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
         ownerUsername: row.repostNft.ownerUsername,
         repost: {
           createdAt: null,
+          deleted: null,
           id: null,
           ownerAddress: null,
           ownerAvatarId: null,
@@ -145,6 +142,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
         repostNft: {
           caption: null,
           createdAt: null,
+          deleted: null,
           id: null,
           ownerAddress: null,
           ownerAvatarId: null,
@@ -167,6 +165,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
       ) {
         baseRepost = formatPostQueryRow({
           createdAt: row.repost.createdAt,
+          deleted: row.repost.deleted ?? false,
           id: row.repost.id,
           nftCaption: null,
           nftShareId: null,
@@ -176,6 +175,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
           ownerUsername: row.repost.ownerUsername,
           repost: {
             createdAt: null,
+            deleted: null,
             id: null,
             ownerAddress: null,
             ownerAvatarId: null,
@@ -187,6 +187,7 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
           repostNft: {
             caption: row.repostNft.caption,
             createdAt: row.repostNft.createdAt,
+            deleted: row.repostNft.deleted,
             id: row.repostNft.id,
             ownerAddress: row.repostNft.ownerAddress,
             ownerAvatarId: row.repostNft.ownerAvatarId,
@@ -200,20 +201,21 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-          ...baseRepost,
-          data: {
-            ...baseRepost.data,
-            repost: nftPost,
-          },
-        } as Repost)
+            ...baseRepost,
+            data: {
+              ...baseRepost.data,
+              repost: formattedNftPost,
+            },
+          } as Repost)
         : null;
 
       return {
         createdAt: row.createdAt.toISOString(),
         data: {
           caption: row.repostCaption,
-          repost: repostPost ?? nftPost,
+          repost: repostPost ?? formattedNftPost,
         },
+        deleted: row.deleted,
         id: row.id,
         owner: {
           address: row.ownerAddress,

@@ -1,5 +1,6 @@
 "use server";
 
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { post } from "db";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -7,6 +8,7 @@ import { z } from "zod";
 
 import { getSession } from "@/lib/auth/getSession";
 import { db } from "@/lib/db";
+import { s3, S3_BUCKET } from "@/lib/s3";
 
 const DeletePostSchema = z.object({
   id: z.string(),
@@ -23,6 +25,7 @@ export async function deletePost(args: DeletePostArgs) {
       throw new Error("Unauthorized");
     }
 
+    // Mark post as deleted
     await db
       .update(post)
       .set({ deleted: true })
@@ -30,6 +33,14 @@ export async function deletePost(args: DeletePostArgs) {
 
     revalidatePath(`/post/${id}`);
     revalidatePath(`/@${session.user.username}`);
+
+    // If successful, delete from S3
+    const command = new DeleteObjectCommand({
+      Bucket: S3_BUCKET,
+      Key: `posts/${id}`,
+    });
+
+    await s3.send(command);
 
     return { success: true };
   } catch (e) {
