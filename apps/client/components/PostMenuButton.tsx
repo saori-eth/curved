@@ -70,7 +70,7 @@ export function PostMenuButton({ post }: Props) {
   }
 
   return (
-    <DropdownRoot>
+    <DropdownRoot modal={false}>
       <DropdownTrigger
         title="More"
         className="z-20 flex h-7 w-7 items-center justify-center rounded-full text-2xl text-slate-400 transition active:bg-slate-600 active:text-white md:hover:bg-slate-600 md:hover:text-white md:active:opacity-90"
