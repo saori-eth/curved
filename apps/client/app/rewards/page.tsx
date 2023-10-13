@@ -1,4 +1,7 @@
+import Image from "next/image";
+
 import { getSession } from "@/lib/auth/getSession";
+import Logo from "@/public/images/icon-256x256.png";
 
 import { Royalties } from "./Royalties";
 import { Yuyu } from "./Yuyu";
@@ -8,7 +11,9 @@ export default async function Rewards() {
 
   return (
     <div className="z-20 col-span-3 mx-4 space-y-4 pt-8 md:pt-2">
-      <h1 className="text-center text-5xl">🎁</h1>
+      <h1 className="flex justify-center">
+        <Image src={Logo} alt="YUYU Logo" width={128} height={128} />
+      </h1>
 
       <div className="flex items-center justify-center">
         <p className="text-center text-slate-400">
