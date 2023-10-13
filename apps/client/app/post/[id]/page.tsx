@@ -70,7 +70,7 @@ export default async function Post({ params }: Props) {
       </div>
 
       {post.type === PostType.Post ? (
-        <div className="z-20 col-span-5 mx-4 flex flex-col-reverse space-y-4 md:col-span-2 md:ml-0 md:flex-col md:pt-14">
+        <div className="z-20 col-span-5 mx-4 flex flex-col-reverse md:col-span-2 md:ml-0 md:flex-col md:pt-14">
           <Trades shareId={post.data.shareId} />
           <TradeButtons shareId={post.data.shareId} />
         </div>
