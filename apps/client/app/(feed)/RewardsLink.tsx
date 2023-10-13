@@ -30,14 +30,14 @@ export function RewardsLink() {
     <Link
       href="/rewards"
       title="Rewards"
-      className="flex items-center space-x-1 rounded-full border border-slate-600 px-2 py-0.5 text-sm font-semibold transition hover:border-slate-500 hover:bg-slate-700 active:opacity-90"
+      className="flex items-center space-x-1 rounded-full border border-slate-600 px-1.5 py-0.5 text-sm font-semibold transition hover:border-slate-500 hover:bg-slate-700 active:opacity-90"
     >
       <Image src={Logo} alt="YUYU Logo" />
       <span>
         {earned
           ? Number(formatUnits(earned)).toLocaleString(undefined, {
-              useGrouping: true,
-            })
+            useGrouping: true,
+          })
           : "0.00"}
       </span>
       <span className="text-slate-400">YUYU</span>
