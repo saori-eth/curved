@@ -25,8 +25,8 @@ export function RefreshButton() {
       title="Refresh"
       onClick={refresh}
       className={`absolute right-2 p-1 text-slate-400 transition duration-300 ${pending
-          ? "-rotate-180 scale-75 text-slate-600"
-          : "active:text-white md:hover:text-white md:active:opacity-80 "
+        ? "-rotate-180 text-slate-600"
+        : "active:text-white md:hover:text-white md:active:opacity-80 "
         }`}
     >
       <MdSync />
