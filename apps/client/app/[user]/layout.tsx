@@ -60,7 +60,7 @@ export default async function UserLayout({ children, params }: Props) {
   }
 
   return (
-    <div className="relative z-20 col-span-3 flex flex-col items-center space-y-2 pb-2 pt-6">
+    <div className="relative z-20 col-span-3 flex flex-col items-center space-y-2 pb-8 pt-6 md:pb-2">
       <div className="relative flex w-full flex-col items-center space-y-2">
         <Avatar src={profile.avatar} uniqueKey={profile.username} size={128} />
         <h3 className="text-2xl font-bold">{profile.username}</h3>

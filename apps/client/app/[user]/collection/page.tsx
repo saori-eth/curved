@@ -70,7 +70,7 @@ export default async function Collection({ params }: Props) {
   const posts = formatPostQuery(data);
 
   return (
-    <div className="grid grid-cols-2 gap-2 pt-2">
+    <div className="grid w-full gap-2 pt-2 md:grid-cols-2">
       {posts.map((post) => (
         <PostCard key={post.id} post={post} disableActions />
       ))}
