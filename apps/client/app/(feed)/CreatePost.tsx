@@ -6,6 +6,7 @@ import Compressor from "compressorjs";
 import { MAX_CAPTION_LENGTH } from "db";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { MdAddCircleOutline } from "react-icons/md";
 import {
   useAccount,
   useContractWrite,
@@ -273,9 +274,11 @@ export function CreatePost() {
       <Dialog.Trigger onClick={promptFile} asChild>
         <button
           draggable={false}
-          className="flex h-full w-full select-none flex-col items-center justify-center rounded-xl p-3 opacity-50 transition hover:opacity-100 active:scale-95 md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:opacity-100 md:hover:opacity-90"
+          className="flex h-full w-full select-none flex-col items-center justify-center rounded-xl p-3 text-slate-400 transition active:scale-95 active:text-white md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:active:text-black"
         >
-          <span className="pb-0.5 text-2xl md:hidden md:w-9">📷</span>
+          <span className="pb-0.5 text-2xl md:hidden md:w-9">
+            <MdAddCircleOutline />
+          </span>
           <span className="text-sm font-bold md:flex md:w-full md:justify-center md:text-xl">
             Upload
           </span>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-
-import Avatar from "@/components/Avatar";
+import { BiCog, BiEnvelope, BiHomeAlt, BiLogIn, BiUser } from "react-icons/bi";
 
 import { CreatePost } from "./(feed)/CreatePost";
 import { AppTitle } from "./AppTitle";
@@ -18,7 +17,7 @@ export function Sidebar() {
     <div className="md:fixed md:inset-0 md:mx-4">
       <div className="max-w-content fixed inset-x-0 bottom-0 z-50 md:absolute md:inset-0 md:mx-auto md:grid md:grid-cols-7 md:gap-4">
         <ul className="relative flex rounded-t-xl bg-slate-800 pb-1.5 shadow-top md:col-span-2 md:block md:h-full md:space-x-0 md:space-y-1 md:p-0 md:shadow-none">
-          <div className="mt-1 hidden h-14 items-center pl-4 md:flex">
+          <div className="mt-1 hidden h-14 items-center pl-3 md:flex">
             <AppTitle />
           </div>
 
@@ -26,7 +25,7 @@ export function Sidebar() {
             href="/"
             activeRoutes={["/", "/following"]}
             title="Home"
-            icon="🏠"
+            icon={<BiHomeAlt />}
           />
 
           {status === "authenticated" && user ? (
@@ -38,23 +37,11 @@ export function Sidebar() {
               <SidebarLink
                 href={`/@${user.username}`}
                 title="Profile"
-                icon={
-                  <Avatar
-                    size={36}
-                    src={user.avatar}
-                    uniqueKey={user.username}
-                  />
-                }
+                icon={<BiUser />}
               />
 
               <span className="hidden md:block">
-                <SidebarButton text="Messages" icon="💬" disabled>
-                  <span className="pl-2">(Coming Soon)</span>
-                </SidebarButton>
-              </span>
-
-              <span className="hidden md:block">
-                <SidebarButton text="Search" icon="🔍" disabled>
+                <SidebarButton text="Messages" icon={<BiEnvelope />} disabled>
                   <span className="pl-2">(Coming Soon)</span>
                 </SidebarButton>
               </span>
@@ -64,11 +51,19 @@ export function Sidebar() {
               </span>
 
               <div className="hidden w-full md:absolute md:inset-x-0 md:bottom-4 md:block">
-                <SidebarLink href="/settings" title="Settings" icon="⚙️" />
+                <SidebarLink
+                  href="/settings"
+                  title="Settings"
+                  icon={<BiCog />}
+                />
               </div>
             </>
           ) : (
-            <SidebarButton onClick={openConnectModal} text="Login" icon="🔑" />
+            <SidebarButton
+              onClick={openConnectModal}
+              text="Log in"
+              icon={<BiLogIn />}
+            />
           )}
         </ul>
       </div>

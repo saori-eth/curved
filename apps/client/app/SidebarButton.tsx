@@ -17,8 +17,8 @@ export const SidebarButton = forwardRef<HTMLButtonElement, Props>(
           disabled={props.disabled}
           className={`flex h-full w-full select-none flex-col items-center justify-center rounded-full p-3 transition md:flex-row md:justify-start md:space-x-1 md:py-2 ${
             props.disabled
-              ? "opacity-30"
-              : "mactive:scale-95 d:opacity-70 opacity-50 hover:opacity-100 md:hover:bg-slate-700"
+              ? "text-slate-600"
+              : "text-slate-400 active:scale-95 active:text-white md:hover:bg-slate-700 md:hover:text-white"
           }`}
         >
           <span className="mt-0.5 text-2xl md:mt-0 md:w-9">{icon}</span>
