@@ -128,7 +128,7 @@ contract YuyuMotherTest is Test {
         vm.stopPrank();
     }
 
-    function _encodeProposal(uint256 percen) internal returns (bytes memory) {
+    function _encodeProposal(uint256 percen) internal view returns (bytes memory) {
         // bytes4 selector = bytes4(keccak256(bytes("transfer(address,uint)")));
         bytes4 selector = _curved.setProtocolFeePercent.selector;
         bytes memory data = abi.encodeWithSelector(selector, percen);
