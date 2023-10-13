@@ -24,8 +24,8 @@ export default async function Settings() {
   const session = await getSession();
   if (!session) {
     return (
-      <p className="z-20 col-span-3 pt-2 text-center text-slate-400">
-        You must be logged in to view this page.
+      <p className="z-20 col-span-3 pt-2 text-center text-amber-500">
+        You must be logged in to view your settings.
       </p>
     );
   }

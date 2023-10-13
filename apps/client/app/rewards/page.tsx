@@ -48,7 +48,7 @@ export default async function Rewards() {
           <Yuyu address={session.user.address} />
         </>
       ) : (
-        <p className="text-center text-slate-400">
+        <p className="text-center text-amber-500">
           You must be logged in to view your rewards.
         </p>
       )}

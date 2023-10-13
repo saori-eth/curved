@@ -28,8 +28,8 @@ export default async function Following() {
   const session = await getSession();
   if (!session) {
     return (
-      <p className="text-center text-slate-500">
-        You must be signed in to view this page.
+      <p className="pt-4 text-center text-amber-500">
+        You must be logged in to view your following feed.
       </p>
     );
   }
@@ -40,7 +40,7 @@ export default async function Following() {
 
   if (posts.length === 0) {
     return (
-      <p className="text-center text-slate-500">
+      <p className="pt-4 text-center text-slate-500">
         Posts from people you follow will appear here!
       </p>
     );
