@@ -33,7 +33,6 @@ export const baseMetadata = {
     images,
     siteName: title,
     title,
-    type: "website",
   },
   themeColor: "#1e293b",
   title: { default: title, template: "%s • yuyu.social" },
