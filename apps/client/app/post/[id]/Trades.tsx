@@ -31,13 +31,13 @@ export async function Trades({ shareId }: Props) {
   const profiles =
     traders.length > 0
       ? await db.query.user.findMany({
-          columns: {
-            address: true,
-            avatarId: true,
-            username: true,
-          },
-          where: (row, { inArray }) => inArray(row.address, traders),
-        })
+        columns: {
+          address: true,
+          avatarId: true,
+          username: true,
+        },
+        where: (row, { inArray }) => inArray(row.address, traders),
+      })
       : [];
 
   const withProfiles = trades.map((trade) => {
@@ -57,6 +57,12 @@ export async function Trades({ shareId }: Props) {
 
   return (
     <ul className="space-y-2">
+      {withProfiles.length === 0 ? null : (
+        <h3 className="text-sm font-semibold leading-4 text-slate-400">
+          Recent trades
+        </h3>
+      )}
+
       {withProfiles.map((trade) => {
         const sign = trade.side === 0 ? "+" : "-";
         const verb = trade.side === 0 ? "bought" : "sold";
@@ -100,9 +106,8 @@ export async function Trades({ shareId }: Props) {
 
             <div className="flex w-full items-center justify-end space-x-2">
               <div
-                className={`text-sm ${
-                  sign === "+" ? "text-sky-500" : "text-amber-500"
-                }`}
+                className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
+                  }`}
               >
                 {sign}
                 {formatUnits(price, 4)} {ETH_SYMBOL}
