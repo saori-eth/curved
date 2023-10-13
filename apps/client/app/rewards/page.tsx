@@ -1,10 +1,27 @@
 import Image from "next/image";
 
+import { baseMetadata } from "@/app/baseMetadata";
 import { getSession } from "@/lib/auth/getSession";
 import Logo from "@/public/images/icon-256x256.png";
 
 import { Royalties } from "./Royalties";
 import { Yuyu } from "./Yuyu";
+
+export function generateMetadata() {
+  const title = "Rewards";
+
+  return {
+    openGraph: {
+      ...baseMetadata.openGraph,
+      title,
+    },
+    title,
+    twitter: {
+      ...baseMetadata.twitter,
+      title,
+    },
+  };
+}
 
 export default async function Rewards() {
   const session = await getSession();

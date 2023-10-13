@@ -1,7 +1,24 @@
+import { baseMetadata } from "@/app/baseMetadata";
 import { getSession } from "@/lib/auth/getSession";
 
 import { LogoutButton } from "./LogoutButton";
 import { ProfileSettings } from "./ProfileSettings";
+
+export function generateMetadata() {
+  const title = "Settings";
+
+  return {
+    openGraph: {
+      ...baseMetadata.openGraph,
+      title,
+    },
+    title,
+    twitter: {
+      ...baseMetadata.twitter,
+      title,
+    },
+  };
+}
 
 export default async function Settings() {
   const session = await getSession();
