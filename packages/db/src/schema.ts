@@ -127,6 +127,9 @@ export const repostRelations = relations(repost, ({ one }) => ({
 
 export const trade = mysqlTable("trade", {
   amount: bigint("amount", { mode: "number" }).notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   hash: varchar("hash", { length: 66 }).notNull().unique(),
   id: serial("id").primaryKey(),
   owner: char("owner", { length: ETH_ADDRESS_LENGTH }).notNull(),
