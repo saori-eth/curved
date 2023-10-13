@@ -8,7 +8,7 @@ const images = [
   {
     height: 512,
     type: "image/png",
-    url: "/images/android-chrome-512x512.png",
+    url: `${env.NEXT_PUBLIC_DEPLOYED_URL}/images/android-chrome-512x512.png`,
     width: 512,
   },
 ];
