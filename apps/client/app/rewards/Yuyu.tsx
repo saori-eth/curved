@@ -32,17 +32,17 @@ export function Yuyu({ address }: Props) {
   const value = dataLoading
     ? "..."
     : dataError
-    ? "Error loading rewards."
-    : earned
-    ? formatUnits(earned)
-    : "0.00";
+      ? "Error loading rewards."
+      : earned
+        ? formatUnits(earned)
+        : "0.00";
 
   const currency = dataError ? "" : "YUYU";
 
   return (
     <Stat title="Claimable rewards" value={value} currency={currency}>
       <div className="absolute inset-y-0 right-4 flex items-center pt-2">
-        <SubmitButton title="Claim rewards" disabled={disabled} onClick={claim}>
+        <SubmitButton disabled={disabled} onClick={claim}>
           Claim
         </SubmitButton>
       </div>
