@@ -25,9 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
 
   const user = post.owner.username || formatAddress(post.owner.address);
+  const description = "Trade shares on yuyu.social and earn YUYU rewards!";
 
   let title = "";
-  let description = "";
   let images: MetadataImages = [];
 
   switch (post.type) {
@@ -35,8 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images = [{ url: post.data.url }];
 
       if (post.data.caption) {
-        title = `"${post.data.caption}"`;
-        description = `Post by ${user}`;
+        title = `"${post.data.caption}" • Post by ${user}`;
       } else {
         title = `Post by ${user}`;
       }
@@ -45,12 +44,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     case PostType.Repost: {
+      if (post.data.repost?.type === PostType.Post) {
+        images = [{ url: post.data.repost.data.url }];
+      }
+
       if (post.data.caption) {
-        title = `"${post.data.caption}"`;
-      } else if (post.data.repost) {
+        title = `"${post.data.caption}" • Repost by ${user}`;
+      } else if (post.data.repost?.data.caption) {
         title = `Repost of "${post.data.repost.data.caption}"`;
       } else {
-        title = `Repost #${post.id}`;
+        title = `Repost by ${user}`;
       }
 
       break;
