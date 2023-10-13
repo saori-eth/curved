@@ -5,5 +5,5 @@ interface Props {
 }
 
 export function PostMenu({ post }: Props) {
-  return
+  return;
 }

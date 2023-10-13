@@ -54,5 +54,7 @@ export async function GET(req: NextRequest) {
     console.error(e);
   }
 
-  return NextResponse.redirect(`${env.DEPLOYED_URL}/@${session.user.username}`);
+  return NextResponse.redirect(
+    `${env.NEXT_PUBLIC_DEPLOYED_URL}/@${session.user.username}`,
+  );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   BiDotsHorizontalRounded,
   BiShareAlt,
@@ -7,6 +8,7 @@ import {
 } from "react-icons/bi";
 
 import { useAuth } from "@/app/AuthProvider";
+import { env } from "@/lib/env.mjs";
 import { Post } from "@/src/types/post";
 
 import { deletePost } from "./deletePost";
@@ -24,11 +26,47 @@ interface Props {
 export function PostMenuButton({ post }: Props) {
   const { user } = useAuth();
 
+  const shareObj = useMemo(
+    () => ({
+      text: "Test text",
+      title: "Test title",
+      url: `${env.NEXT_PUBLIC_DEPLOYED_URL}/post/${post.id}`,
+    }),
+    [post],
+  );
+
+  const canShare = useMemo(() => {
+    if (typeof navigator === "undefined") {
+      return false;
+    }
+
+    if (!navigator.share) {
+      return false;
+    }
+
+    return navigator.canShare(shareObj);
+  }, [shareObj]);
+
+  const canDelete =
+    user?.address.toLowerCase() === post.owner.address.toLowerCase();
+
+  if (!canDelete && !canShare) {
+    return null;
+  }
+
   async function handleDelete() {
     const { success } = await deletePost({ id: post.id });
     if (success) {
       console.log("Post deleted");
     }
+  }
+
+  function handleShare() {
+    navigator.share({
+      text: "Test share",
+      title: "Test share 2",
+      url: `${env.NEXT_PUBLIC_DEPLOYED_URL}/post/${post.id}`,
+    });
   }
 
   return (
@@ -41,7 +79,7 @@ export function PostMenuButton({ post }: Props) {
       </DropdownTrigger>
 
       <DropdownContent>
-        {user?.address.toLowerCase() === post.owner.address.toLowerCase() ? (
+        {canDelete ? (
           <DropdownItem
             onClick={handleDelete}
             icon={<BiTrashAlt />}
@@ -51,7 +89,11 @@ export function PostMenuButton({ post }: Props) {
           </DropdownItem>
         ) : null}
 
-        <DropdownItem icon={<BiShareAlt />}>Share</DropdownItem>
+        {canShare ? (
+          <DropdownItem onClick={handleShare} icon={<BiShareAlt />}>
+            Share
+          </DropdownItem>
+        ) : null}
       </DropdownContent>
     </DropdownRoot>
   );

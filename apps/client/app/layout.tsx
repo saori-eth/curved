@@ -29,7 +29,7 @@ const images = [
 export const metadata: Metadata = {
   applicationName: title,
   description,
-  metadataBase: new URL(env.DEPLOYED_URL),
+  metadataBase: new URL(env.NEXT_PUBLIC_DEPLOYED_URL),
   openGraph: {
     description,
     images,
