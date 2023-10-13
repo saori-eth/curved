@@ -3,6 +3,7 @@ import { and, eq, inArray, like, not } from "drizzle-orm";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { baseMetadata } from "@/app/baseMetadata";
 import { PostCard } from "@/components/PostCard";
 import { db } from "@/lib/db";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
@@ -22,10 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     openGraph: {
+      ...baseMetadata.openGraph,
       title,
     },
     title,
     twitter: {
+      ...baseMetadata.twitter,
       title,
     },
   };

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { MdEdit } from "react-icons/md";
 
+import { baseMetadata } from "@/app/baseMetadata";
 import Avatar from "@/components/Avatar";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     description,
     openGraph: {
+      ...baseMetadata.openGraph,
       description,
       images,
       title,
@@ -39,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     title: { default: title, template: `%s • yuyu.social` },
     twitter: {
+      ...baseMetadata.twitter,
       card: "summary",
       description,
       images,

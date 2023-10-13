@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { baseMetadata } from "@/app/baseMetadata";
 import { PostCard } from "@/components/PostCard";
 import { fetchPost } from "@/lib/fetchPost";
 import { formatAddress } from "@/lib/utils";
@@ -63,12 +64,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     description,
     openGraph: {
+      ...baseMetadata.openGraph,
       description,
       images,
       title,
     },
     title,
     twitter: {
+      ...baseMetadata.twitter,
       card: "summary",
       description,
       images,
