@@ -63,8 +63,7 @@ export function PostMenuButton({ post }: Props) {
 
   function handleShare() {
     navigator.share({
-      text: "Test share",
-      title: "Test share 2",
+      text: "Check out this post!",
       url: `${env.NEXT_PUBLIC_DEPLOYED_URL}/post/${post.id}`,
     });
   }
