@@ -31,6 +31,7 @@ export async function deletePost(args: DeletePostArgs) {
       .set({ deleted: true })
       .where(and(eq(post.publicId, id), eq(post.owner, session.user.address)));
 
+    revalidatePath(`/`);
     revalidatePath(`/post/${id}`);
     revalidatePath(`/@${session.user.username}`);
 
