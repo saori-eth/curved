@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     title,
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       description,
       images,
       title,
