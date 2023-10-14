@@ -1,12 +1,11 @@
 import { Metadata } from "next";
-import Link from "next/link";
-import { MdEdit } from "react-icons/md";
 
 import { baseMetadata } from "@/app/baseMetadata";
 import Avatar from "@/components/Avatar";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
 import { FeedButton } from "../(feed)/FeedButton";
+import { EditProfile } from "./EditProfile";
 import { FollowButton } from "./FollowButton";
 import { TwitterUsername } from "./TwitterUsername";
 
@@ -65,25 +64,18 @@ export default async function UserLayout({ children, params }: Props) {
 
   return (
     <div className="relative z-20 col-span-3 flex flex-col items-center space-y-2 pb-8 pt-6 md:pb-2">
-      <div className="relative flex w-full flex-col items-center space-y-2">
-        <Avatar src={profile.avatar} uniqueKey={profile.username} size={128} />
-        <h3 className="text-2xl font-bold">{profile.username}</h3>
-      </div>
+      <EditProfile username={profile.username} />
 
-      <Link
-        href="/settings"
-        title="Edit profile"
-        className="absolute right-4 top-2 rounded-full p-1 text-slate-400 transition active:text-white md:right-0 md:top-0 md:hover:text-white"
-      >
-        <MdEdit className="text-xl" />
-      </Link>
+      <Avatar src={profile.avatar} uniqueKey={profile.username} size={128} />
+
+      <h3 className="text-2xl font-bold">{profile.username}</h3>
 
       <TwitterUsername
         username={profile.username}
         twitterUsername={profile.twitterUsername}
       />
 
-      <div className="py-1.5">
+      <div className="py-1">
         <FollowButton address={profile.address} username={profile.username} />
       </div>
 
