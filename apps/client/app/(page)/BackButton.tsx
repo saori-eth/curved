@@ -13,7 +13,7 @@ export function BackButton() {
   return (
     <button
       onClick={back}
-      className="text-slate-300 active:text-white md:hover:text-white"
+      className="rounded-full p-1 text-slate-300 active:text-white md:hover:text-white"
     >
       <BiArrowBack className="text-lg" />
     </button>
