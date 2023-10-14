@@ -4,7 +4,7 @@ import { baseMetadata } from "@/app/baseMetadata";
 import Avatar from "@/components/Avatar";
 import { fetchProfileFromUsername } from "@/lib/fetchProfile";
 
-import { FeedButton } from "../(feed)/FeedButton";
+import { FeedButton } from "../../(feed)/FeedButton";
 import { EditProfile } from "./EditProfile";
 import { FollowButton } from "./FollowButton";
 import { TwitterUsername } from "./TwitterUsername";

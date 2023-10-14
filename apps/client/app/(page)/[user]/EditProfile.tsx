@@ -10,7 +10,7 @@ interface Props {
 export async function EditProfile({ username }: Props) {
   const session = await getSession();
 
-  if (!session || session.username !== username) {
+  if (!session || session.user.username !== username) {
     return null;
   }
 
