@@ -20,9 +20,9 @@ export function NftPostCard({ post, disableLink }: Props) {
       <PostImage post={post} />
 
       {post.data.caption ? (
-        <h3 className="px-2 text-sm text-slate-400 md:px-0">
+        <p className="px-2 text-sm text-slate-400 md:px-0">
           {post.data.caption}
-        </h3>
+        </p>
       ) : null}
     </>
   );

@@ -26,9 +26,9 @@ export function RepostCard({ post, layer = 1, disableLink }: Props) {
       </PostTopBar>
 
       {post.data.caption ? (
-        <h3 className="px-2 text-sm text-slate-400 md:px-0">
+        <p className="px-2 text-sm text-slate-400 md:px-0">
           {post.data.caption}
-        </h3>
+        </p>
       ) : null}
 
       {post.data.repost && layer < 2 ? (
