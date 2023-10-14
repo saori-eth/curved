@@ -7,8 +7,8 @@ interface Props {
 
 export default function PageLayout({ children }: Props) {
   return (
-    <div>
-      <div className="grid grid-cols-3 px-3 py-2 shadow">
+    <>
+      <div className="grid grid-cols-3 px-3 py-2 shadow md:hidden">
         <div className="flex items-center">
           <BackButton />
         </div>
@@ -19,6 +19,6 @@ export default function PageLayout({ children }: Props) {
       </div>
 
       {children}
-    </div>
+    </>
   );
 }
