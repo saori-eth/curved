@@ -21,7 +21,7 @@ export async function Trades({ shareId }: Props) {
       side: true,
       trader: true,
     },
-    limit: 10,
+    limit: 8,
     orderBy: (row, { desc }) => desc(row.id),
     where: (row, { eq }) => eq(row.shareId, shareId),
   });
@@ -31,13 +31,13 @@ export async function Trades({ shareId }: Props) {
   const profiles =
     traders.length > 0
       ? await db.query.user.findMany({
-          columns: {
-            address: true,
-            avatarId: true,
-            username: true,
-          },
-          where: (row, { inArray }) => inArray(row.address, traders),
-        })
+        columns: {
+          address: true,
+          avatarId: true,
+          username: true,
+        },
+        where: (row, { inArray }) => inArray(row.address, traders),
+      })
       : [];
 
   const withProfiles = trades.map((trade) => {
@@ -56,77 +56,77 @@ export async function Trades({ shareId }: Props) {
   });
 
   return (
-    <ul className="space-y-2">
-      {withProfiles.length === 0 ? null : (
-        <h3 className="text-sm font-semibold leading-4 text-slate-400">
-          Recent trades
-        </h3>
-      )}
+    <div className="bg-slate-900/50 py-2 md:rounded-lg">
+      <ul className="space-y-2 px-3">
+        {withProfiles.map((trade) => {
+          const sign = trade.side === 0 ? "+" : "-";
+          const verb = trade.side === 0 ? "bought" : "sold";
+          const price = BigInt(trade.price);
+          const amount = trade.amount;
+          const hash = trade.hash;
 
-      {withProfiles.map((trade) => {
-        const sign = trade.side === 0 ? "+" : "-";
-        const verb = trade.side === 0 ? "bought" : "sold";
-        const price = BigInt(trade.price);
-        const amount = trade.amount;
-        const hash = trade.hash;
+          return (
+            <li key={hash} className="flex items-center space-x-1 text-sm">
+              {trade.trader.username ? (
+                <Link
+                  href={`/@${trade.trader.username}`}
+                  className="flex items-center space-x-1 font-bold hover:underline"
+                >
+                  <Avatar
+                    uniqueKey={trade.trader.username}
+                    size={24}
+                    src={trade.trader.avatar}
+                    draggable={false}
+                  />
+                  <span>{trade.trader.username}</span>
+                </Link>
+              ) : (
+                <>
+                  <Avatar
+                    uniqueKey={trade.trader.address}
+                    size={24}
+                    draggable={false}
+                  />
+                  <span>{formatAddress(trade.trader.address)}</span>
+                </>
+              )}
 
-        return (
-          <li key={hash} className="flex items-center space-x-1 text-sm">
-            {trade.trader.username ? (
-              <Link
-                href={`/@${trade.trader.username}`}
-                className="flex items-center space-x-1 font-bold hover:underline"
-              >
-                <Avatar
-                  uniqueKey={trade.trader.username}
-                  size={24}
-                  src={trade.trader.avatar}
-                  draggable={false}
-                />
-                <span>{trade.trader.username}</span>
-              </Link>
-            ) : (
-              <>
-                <Avatar
-                  uniqueKey={trade.trader.address}
-                  size={24}
-                  draggable={false}
-                />
-                <span>{formatAddress(trade.trader.address)}</span>
-              </>
-            )}
-
-            <div className="space-x-1">
-              <span className="text-slate-400">{verb}</span>
-              <span className="font-bold text-white">{amount}</span>
-              <span className="text-slate-400">
-                share{amount > 1 ? "s" : ""}
-              </span>
-            </div>
-
-            <div className="flex w-full items-center justify-end space-x-2">
-              <div
-                className={`text-sm ${
-                  sign === "+" ? "text-sky-500" : "text-amber-500"
-                }`}
-              >
-                {sign}
-                {formatUnits(price, 4)} {ETH_SYMBOL}
+              <div className="space-x-1">
+                <span className="text-slate-400">{verb}</span>
+                <span className="font-bold text-white">{amount}</span>
+                <span className="text-slate-400">
+                  share{amount > 1 ? "s" : ""}
+                </span>
               </div>
 
-              <Link
-                title="View on Etherscan"
-                href={`https://etherscan.io/tx/${hash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:opacity-80 active:opacity-70"
-              >
-                <Image src={etherscan} width={16} height={16} alt="Etherscan" />
-              </Link>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+              <div className="flex w-full items-center justify-end space-x-2">
+                <div
+                  className={`text-sm ${sign === "+" ? "text-sky-500" : "text-amber-500"
+                    }`}
+                >
+                  {sign}
+                  {formatUnits(price, 4)} {ETH_SYMBOL}
+                </div>
+
+                <Link
+                  title="View on Etherscan"
+                  href={`https://etherscan.io/tx/${hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:opacity-80 active:opacity-70"
+                >
+                  <Image
+                    src={etherscan}
+                    width={16}
+                    height={16}
+                    alt="Etherscan"
+                  />
+                </Link>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }

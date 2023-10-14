@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { BiLoaderAlt } from "react-icons/bi";
 
 import { baseMetadata } from "@/app/baseMetadata";
 import { PostCard } from "@/components/PostCard";
@@ -7,6 +9,7 @@ import { fetchPost } from "@/lib/fetchPost";
 import { formatAddress } from "@/lib/utils";
 import { PostType } from "@/src/types/post";
 
+import { Comments } from "./Comments";
 import { TradeButtons } from "./TradeButtons";
 import { Trades } from "./Trades";
 
@@ -91,9 +94,15 @@ export default async function Post({ params }: Props) {
       </div>
 
       {post.type === PostType.Post ? (
-        <div className="z-20 col-span-5 mx-4 flex flex-col-reverse pb-12 md:col-span-2 md:ml-0 md:flex-col md:pb-0 md:pt-11">
-          <Trades shareId={post.data.shareId} />
-          <TradeButtons shareId={post.data.shareId} />
+        <div className="z-20 col-span-5 space-y-4 pb-12 md:col-span-2 md:ml-0 md:mr-3 md:pb-0 md:pt-12">
+          <div className="space-y-4">
+            <Trades shareId={post.data.shareId} />
+            <TradeButtons shareId={post.data.shareId} />
+          </div>
+
+          <Suspense fallback={<BiLoaderAlt className="animate-spin" />}>
+            <Comments postId={post.id} />
+          </Suspense>
         </div>
       ) : null}
     </>

@@ -6,12 +6,12 @@ import { db } from "@/lib/db";
 import { getAvatarUrl } from "@/lib/getAvatarUrl";
 import { Post, PostType, Repost } from "@/src/types/post";
 
-const repostPost = alias(post, "repostPost");
-const repostUser = alias(user, "repostUser");
-const repostRepost = alias(repost, "repostRepost");
-const repostNftPost = alias(nftPost, "repostNftPost");
-const repostNftPostPost = alias(post, "repostNftPostPost");
-const repostNftPostUser = alias(user, "repostNftPostUser");
+export const repostPost = alias(post, "repostPost");
+export const repostUser = alias(user, "repostUser");
+export const repostRepost = alias(repost, "repostRepost");
+export const repostNftPost = alias(nftPost, "repostNftPost");
+export const repostNftPostPost = alias(post, "repostNftPostPost");
+export const repostNftPostUser = alias(user, "repostNftPostUser");
 
 export const postQuery = (tx = db) =>
   tx
@@ -201,12 +201,12 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-            ...baseRepost,
-            data: {
-              ...baseRepost.data,
-              repost: formattedNftPost,
-            },
-          } as Repost)
+          ...baseRepost,
+          data: {
+            ...baseRepost.data,
+            repost: formattedNftPost,
+          },
+        } as Repost)
         : null;
 
       return {
