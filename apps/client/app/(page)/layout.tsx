@@ -8,7 +8,9 @@ interface Props {
 export default function PageLayout({ children }: Props) {
   return (
     <>
-      <div className="grid grid-cols-3 p-2 shadow md:hidden">
+      <div className="h-11 md:hidden" />
+
+      <div className="fixed inset-x-0 top-0 z-50 grid grid-cols-3 bg-slate-800 p-2 shadow md:hidden">
         <div className="flex items-center">
           <BackButton />
         </div>
