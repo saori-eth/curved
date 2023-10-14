@@ -62,7 +62,7 @@ export function LoadMore({ fetchType }: Props) {
   }
 
   return (
-    <div ref={ref} className="flex justify-center text-slate-500">
+    <div ref={ref} className="flex justify-center pb-4 text-slate-500">
       <BiLoaderAlt className="animate-spin" />
     </div>
   );
