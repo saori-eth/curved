@@ -93,18 +93,26 @@ export default async function Post({ params }: Props) {
         <PostCard post={post} disablePostLink />
       </div>
 
-      {post.type === PostType.Post ? (
-        <div className="z-20 col-span-5 space-y-4 pb-12 md:col-span-2 md:ml-0 md:mr-3 md:pb-0 md:pt-12">
-          <div className="space-y-4">
+      <div className="z-20 col-span-5 pb-12 md:col-span-2 md:ml-0 md:mr-3 md:pb-0">
+        {post.type === PostType.Post ? (
+          <div className="space-y-4 md:pt-12">
             <Trades shareId={post.data.shareId} />
             <TradeButtons shareId={post.data.shareId} />
           </div>
+        ) : null}
 
-          <Suspense fallback={<BiLoaderAlt className="animate-spin" />}>
+        <div className="pt-[20px]">
+          <Suspense
+            fallback={
+              <div className="flex w-full justify-center">
+                <BiLoaderAlt className="animate-spin" />
+              </div>
+            }
+          >
             <Comments postId={post.id} />
           </Suspense>
         </div>
-      ) : null}
+      </div>
     </>
   );
 }
