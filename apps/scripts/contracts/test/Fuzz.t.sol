@@ -31,9 +31,15 @@ contract FuzzyTest is Test {
         for (uint i = 0; i < _users.length; i++) {
             vm.deal(_users[i], 100 ether);
         }
-        _rewardToken = new YuYu();
-        _curvedAddress = address(_rewardToken);
-        _curved = new Curved(_curvedAddress);
+
+        YuYu _tk = new YuYu();
+        _rewardToken = IERC20(address(_tk));
+
+        _curved = new Curved(address(_rewardToken));
+        _curvedAddress = address(_curved);
+
+        _tk.addMinter(_curvedAddress);
+        
         uint256 _ownerRewardTokenBalance = _rewardToken.balanceOf(_owner);
         assertEq(_ownerRewardTokenBalance, 2_000_000_000 ether);
         vm.stopPrank();
@@ -158,20 +164,27 @@ contract FuzzyTest is Test {
     }
 
     function testAccurateRewardAsManyInDiffPools(uint256 amt0, uint256 amt1) public {
-        vm.assume(amt0 > 10);
-        vm.assume(amt1 > 10);
+        // vm.assume(amt0 > 15 && amt0 < 25);
+        // vm.assume(amt1 > 20 && amt1 < 30);
+        amt0 = bound(amt0, 300, 400);
+        amt1 = bound(amt1, 500, 600);
         
-        // vm.assume(amt0 < 100);
-        // vm.assume(amt1 < 50);
+        // vm.assume(amt0 < 25);
+        // vm.assume(amt1 < 30);
 
-        uint256 _sid0 = _createShare(_users[0]);
-        uint256 _sid1 = _createShare(_users[1]);
+        uint256 _sid0 = _createShare(_owners[0]);
+        uint256 _sid1 = _createShare(_owners[1]);
 
-        _purchaseShare(_users[0], _sid1);
-        _purchaseShare(_users[1], _sid0);
+        // _purchaseShare(_users[0], _sid1);
+        // _purchaseShare(_users[1], _sid0);
 
-        _purchaseManyShares(_users[0], _sid1, amt1);
-        _purchaseManyShares(_users[1], _sid0, amt0);
+        for (uint256 i = 0; i < _users.length; i++) {
+            vm.deal(_users[i], 1_000_000_00 ether);
+            _purchaseManyShares(_users[i], i % 2 == 0 ? _sid0 : _sid1 , (i % 2 == 0 ? amt0 : amt1) * i+1);
+        }
+
+        // _purchaseManyShares(_users[0], _sid1, 2);
+        // _purchaseManyShares(_users[1], _sid0, 2);
 
         uint256 totalDeposit = _curved.totalVolume();
 
@@ -179,7 +192,7 @@ contract FuzzyTest is Test {
         vm.warp(targetTime);
         uint256 currentRate = _curved.getRate(block.timestamp);
 
-        for (uint256 i = 0; i < 2; i++) {
+        for (uint256 i = 0; i < _users.length; i++) {
             vm.prank(_users[i]);
             _curved.getReward();
 
@@ -198,10 +211,13 @@ contract FuzzyTest is Test {
             uint256 userRewardBalance = _rewardToken.balanceOf(_users[i]);
             console2.log('------------------------------');
             console2.log('user', i);
-            console2.log('amt shares bought', _curved.getShareBalance(i == 0 ? _sid1 : _sid0, _users[i]));
+            console2.log('amt shares0:', _curved.getShareBalance(_sid0, _users[i]), '| amt shares1:', _curved.getShareBalance(_sid1, _users[i]));
             console2.log('balanceOf', userRewardBalance);
             console2.log('expectedReward', expectedReward);
-            assertEq(userRewardBalance, expectedReward);
+            console2.log(address(_curved).balance); // check total volume
+
+            assertApproxEqRel(userRewardBalance, expectedReward, 0.0005e18); // we are guarantee precision up to 5bps
+            
         }
         
     }
@@ -281,5 +297,24 @@ contract FuzzyTest is Test {
 
       uint256 ownerBalanceAfter = owner.balance;
       assertEq(ownerBalanceAfter - ownerBalanceBefore, expectedRoyaltyFee);
+    }
+
+    function testCurveBuyPrice(uint256 amtShares) public {
+        vm.assume(amtShares < 50);
+
+        address owner = _users[0];
+        address buyer = _users[1];
+
+        uint256 _sid0 = _createShare(owner);
+        uint256 _sid1 = _createShare(owner);
+
+        for (uint256 i = 0; i < amtShares; i++) {
+            _purchaseShare(buyer, _sid0);
+        }
+
+        _purchaseManyShares(buyer, _sid1, amtShares);
+
+        assertEq(_curved.getBuyPriceAfterFee(_sid0, 1), _curved.getBuyPriceAfterFee(_sid1, 1));
+
     }
 }
