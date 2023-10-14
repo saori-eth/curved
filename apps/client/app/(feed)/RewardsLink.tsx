@@ -36,8 +36,8 @@ export function RewardsLink() {
       <span>
         {earned
           ? Number(formatUnits(earned)).toLocaleString(undefined, {
-            useGrouping: true,
-          })
+              useGrouping: true,
+            })
           : "0.00"}
       </span>
       <span className="text-slate-400">YUYU</span>

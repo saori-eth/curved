@@ -16,8 +16,9 @@ export function DropdownContent({ children }: DropdownContentProps) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        className={`z-20 overflow-hidden rounded-lg bg-slate-700 text-slate-300 shadow-lg transition ${mounted ? "" : "scale-75 opacity-0"
-          }`}
+        className={`z-20 overflow-hidden rounded-lg bg-slate-700 text-slate-300 shadow-lg transition ${
+          mounted ? "" : "scale-75 opacity-0"
+        }`}
       >
         {children}
         <Mount setMounted={setMounted} />
