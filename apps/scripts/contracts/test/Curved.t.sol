@@ -260,4 +260,20 @@ contract CurvedTest is Test {
       uint256 ownerBalanceAfter = _owners[0].balance;
       assertEq(ownerBalanceAfter - ownerBalanceBefore, expectedRoyaltyFee);
     }
+
+    // testFail syntax passes if the fn reverts
+    // need to make sure that users cant double claim or claim more than the 8b allocation over 6 years
+
+    function testDoubleClaim() public createShare(1) purchaseShare(1) {
+        vm.warp(block.timestamp + 1 weeks);
+        uint256 initbalance = _rewardToken.balanceOf(_users[1]);
+        _curved.getReward();
+        uint256 balanceAfterFirstClaim = _rewardToken.balanceOf(_users[1]);
+        // wont revert but also doesn't double mint
+        _curved.getReward();
+        uint256 balanceAfterSecondClaim = _rewardToken.balanceOf(_users[1]);
+
+        assertGt(balanceAfterFirstClaim, initbalance);
+        assertEq(balanceAfterFirstClaim, balanceAfterSecondClaim);
+    }
 }
