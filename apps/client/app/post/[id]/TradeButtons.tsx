@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { formatEther } from "viem";
 
 import { useMarket } from "@/hooks/useMarket";
+import { ETH_SYMBOL } from "@/lib/utils";
 
 interface Props {
   shareId: number;
@@ -77,7 +78,7 @@ export function TradeButtons({ shareId }: Props) {
               ? "Error"
               : !buyPrice
                 ? ""
-                : formatEther(buyPrice)}
+                : `${formatEther(buyPrice)} ${ETH_SYMBOL}`}
           </p>
 
           <div className="h-5">
@@ -116,7 +117,7 @@ export function TradeButtons({ shareId }: Props) {
                 ? "Error"
                 : !sellPrice
                   ? ""
-                  : formatEther(sellPrice)}
+                  : `${formatEther(sellPrice)} ${ETH_SYMBOL}`}
             </p>
 
             <div className="h-5">
