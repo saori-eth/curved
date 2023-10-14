@@ -4,3 +4,6 @@
 [submodule "apps/scripts/contracts/lib/openzeppelin-contracts"]
 	path = apps/scripts/contracts/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "apps/scripts/contracts/lib/forge-std"]
+	path = apps/scripts/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
