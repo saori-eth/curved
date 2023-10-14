@@ -201,12 +201,12 @@ export function formatPostQueryRow(row: PostQueryRow): Post | null {
 
       const repostPost = baseRepost
         ? ({
-          ...baseRepost,
-          data: {
-            ...baseRepost.data,
-            repost: formattedNftPost,
-          },
-        } as Repost)
+            ...baseRepost,
+            data: {
+              ...baseRepost.data,
+              repost: formattedNftPost,
+            },
+          } as Repost)
         : null;
 
       return {

@@ -67,8 +67,9 @@ export function TradeButtons({ shareId }: Props) {
                 buy();
               }
             }}
-            className={`w-full rounded-lg bg-sky-600 py-2 text-lg font-bold transition ${disableBuy ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
-              }`}
+            className={`w-full rounded-lg bg-sky-600 py-2 text-lg font-bold transition ${
+              disableBuy ? "opacity-50" : "hover:bg-sky-500 active:scale-95"
+            }`}
           >
             Buy
           </button>
@@ -77,8 +78,8 @@ export function TradeButtons({ shareId }: Props) {
             {isReadError || isPrepareBuyError
               ? "Error"
               : !buyPrice
-                ? ""
-                : `${formatEther(buyPrice)} ${ETH_SYMBOL}`}
+              ? ""
+              : `${formatEther(buyPrice)} ${ETH_SYMBOL}`}
           </p>
 
           <div className="h-5">
@@ -104,10 +105,11 @@ export function TradeButtons({ shareId }: Props) {
                   sell();
                 }
               }}
-              className={`w-full rounded-lg bg-amber-600 py-2 text-lg font-bold transition ${disableSell
+              className={`w-full rounded-lg bg-amber-600 py-2 text-lg font-bold transition ${
+                disableSell
                   ? "cursor-default opacity-50"
                   : "hover:bg-amber-500 active:scale-95"
-                }`}
+              }`}
             >
               Sell
             </button>
@@ -116,8 +118,8 @@ export function TradeButtons({ shareId }: Props) {
               {isReadError || isPrepareSellError
                 ? "Error"
                 : !sellPrice
-                  ? ""
-                  : `${formatEther(sellPrice)} ${ETH_SYMBOL}`}
+                ? ""
+                : `${formatEther(sellPrice)} ${ETH_SYMBOL}`}
             </p>
 
             <div className="h-5">

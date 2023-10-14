@@ -24,7 +24,7 @@ export function SidebarLink({ title, activeRoutes, href, icon }: Props) {
           isActive ? "" : "text-slate-400 md:hover:text-white"
         }`}
       >
-        <span className="mt-0.5 text-2xl md:mt-0 md:w-9">{icon}</span>
+        <span className="mt-0.5 text-2xl md:mt-0 md:w-8">{icon}</span>
         <span className="text-sm font-bold md:text-xl">{title}</span>
       </Link>
     </li>
