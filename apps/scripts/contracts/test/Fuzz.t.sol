@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
 import {Curved} from "../src/Curved.sol";
+import {YuYu} from "../src/Token.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract FuzzyTest is Test {
@@ -30,9 +31,9 @@ contract FuzzyTest is Test {
         for (uint i = 0; i < _users.length; i++) {
             vm.deal(_users[i], 100 ether);
         }
-        _curved = new Curved();
-        _curvedAddress = address(_curved);
-        _rewardToken = IERC20(_curvedAddress);
+        _rewardToken = new YuYu();
+        _curvedAddress = address(_rewardToken);
+        _curved = new Curved(_curvedAddress);
         uint256 _ownerRewardTokenBalance = _rewardToken.balanceOf(_owner);
         assertEq(_ownerRewardTokenBalance, 2_000_000_000 ether);
         vm.stopPrank();
@@ -157,8 +158,8 @@ contract FuzzyTest is Test {
     }
 
     function testAccurateRewardAsManyInDiffPools(uint256 amt0, uint256 amt1) public {
-        // vm.assume(amt0 > 10);
-        // vm.assume(amt1 > 10);
+        vm.assume(amt0 > 10);
+        vm.assume(amt1 > 10);
         
         // vm.assume(amt0 < 100);
         // vm.assume(amt1 < 50);
@@ -169,8 +170,8 @@ contract FuzzyTest is Test {
         _purchaseShare(_users[0], _sid1);
         _purchaseShare(_users[1], _sid0);
 
-        // _purchaseManyShares(_users[0], _sid1, amt1);
-        // _purchaseManyShares(_users[1], _sid0, amt0);
+        _purchaseManyShares(_users[0], _sid1, amt1);
+        _purchaseManyShares(_users[1], _sid0, amt0);
 
         uint256 totalDeposit = _curved.totalVolume();
 
