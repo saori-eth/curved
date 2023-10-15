@@ -4,10 +4,10 @@ import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Gemunu_Libre } from "next/font/google";
 
+import { env } from "@/lib/env.mjs";
+
 import { baseMetadata } from "./baseMetadata";
 import { Sidebar } from "./Sidebar";
-
-import { env } from "@/lib/env.mjs";
 
 const mode = env.NEXT_PUBLIC_NODE_ENV;
 
@@ -34,18 +34,18 @@ export default function RootLayout({ children }: Props) {
           {mode !== "development" && (
             <div
               style={{
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.8)",
+                color: "#fff",
+                display: "flex",
+                fontSize: "32px",
+                height: "100%",
+                justifyContent: "center",
+                left: 0,
                 position: "absolute",
                 top: 0,
-                left: 0,
                 width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0,0,0,0.8)",
                 zIndex: 9999,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "#fff",
-                fontSize: "32px",
               }}
             >
               Coming Soon
