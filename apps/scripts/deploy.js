@@ -12,10 +12,10 @@ const tBytecode = tokenABI.bytecode;
 const sBytecode = sharesAbi.bytecode;
 const vBytecode = vestingAbi.bytecode;
 
-const { GOERLI_HTTP, GOERLI_PK } = process.env;
-// const GOERLI_HTTP = "http://localhost:8545";
-// const GOERLI_PK =
-//   "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+// const { GOERLI_HTTP, GOERLI_PK } = process.env;
+const GOERLI_HTTP = "http://localhost:8545";
+const GOERLI_PK =
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const provider = new ethers.providers.JsonRpcProvider(GOERLI_HTTP);
 const wallet = new ethers.Wallet(GOERLI_PK, provider);
 
@@ -24,10 +24,10 @@ const deployToken = async () => {
   const contract = await factory.deploy();
   await contract.deployed();
   console.log("Token deployed to:", contract.address);
-  return contract.address;
+  return contract;
 };
 
-const deployVestingWallet = async () => {
+const deployVestingWallet = async (token) => {
   const factory = new ethers.ContractFactory(vAbi, vBytecode, wallet);
   const thirteenWeeks = 13 * 7 * 24 * 60 * 60;
   const fiftyTwoWeeks = 52 * 7 * 24 * 60 * 60;
@@ -50,7 +50,12 @@ const deployVestingWallet = async () => {
   );
   await contract.deployed();
   console.log("Vesting deployed to:", contract.address);
-  return contract.address;
+  console.log("Sending tokens to vesting contract");
+  const amount = ethers.utils.parseEther("2000000000");
+  const tx = await token.transfer(contract.address, amount);
+  await tx.wait();
+  console.log("Tokens sent to vesting contract");
+  return contract;
 };
 
 const deployShares = async (tokenAddr) => {
@@ -58,21 +63,23 @@ const deployShares = async (tokenAddr) => {
   const contract = await factory.deploy(tokenAddr);
   await contract.deployed();
   console.log("Shares deployed to:", contract.address);
-  return contract.address;
+  return contract;
 };
 
-const initMinter = async (sharesAddr, tokenAddr) => {
-  const contract = new ethers.Contract(tokenAddr, tAbi, wallet);
-  const tx = await contract.addMinter(sharesAddr);
+const initMinter = async (sharesAddress, token) => {
+  const tx = await token.addMinter(sharesAddress);
   await tx.wait();
   console.log("Minter added to token");
 };
 
 const main = async () => {
-  const tokenAddress = await deployToken();
-  await deployVestingWallet();
-  const sharesAddress = await deployShares(tokenAddress);
-  await initMinter(sharesAddress, tokenAddress);
+  const token = await deployToken();
+  const tokenAddress = token.address;
+  const vestWallet = await deployVestingWallet(token);
+  const vestWalletAddress = vestWallet.address;
+  const shares = await deployShares(tokenAddress);
+  const sharesAddress = shares.address;
+  await initMinter(sharesAddress, token);
 };
 
 main();
