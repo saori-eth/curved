@@ -9,7 +9,7 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 import { Chain, Config, configureChains, createConfig } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { goerli, base } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 import { env } from "@/lib/env.mjs";
@@ -40,7 +40,7 @@ export const {
   chains: Chain[];
   publicClient: any;
 } = configureChains(
-  [...(env.NEXT_PUBLIC_NODE_ENV === "development" ? [goerli] : [goerli])],
+  [...(env.NEXT_PUBLIC_NODE_ENV === "development" ? [goerli] : [base])],
   [publicProvider()],
 );
 
