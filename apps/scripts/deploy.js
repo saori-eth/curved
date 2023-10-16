@@ -77,8 +77,7 @@ const initMinter = async (sharesAddress, token) => {
 const main = async () => {
   const token = await deployToken();
   const tokenAddress = token.address;
-  const vestWallet = await deployVestingWallet(token);
-  const vestWalletAddress = vestWallet.address;
+  await deployVestingWallet(token);
   const shares = await deployShares(tokenAddress);
   const sharesAddress = shares.address;
   await initMinter(sharesAddress, token);
