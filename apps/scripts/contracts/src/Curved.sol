@@ -2,6 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 interface IERC20 {
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -23,36 +24,22 @@ interface IERC20 {
     function mint(address to, uint256 amount) external;
 }
 
-contract Curved is Ownable {
-    // ====== Market Variables ======
+contract Curved is Ownable, ReentrancyGuard {
     address public protocolFeeDestination;
-    // 0.05 ether = 5%
     uint256 public royaltyFeePercent;
     uint256 public protocolFeePercent;
     uint256 public currentId = 0;
 
-    // ====== Reward Variables ======
 
-    // Token to be staked
     IERC20 public immutable rewardsToken;
-    // Reward start time
     uint256 public startTime;
-    // Timestamp of when the rewards finish
     uint256 public finishAt;
-    // Minimum of last updated time and reward finish time
     uint256 public updatedAt;
-    // Sum of (reward rate * dt * 1e18 / total supply)
     uint256 public rewardPerEthStored;
-    // User address => rewardPerEthStored
     mapping(address => uint256) public userRewardPerEthPaid;
-    // User address => rewards to be claimed
     mapping(address => uint256) public rewards;
-    // Net ETH from buy/sell transactions
     uint256 public totalVolume;
-    // User address => staked amount
     mapping(address => uint256) public userVolume;
-
-    // ====== Events ======
 
     event ShareCreated(address indexed owner, uint256 indexed id);
     event Trade(
@@ -130,7 +117,7 @@ contract Curved is Ownable {
         return (summation * 1 ether) / 1000;
     }
 
-    function createShare(string calldata _uri) external {
+    function createShare(string calldata _uri) external nonReentrant {
         shareInfo[currentId].owner = msg.sender;
         shareInfo[currentId].balances[msg.sender] = 1;
         shareInfo[currentId].totalSupply = 1;
@@ -139,7 +126,7 @@ contract Curved is Ownable {
         emit ShareCreated(msg.sender, currentId - 1);
     }
 
-    function buyShare(uint256 id, uint256 amount) external payable updateReward(msg.sender) {
+    function buyShare(uint256 id, uint256 amount) external payable nonReentrant updateReward(msg.sender) {
         require(id < currentId, "Invalid share id");
         Share storage share = shareInfo[id];
         uint256 supply = share.totalSupply;
@@ -161,7 +148,7 @@ contract Curved is Ownable {
         require(success1 && success2, "Unable to send funds");
     }
 
-    function sellShare(uint256 id, uint256 amount) external updateReward(msg.sender) {
+    function sellShare(uint256 id, uint256 amount) external nonReentrant updateReward(msg.sender) {
         require(id < currentId, "Invalid share id");
         Share storage share = shareInfo[id];
         uint256 supply = share.totalSupply;
@@ -199,8 +186,6 @@ contract Curved is Ownable {
         shareInfo[id].uri = _uri;
     }
 
-    // ====== Rewards ======
-
     uint256[] public epoch = [
         4_000_000_000 ether, // 50%
         1_600_000_000 ether, // 20%
@@ -210,7 +195,6 @@ contract Curved is Ownable {
         380_000_000 ether // 4.75%
     ];
 
-    // reward per second
     function getRate(uint256 currentTime) public view returns (uint256) {
         uint256 timeElapsed = currentTime - startTime;
         uint256 rate;
@@ -260,7 +244,7 @@ contract Curved is Ownable {
           rewards[_account];
     }
 
-    function getReward() public updateReward(msg.sender) {
+    function getReward() public nonReentrant updateReward(msg.sender) {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
@@ -271,8 +255,6 @@ contract Curved is Ownable {
     function _min(uint256 x, uint256 y) private pure returns (uint256) {
         return x <= y ? x : y;
     }
-
-    // ====== Market Getters ======
 
     function getShareInfo(
         uint256 id
