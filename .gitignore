@@ -43,3 +43,5 @@ apps/client/public/worker-*.js
 apps/client/public/sw.js.map
 apps/client/public/workbox-*.js.map
 apps/client/public/worker-*.js.map
+
+.env
