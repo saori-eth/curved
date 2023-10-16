@@ -9,14 +9,14 @@ import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Vo
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-contract YuYu is Ownable, ERC20, ERC20Permit, ERC20Votes {
+contract Yuyu is Ownable, ERC20, ERC20Permit, ERC20Votes {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     uint256 public maxSupply = 10_000_000_000 ether;
 
     EnumerableSet.AddressSet _minters;
 
-    constructor() ERC20("yuyu", "YUYU") ERC20Permit("yuyu") {
+    constructor() ERC20("Yuyu", "YUYU") ERC20Permit("Yuyu") {
         _mint(msg.sender, 2_000_000_000 ether);
     }
 
