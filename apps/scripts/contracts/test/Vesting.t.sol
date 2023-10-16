@@ -6,11 +6,11 @@ import {Test, console2} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {Curved} from "../src/Curved.sol";
-import {YuYu} from "../src/Token.sol";
+import {Yuyu} from "../src/Token.sol";
 import {Vesting} from "../src/Vesting.sol";
 
 contract VestingTest is Test {
-    YuYu _yuyu;
+    Yuyu _yuyu;
     Vesting _vesting;
     address _yuyuAddr;
     address _vestingAddr;
@@ -19,7 +19,7 @@ contract VestingTest is Test {
 
     function setUp() public {
       vm.startPrank(_owner);
-      _yuyu = new YuYu();
+      _yuyu = new Yuyu();
       _yuyuAddr = address(_yuyu);
       // 13 week cliff, 6 year linear vesting
       _vesting = new Vesting(_owner, _startTimestamp, 52 weeks * 6);

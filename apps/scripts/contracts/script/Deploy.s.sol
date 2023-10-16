@@ -8,7 +8,7 @@ import {IVotes} from "@openzeppelin/contracts/governance/utils/IVotes.sol";
 
 import {Curved} from "../src/Curved.sol";
 import {YuYuMother} from "../src/Governance.sol";
-import {YuYu} from "../src/Token.sol";
+import {Yuyu} from "../src/Token.sol";
 
 contract Deploy is Script {
     function setUp() public {}
@@ -27,7 +27,7 @@ contract Deploy is Script {
 
         TimelockController tl = new TimelockController(4 hours, proposers, executors, deployer);
 
-        YuYu token = new YuYu();
+        Yuyu token = new Yuyu();
         Curved shares = new Curved(address(token));
 
         token.addMinter(address(shares));

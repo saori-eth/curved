@@ -13,7 +13,7 @@ import {GovernorCompatibilityBravo} from
 import {Curved} from "../src/Curved.sol";
 import {YuYuMother} from "../src/Governance.sol";
 
-import {YuYu} from "../src/Token.sol";
+import {Yuyu} from "../src/Token.sol";
 
 contract YuyuMotherTest is Test {
     enum VoteType {
@@ -27,7 +27,7 @@ contract YuyuMotherTest is Test {
 
     TimelockController _tl;
     YuYuMother _gov;
-    YuYu _tk;
+    Yuyu _tk;
 
     address _curvedAddress;
     address _owner = address(0x11);
@@ -38,7 +38,7 @@ contract YuyuMotherTest is Test {
     function setUp() public {
         vm.startPrank(_owner);
 
-        _tk = new YuYu();
+        _tk = new Yuyu();
         _rewardToken = IERC20(address(_tk));
 
         _curved = new Curved(address(_rewardToken));

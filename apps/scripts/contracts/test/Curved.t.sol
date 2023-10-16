@@ -6,7 +6,7 @@ import {Test, console2} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {Curved} from "../src/Curved.sol";
-import {YuYu} from "../src/Token.sol";
+import {Yuyu} from "../src/Token.sol";
 
 
 contract CurvedTest is Test {
@@ -64,7 +64,7 @@ contract CurvedTest is Test {
             vm.deal(_users[i], 100 ether);
         }
 
-        YuYu _tk = new YuYu();
+        Yuyu _tk = new Yuyu();
         _rewardToken = IERC20(address(_tk));
 
         _curved = new Curved(address(_rewardToken));
