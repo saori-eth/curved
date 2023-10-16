@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import dotenv from "dotenv";
 dotenv.config();
-import tokenABI from "./contracts/out/Token.sol/YuYu.json" assert { type: "json" };
+import tokenABI from "./contracts/out/Token.sol/Yuyu.json" assert { type: "json" };
 import sharesAbi from "./contracts/out/Curved.sol/Curved.json" assert { type: "json" };
 import vestingAbi from "./contracts/out/Vesting.sol/Vesting.json" assert { type: "json" };
 
