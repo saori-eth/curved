@@ -10,7 +10,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_DEPLOYED_URL: z.string().url(),
     NEXT_PUBLIC_NODE_ENV: z.enum(["development", "production", "test"]),
-    NEXT_PUBLIC_RPC_URL: z.string().url(),
     NEXT_PUBLIC_SHARES_ADDRESS: z.string().startsWith("0x").length(42),
     NEXT_PUBLIC_TOKEN_ADDRESS: z.string().startsWith("0x").length(42),
   },
@@ -28,7 +27,6 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NEXT_PUBLIC_DEPLOYED_URL: process.env.NEXT_PUBLIC_DEPLOYED_URL,
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_RPC_URL: process.env.NEXT_PUBLIC_RPC_URL,
     NEXT_PUBLIC_SHARES_ADDRESS: process.env.NEXT_PUBLIC_SHARES_ADDRESS,
     NEXT_PUBLIC_TOKEN_ADDRESS: process.env.NEXT_PUBLIC_TOKEN_ADDRESS,
     REVALIDATE_SECRET: process.env.REVALIDATE_SECRET,
