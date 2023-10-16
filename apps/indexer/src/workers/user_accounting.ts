@@ -6,6 +6,7 @@ import PQueue from "p-queue";
 import { parentPort } from "worker_threads";
 
 import { db } from "../DB";
+import { msgDiscord } from "../msgDiscord";
 import { Message, sendNotification } from "../sendNotification";
 
 if (!parentPort) {
@@ -33,6 +34,9 @@ const handleMessage = async (event: any) => {
       });
     } catch (e) {
       console.error("error inserting creator balance", e);
+      msgDiscord(
+        `error inserting creator balance for ${owner} and shareId ${shareId}`,
+      );
     }
   } else if (eventType === "Trade") {
     const shareId = event.args[0];
@@ -64,6 +68,9 @@ const handleMessage = async (event: any) => {
         );
     } catch (e) {
       console.error("error querying existing balance", e);
+      msgDiscord(
+        `error querying existing balance for ${trade.from} and shareId ${shareId}`,
+      );
     }
 
     if (!existingBalance)
@@ -80,6 +87,9 @@ const handleMessage = async (event: any) => {
         return;
       } catch (e) {
         console.error("error inserting balance", e);
+        msgDiscord(
+          `error inserting balance for ${trade.from} and shareId ${shareId}`,
+        );
       }
     }
 
@@ -111,6 +121,9 @@ const handleMessage = async (event: any) => {
         );
     } catch (e) {
       console.error("error updating balance", e);
+      msgDiscord(
+        `error updating balance for ${trade.from} and shareId ${shareId}`,
+      );
     }
   }
 };
