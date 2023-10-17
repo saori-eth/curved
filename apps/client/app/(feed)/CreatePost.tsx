@@ -90,6 +90,18 @@ export function CreatePost() {
     status !== "authenticated" ||
     isErrorPrepare;
 
+  console.log("submitDisabled", submitDisabled, {
+    isErrorPrepare,
+    isLoadingPrepare,
+    isLoadingWrite,
+    isRedirecting,
+    isUploading,
+    isWaitingOnTx,
+    status,
+    waitingForIndex,
+    write,
+  });
+
   useEffect(() => {
     if (!isTxMined) return;
     console.log("Transaction mined");
@@ -176,7 +188,7 @@ export function CreatePost() {
           },
           maxWidth: 480,
           quality: 0.6,
-          success: function (compressedFile) {
+          success: function(compressedFile) {
             setFile(
               new File([compressedFile], "compressed.gif", {
                 type: "image/gif",
@@ -274,7 +286,7 @@ export function CreatePost() {
       <Dialog.Trigger onClick={promptFile} asChild>
         <button
           draggable={false}
-          className="flex h-full w-full select-none flex-col items-center justify-center rounded-xl p-3 text-slate-400 transition active:scale-95 active:text-white md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:active:text-black"
+          className="flex h-full w-full select-none flex-col items-center justify-center p-3 text-slate-400 transition active:scale-95 active:text-white md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:active:text-black"
         >
           <span className="pb-0.5 text-2xl md:hidden md:w-9">
             <MdAddCircleOutline />
@@ -293,11 +305,10 @@ export function CreatePost() {
             <img
               src={URL.createObjectURL(file)}
               onClick={promptFile}
-              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[600px] ${
-                imageDisabled
+              className={`max-h-[400px] w-full rounded-lg object-contain transition md:max-h-[600px] ${imageDisabled
                   ? "opacity-50"
                   : "hover:cursor-pointer hover:opacity-80"
-              }`}
+                }`}
               alt="Upload preview"
             />
           ) : (
@@ -310,9 +321,8 @@ export function CreatePost() {
             maxLength={MAX_CAPTION_LENGTH}
             placeholder="Add a caption..."
             rows={2}
-            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${
-              captionDisabled ? "opacity-50" : ""
-            }`}
+            className={`w-full rounded-lg bg-slate-900 px-3 py-1 placeholder:text-slate-400 ${captionDisabled ? "opacity-50" : ""
+              }`}
           />
 
           <div className="flex justify-center">
