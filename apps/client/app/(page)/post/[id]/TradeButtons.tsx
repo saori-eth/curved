@@ -23,8 +23,6 @@ export function TradeButtons({ shareId }: Props) {
     sellPrice,
     isPrepareBuyError,
     isPrepareSellError,
-    isReadError,
-    readError,
     isBuyLoading,
     isReadLoading,
     isSellLoading,
@@ -55,10 +53,6 @@ export function TradeButtons({ shareId }: Props) {
   const disableBuy = !buy || isBuyLoading || isReadLoading || isPrepareBuyError;
   const disableSell =
     !sell || isSellLoading || isReadLoading || isPrepareSellError;
-
-  console.log({
-    buyPrice,
-  });
 
   return (
     <div className="mx-3 space-y-1 md:mx-0">

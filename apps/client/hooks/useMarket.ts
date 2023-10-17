@@ -18,12 +18,7 @@ const contract = {
 export const useMarket = (shareId: number) => {
   const { address } = useAccount();
 
-  const {
-    data,
-    error: readError,
-    isLoading: isReadLoading,
-    isError: isReadError,
-  } = useContractReads({
+  const { data, isLoading: isReadLoading } = useContractReads({
     contracts: [
       {
         ...contract,
@@ -44,8 +39,6 @@ export const useMarket = (shareId: number) => {
     suspense: true,
     watch: true,
   });
-
-  console.log(data);
 
   const buyPrice = data ? data[0].result : undefined;
   const sellPrice = data ? data[1].result : undefined;
@@ -104,10 +97,8 @@ export const useMarket = (shareId: number) => {
     isBuyLoading: isBuyLoading || isPrepareBuyLoading,
     isPrepareBuyError,
     isPrepareSellError,
-    isReadError,
     isReadLoading,
     isSellLoading: isSellLoading || isPrepareSellLoading,
-    readError,
     sell,
     sellPrice,
     shareBalance,
