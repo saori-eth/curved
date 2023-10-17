@@ -59,11 +59,17 @@ export function Sidebar() {
               </div>
             </>
           ) : (
-            <SidebarButton
-              onClick={openConnectModal}
-              text="Log in"
-              icon={<BiLogIn />}
-            />
+            <>
+              <SidebarButton
+                onClick={openConnectModal}
+                text="Log in"
+                icon={<BiLogIn />}
+              />
+              {/* // message saying sign ups are turned off until indexer is upgraded. not on mobile */}
+              <div className="hidden text-center text-sm text-gray-400 md:block">
+                Sign ups closed for upgrades
+              </div>
+            </>
           )}
         </ul>
       </div>
