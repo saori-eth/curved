@@ -1,6 +1,6 @@
 import { AppTitle } from "../AppTitle";
 import { FeedButton } from "./FeedButton";
-import { RefreshButton } from "./RefreshButton";
+import { RefreshButton, RefreshProvider } from "./RefreshButton";
 import { RewardsLink } from "./RewardsLink";
 
 interface Props {
@@ -20,15 +20,17 @@ export default function FeedLayout({ children }: Props) {
         </div>
       </div>
 
-      <div className="w-full pt-14 md:pt-2">
-        <div className="mb-2 flex items-center justify-center">
-          <FeedButton href="/">Latest</FeedButton>
-          <FeedButton href="/following">Following</FeedButton>
-          <RefreshButton />
-        </div>
+      <RefreshProvider>
+        <div className="w-full pt-14 md:pt-2">
+          <div className="mb-2 flex items-center justify-center">
+            <FeedButton href="/">Latest</FeedButton>
+            <FeedButton href="/following">Following</FeedButton>
+            <RefreshButton />
+          </div>
 
-        {children}
-      </div>
+          {children}
+        </div>
+      </RefreshProvider>
     </div>
   );
 }

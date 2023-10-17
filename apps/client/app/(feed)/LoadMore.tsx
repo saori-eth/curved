@@ -24,6 +24,14 @@ export function LoadMore({ fetchType }: Props) {
   );
 
   useEffect(() => {
+    if (page === -1) {
+      // Reset on refresh
+      setFetchingPage(-1);
+      setReachedBottom(false);
+    }
+  }, [page]);
+
+  useEffect(() => {
     if (!inView || reachedBottom) return;
 
     const nextPage = page + 1;

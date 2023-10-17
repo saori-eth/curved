@@ -5,10 +5,13 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
 import { Post } from "@/src/types/post";
+
+import { useRefresh } from "./RefreshButton";
 
 export interface IFeedContext {
   posts: Post[];
@@ -32,9 +35,20 @@ interface Props {
 }
 
 export function FeedProvider({ initialPosts = [], children }: Props) {
+  const { time, timeChanged } = useRefresh();
+
   const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [start] = useState(Date.now());
   const [page, setPage] = useState(0);
+
+  // Clear posts when refreshing
+  useEffect(() => {
+    if (!timeChanged) {
+      return;
+    }
+
+    setPosts([]);
+    setPage(-1);
+  }, [time, timeChanged]);
 
   return (
     <FeedContext.Provider
@@ -43,7 +57,7 @@ export function FeedProvider({ initialPosts = [], children }: Props) {
         posts,
         setPage,
         setPosts,
-        start,
+        start: time,
       }}
     >
       {children}
