@@ -1,11 +1,12 @@
 import { nftPost, pendingPost, post, trade } from "db";
 import { config } from "dotenv";
-import { eq, asc, desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { ethers } from "ethers";
 import { Worker } from "worker_threads";
-import { msgDiscord } from "./msgDiscord";
+
 import SharesABI from "./abi/Shares.json" assert { type: "json" };
 import { db } from "./DB";
+import { msgDiscord } from "./msgDiscord";
 import { nanoidLowercase } from "./nanoid";
 const { WS_URL, SHARES_ADDRESS, DISCORD_WEBHOOK_URL } = process.env;
 
@@ -62,9 +63,9 @@ export class Indexer {
     const reInitBlockNumber = receipt.blockNumber + 1;
 
     // get all trades since last indexed block
-    //@ts-ignore
+    //@ts-expect-error
     const tradeFilter = this.curve.filters.Trade();
-    //@ts-ignore
+    //@ts-expect-error
     const newShareFilter = this.curve.filters.ShareCreated();
     const tradeEvents = await this.curve.queryFilter(
       tradeFilter,
