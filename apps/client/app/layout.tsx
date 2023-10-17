@@ -4,8 +4,6 @@ import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Gemunu_Libre } from "next/font/google";
 
-import { env } from "@/lib/env.mjs";
-
 import { baseMetadata } from "./baseMetadata";
 import { InstallPWA } from "./InstallPWA";
 import { Sidebar } from "./Sidebar";

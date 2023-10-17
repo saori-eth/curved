@@ -59,8 +59,9 @@ export function InstallPWA() {
           onClick={() => {
             setHide(true);
           }}
-          className={`w-fit rounded-full border border-slate-600 px-4 py-1 text-slate-500 transition active:border-white active:bg-slate-700 active:text-white ${showContinue ? "" : "opacity-0"
-            }`}
+          className={`w-fit rounded-full border border-slate-600 px-4 py-1 text-slate-500 transition active:border-white active:bg-slate-700 active:text-white ${
+            showContinue ? "" : "opacity-0"
+          }`}
         >
           Continue
         </button>

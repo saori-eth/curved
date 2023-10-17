@@ -23,7 +23,6 @@ export function TradeButtons({ shareId }: Props) {
     sellPrice,
     isPrepareBuyError,
     isPrepareSellError,
-    isReadError,
     isBuyLoading,
     isReadLoading,
     isSellLoading,
@@ -75,11 +74,7 @@ export function TradeButtons({ shareId }: Props) {
           </button>
 
           <p className="text-center text-sm text-slate-400">
-            {isReadError || isPrepareBuyError
-              ? "Error"
-              : !buyPrice
-              ? ""
-              : `${formatEther(buyPrice)} ${ETH_SYMBOL}`}
+            {buyPrice ? `${formatEther(buyPrice)} ${ETH_SYMBOL}` : null}
           </p>
 
           <div className="h-5">
@@ -115,11 +110,7 @@ export function TradeButtons({ shareId }: Props) {
             </button>
 
             <p className="text-center text-sm text-slate-400">
-              {isReadError || isPrepareSellError
-                ? "Error"
-                : !sellPrice
-                ? ""
-                : `${formatEther(sellPrice)} ${ETH_SYMBOL}`}
+              {sellPrice ? `${formatEther(sellPrice)} ${ETH_SYMBOL}` : null}
             </p>
 
             <div className="h-5">
