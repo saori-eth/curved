@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
       const shareId = data[0]?.nftShareId ?? data[0]?.repostShareId;
 
-      if (!shareId) {
+      if (shareId == null || shareId == undefined) {
         throw new Error("No shareId found");
       }
 
