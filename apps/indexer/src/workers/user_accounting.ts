@@ -1,4 +1,3 @@
-// worker.js
 import { nftPost, userBalances } from "db";
 import { and, eq } from "drizzle-orm";
 import { utils } from "ethers";
