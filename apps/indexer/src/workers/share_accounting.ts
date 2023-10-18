@@ -1,4 +1,3 @@
-// worker.js
 import { shareData } from "db";
 import { and, eq } from "drizzle-orm";
 import PQueue from "p-queue";
@@ -13,12 +12,14 @@ if (!parentPort) {
 
 const queue = new PQueue({ concurrency: 1 });
 
-const handleMessage = async (event: any) => {
+async function handleMessage(event: any) {
   if (event.event !== "Trade") return;
+
   const shareId = event.args[0];
   const price = event.args[5];
 
   let data;
+
   try {
     data = await db.query.shareData.findFirst({
       where: (row, { eq }) => eq(row.shareId, shareId),
@@ -42,6 +43,7 @@ const handleMessage = async (event: any) => {
 
   if (data?.volume && data?.volume.toString() !== "0") {
     const newVolume = data.volume + BigInt(price);
+
     try {
       await db
         .update(shareData)
@@ -54,9 +56,9 @@ const handleMessage = async (event: any) => {
       msgDiscord(`error updating share data for shareId ${shareId}`);
     }
   }
-};
+}
 
-parentPort.on("message", async (event: any) => {
+parentPort.on("message", async (event) => {
   queue.add(() => handleMessage(event));
 });
 

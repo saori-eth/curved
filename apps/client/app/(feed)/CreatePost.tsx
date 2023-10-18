@@ -90,6 +90,18 @@ export function CreatePost() {
     status !== "authenticated" ||
     isErrorPrepare;
 
+  console.log("submitDisabled", submitDisabled, {
+    isErrorPrepare,
+    isLoadingPrepare,
+    isLoadingWrite,
+    isRedirecting,
+    isUploading,
+    isWaitingOnTx,
+    status,
+    waitingForIndex,
+    write,
+  });
+
   useEffect(() => {
     if (!isTxMined) return;
     console.log("Transaction mined");
@@ -274,7 +286,7 @@ export function CreatePost() {
       <Dialog.Trigger onClick={promptFile} asChild>
         <button
           draggable={false}
-          className="flex h-full w-full select-none flex-col items-center justify-center rounded-xl p-3 text-slate-400 transition active:scale-95 active:text-white md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:active:text-black"
+          className="flex h-full w-full select-none flex-col items-center justify-center p-3 text-slate-400 transition active:scale-95 active:text-white md:flex-row md:justify-start md:rounded-full md:bg-white md:py-2.5 md:text-black md:active:text-black"
         >
           <span className="pb-0.5 text-2xl md:hidden md:w-9">
             <MdAddCircleOutline />
