@@ -3,6 +3,7 @@ import { Worker } from "worker_threads";
 
 import { insertShare } from "./insertShare";
 import { insertTrade } from "./insertTrade";
+import { msgDiscord } from "./msgDiscord";
 
 export function listenToBlocks(contract: ethers.Contract) {
   console.log("Spawning worker threads...");
@@ -55,6 +56,7 @@ export function listenToBlocks(contract: ethers.Contract) {
           await insertShare(event);
         } catch (e) {
           console.log("Error inserting share", e);
+          msgDiscord("Error inserting share");
         }
 
         break;
@@ -64,6 +66,7 @@ export function listenToBlocks(contract: ethers.Contract) {
           await insertTrade(event);
         } catch (e) {
           console.log("Error inserting trade", e);
+          msgDiscord("Error inserting trade");
         }
 
         shareWorker.postMessage(workerEvent);

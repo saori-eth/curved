@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import SharesABI from "./abi/Shares.json" assert { type: "json" };
 import { indexHistoricalBlocks } from "./indexHistoricalBlocks";
 import { listenToBlocks } from "./listenToBlocks";
+import { msgDiscord } from "./msgDiscord";
 
 if (!process.env.WS_URL) {
   throw new Error("WS_URL env variable must be set");
@@ -21,9 +22,10 @@ const contract = new ethers.Contract(
 
 try {
   await indexHistoricalBlocks(provider, contract);
+  listenToBlocks(contract);
 } catch (e) {
   console.error("Error indexing historical blocks", e);
-  process.exit(1);
+  msgDiscord("Error indexing historical blocks").finally(() => {
+    process.exit(1);
+  });
 }
-
-listenToBlocks(contract);
