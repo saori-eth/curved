@@ -1,0 +1,15 @@
+{
+  "extends": ["custom", "next/core-web-vitals"],
+  "root": true,
+  "rules": {
+    "@next/next/no-img-element": "off"
+  },
+  "settings": {
+    "next": {
+      "rootDir": "apps/client"
+    },
+    "tailwindcss": {
+      "config": "apps/client/tailwind.config.cjs"
+    }
+  }
+}

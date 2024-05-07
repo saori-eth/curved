@@ -1,0 +1,49 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# production
+dist
+build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.turbo
+
+apps/indexer/src/abi/Curved.json
+apps/indexer/src/abi/Shares.json
+apps/indexer/src/abi/Token.json
+
+apps/client/public/sw.js
+apps/client/public/workbox-*.js
+apps/client/public/worker-*.js
+apps/client/public/sw.js.map
+apps/client/public/workbox-*.js.map
+apps/client/public/worker-*.js.map
+
+.env

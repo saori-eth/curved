@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
+  },
+  "extends": "tsconfig/nextjs.json",
+  "include": ["**/*.mjs", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
+}

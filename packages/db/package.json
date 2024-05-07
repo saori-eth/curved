@@ -1,0 +1,30 @@
+{
+  "name": "db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "_db:push": "pnpm run env -- drizzle-kit push:mysql --driver=mysql2 --schema=./src/schema.ts --connectionString=$DATABASE_URL",
+    "build": "pnpm run env -- tsc",
+    "db:push": "pnpm run env -- pnpm run _db:push",
+    "db:studio": "pnpm run env -- drizzle-kit studio",
+    "dev": "pnpm run env -- tsc -w",
+    "env": "dotenv -e ../../.env",
+    "lint": "cd ../.. && eslint --fix \"packages/db/**/*.{ts,tsx,cjs,mjs}\" --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@planetscale/database": "^1.11.0",
+    "drizzle-orm": "^0.28.6"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "drizzle-kit": "^0.19.13",
+    "eslint": "^8.49.0",
+    "eslint-config-custom": "workspace:*",
+    "eslint-config-next": "^13.5.1",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.2.2"
+  }
+}
